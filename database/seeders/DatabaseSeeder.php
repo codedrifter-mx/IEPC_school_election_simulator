@@ -16,9 +16,48 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        DB::table('levels')->insert([
+            'level' => 'Primaria'
+        ]);
+        DB::table('levels')->insert([
+            'level' => 'Secundaria'
+        ]);
+        DB::table('levels')->insert([
+            'level' => 'Bachillerato'
+        ]);
+        DB::table('levels')->insert([
+            'level' => 'Universidad'
+        ]);
+        DB::table('levels')->insert([
+            'level' => 'Administrador'
+        ]);
+
+
+
+        DB::table('schedules')->insert([
+            'schedule' => 'Matutino'
+        ]);
+        DB::table('schedules')->insert([
+            'schedule' => 'Mixto'
+        ]);
+        DB::table('schedules')->insert([
+            'schedule' => 'Vespertino'
+        ]);
+        DB::table('schedules')->insert([
+            'schedule' => 'Nocturno'
+        ]);
+
+
+        DB::table('users')->insert([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'level' => 'Primaria',
+        ]);
+//        User::factory()->create([
+//            'name' => 'Test User',
+//            'email' => 'test@example.com',
+//            'level' => 'Primaria',
+//        ]);
     }
 }
