@@ -17,3 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Make each controller API routes for index, create, store, show, edit, update, destroy
+Route::resource('voters', 'VoterController');
+Route::resource('candidates', 'CandidateController');
+Route::resource('events', 'EventController');
+Route::resource('votes', 'VoteController');
+
