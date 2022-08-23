@@ -13,9 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'welcome');
+Route::view('/', 'welcome')->name('welcome');
 Route::view('/dashboard', 'dashboard')->middleware(['auth'])->name('dashboard');
 Route::view('/events', 'Event')->middleware(['auth'])->name('events');
 Route::view('/candidates', 'Candidate')->middleware(['auth'])->name('candidates');
+Route::view('/iepc', 'dashboard_global')->middleware(['auth'])->name('dashboard_iepc');
 
 require __DIR__.'/auth.php';
