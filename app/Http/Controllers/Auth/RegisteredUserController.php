@@ -33,12 +33,36 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Create validation rules
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'level' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        ];
+
+        // Create validation messages on spanish
+        $messages = [
+            'name.required' => 'El campo nombre es obligatorio.',
+            'name.string' => 'El campo nombre debe ser una cadena de caracteres.',
+            'name.max' => 'El campo nombre no debe ser mayor a 255 caracteres.',
+            'email.required' => 'El campo email es obligatorio.',
+            'email.string' => 'El campo email debe ser una cadena de caracteres.',
+            'email.email' => 'El campo email debe ser un email válido.',
+            'email.max' => 'El campo email no debe ser mayor a 255 caracteres.',
+            'email.unique' => 'El campo email ya se encuentra registrado.',
+            'level.required' => 'El campo nivel es obligatorio.',
+            'level.string' => 'El campo nivel debe ser una cadena de caracteres.',
+            'level.max' => 'El campo nivel no debe ser mayor a 255 caracteres.',
+            'password.required' => 'El campo contraseña es obligatorio.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'password.min' => 'El campo contraseña debe tener al menos 8 caracteres.',
+            'password.max' => 'El campo contraseña no debe ser mayor a 255 caracteres.',
+            'password.regex' => 'El campo contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número.',
+        ];
+
+        // Create validation with messages
+        $request->validate($rules, $messages);
 
         $user = User::create([
             'name' => $request->name,

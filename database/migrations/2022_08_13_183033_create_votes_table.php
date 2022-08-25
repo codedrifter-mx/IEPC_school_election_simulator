@@ -16,8 +16,8 @@ return new class extends Migration
     {
         Schema::create('votes', function (Blueprint $table) {
             $table->id('vote_id')->comment('Id voto');
-            $table->unsignedBigInteger('voter_id')->comment('Id votador');
-            $table->foreign('voter_id')->references('voter_id')->on('voters');
+            $table->unsignedBigInteger('elector_id')->comment('Id votador');
+            $table->foreign('elector_id')->references('elector_id')->on('electors');
             $table->unsignedBigInteger('candidate_id')->comment('Id candidato');
             $table->foreign('candidate_id')->references('candidate_id')->on('candidates');
             $table->unsignedBigInteger('event_id')->comment('Id evento');

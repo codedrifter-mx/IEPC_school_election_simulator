@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
@@ -12,16 +12,16 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::all();
-        return response()->json($events);
-    }
 
-    public function create()
-    {
-        return view('event.create');
+        // Return the event
+        return response()->json($events, 200);
     }
 
     public function store(Request $request)
     {
+        // Log all the request data
+        \Log::info($request->all());
+
         // Make an array of rules for validation with these keys
         $rules = [
             'name' => 'required|string',
@@ -54,33 +54,27 @@ class EventController extends Controller
             'end_at.date' => 'La fecha de fin debe ser una fecha',
         ];
 
-
         // Make a validator with the rules and msgs
-        $validator = Validator::make($request->all(), $rules, $msgs);
-
-        // If the validator fails, return the errors
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->all(), 400);
-        }
-
-        // If the validator passes, get user id
-        $id = Auth::id();
+        $request->validate($rules, $msgs);
 
         // get current datetime and merge it to the request as added_at
         $request->merge(['added_at' => date('Y-m-d H:i:s')]);
 
-        // add user id to request
-        $request->merge(['user_id' => $id]);
-
         // If the validator passes, create the event
         $event = Event::create($request->all());
 
-        // Return the event
-        return response()->json($event, 201);
+        // Return only 200 status
+        return response()->json($event, 200);
     }
 
-    public function show($id)
+    public function show(Request $request)
     {
+        // Get id from request
+        $id = $request->id;
+
+        // log the id
+//        \Log::info($id);
+
         // Find the event with the id
         $event = Event::find($id);
 
@@ -93,22 +87,11 @@ class EventController extends Controller
         return response()->json($event, 200);
     }
 
-    public function edit($id)
+    public function update(Request $request)
     {
-        // Find the event with the id
-        $event = Event::find($id);
+        // Get event_id from request
+        $id = $request->event_id;
 
-        // If the event is not found, return a 404
-        if (!$event) {
-            return response()->json(['message' => 'Event not found'], 404);
-        }
-
-        // Return the event
-        return view('event.edit', compact('event'));
-    }
-
-    public function update(Request $request, $id)
-    {
         // Make an array of rules for validation with these keys
         $rules = [
             'user_id' => 'required|integer',
@@ -118,7 +101,6 @@ class EventController extends Controller
             'in_charge' => 'required|string',
             'population' => 'required|integer',
             'groups' => 'required|integer',
-            'added_at' => 'required|date',
             'start_at' => 'required|date',
             'end_at' => 'required|date',
         ];
@@ -147,13 +129,10 @@ class EventController extends Controller
             'end_at.date' => 'End At must be a date',
         ];
 
-        // Make a validator with the rules and msgs
-        $validator = Validator::make($request->all(), $rules, $msgs);
+        $request->validate($rules, $msgs);
 
-        // If the validator fails, return the errors
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->all(), 400);
-        }
+        // log id
+        \Log::info($id);
 
         // If the validator passes, update the event
         $event = Event::find($id)->update($request->all());
@@ -162,20 +141,29 @@ class EventController extends Controller
         return response()->json($event, 200);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
+
+        // Get event_id from request
+        $id = $request->id;
+
+        //log id
+        \Log::info($id);
+        \Log::info($request);
+
         // Find the event
         $event = Event::find($id);
 
         // If the event is not found, return a 404
         if (!$event) {
-            return response()->json(['message' => 'Event not found'], 404);
+            return response()->json(['message' => 'Event not found'], 500);
         }
 
         // Delete the event
         $event->delete();
 
-        // Return a 204
-        return response()->json(null, 204);
+        $events = Event::all();
+
+        return view('event.Event', ['events' => $events])->renderSections()['events'];
     }
 }

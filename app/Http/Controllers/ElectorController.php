@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Voter;
+use App\Models\Elector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class VoterController extends Controller
+class ElectorController extends Controller
 {
     public function index()
     {
-        $voters = Voter::all();
-        return response()->json($voters);
+        $electors = Elector::all();
+        return response()->json($electors);
     }
 
     public function create()
     {
-        return view('voter.create');
+        return view('elector.create');
     }
 
     public function store(Request $request)
@@ -62,7 +62,7 @@ class VoterController extends Controller
         }
 
         // if the validator passes, create the user
-        $voter = Voter::create($request->all());
+        $elector = Elector::create($request->all());
 
         // return the user
 
@@ -70,17 +70,17 @@ class VoterController extends Controller
 
     public function show($id)
     {
-        $voter = Voter::find($id);
-        return response()->json($voter);
+        $elector = Elector::find($id);
+        return response()->json($elector);
     }
 
     public function edit($id)
     {
         // find the user with the id
-        $voter = Voter::find($id);
+        $elector = Elector::find($id);
 
         // return the view with the user
-        return view('voter.edit', compact('voter'));
+        return view('elector.edit', compact('elector'));
     }
 
     public function update(Request $request, $id)
@@ -126,17 +126,17 @@ class VoterController extends Controller
         }
 
         // if the validator passes, update the user
-        $voter = Voter::find($id);
-        $voter->update($request->all());
+        $elector = Elector::find($id);
+        $elector->update($request->all());
 
         // return the user
-        return response()->json($voter);
+        return response()->json($elector);
     }
 
     public function destroy($id)
     {
-        $voter = Voter::find($id);
-        $voter->delete();
+        $elector = Elector::find($id);
+        $elector->delete();
 
         return response()->json(['success' => true]);
     }

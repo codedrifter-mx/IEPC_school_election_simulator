@@ -14,8 +14,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('voters', function (Blueprint $table) {
-            $table->id('voter_id')->comment('Id votador');
+        Schema::create('electors', function (Blueprint $table) {
+            $table->id('elector_id')->comment('Id votador');
             $table->unsignedBigInteger('event_id')->comment('Id evento');
             $table->foreign('event_id')->references('event_id')->on('events');
             $table->string('name')->comment('Nombres');
@@ -26,8 +26,8 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        $table = "voters";
-        $comment = "Votadores";
+        $table = "electors";
+        $comment = "Electores";
 
         DB::statement("ALTER TABLE " . $table . " COMMENT = '" . $comment . "'");
     }
@@ -39,6 +39,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('voters');
+        Schema::dropIfExists('electors');
     }
 };

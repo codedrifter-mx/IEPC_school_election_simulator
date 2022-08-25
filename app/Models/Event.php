@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Event
- * 
+ *
  * @property int $event_id
  * @property int $user_id
  * @property string $name
@@ -24,10 +24,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $added_at
  * @property Carbon|null $start_at
  * @property Carbon|null $end_at
- * 
+ *
  * @property User $user
  * @property Candidate $candidate
- * @property Collection|Voter[] $voters
+ * @property Collection|Elector[] $electors
  * @property Collection|Vote[] $votes
  *
  * @package App\Models
@@ -78,9 +78,9 @@ class Event extends Model
 		return $this->hasOne(Candidate::class);
 	}
 
-	public function voters()
+	public function electors()
 	{
-		return $this->hasMany(Voter::class);
+		return $this->hasMany(Elector::class);
 	}
 
 	public function votes()

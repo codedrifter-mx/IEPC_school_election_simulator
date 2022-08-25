@@ -6,11 +6,26 @@
 
                     {{-- Title Form --}}
                     <div>
-                        <h1 class="block"> Analytics </h1>
+
+                        <div class="card w-96 bg-base-100 shadow-xl">
+                            <div class="card-body">
+                                <h2 class="card-title">1</h2>
+                                <h4>Votaciones</h4>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
             </div>
         </div>
     </div>
+
+    <x-slot name="scripts">
+        <script type="text/javascript">
+
+
+        </script>
+    </x-slot>
+
 </x-app-layout>

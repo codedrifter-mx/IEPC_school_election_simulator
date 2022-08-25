@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Voter
- * 
- * @property int $voter_id
+ * Class Elector
+ *
+ * @property int $elector_id
  * @property int $event_id
  * @property string $name
  * @property string $paternal_surname
@@ -22,16 +22,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $code
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * 
+ *
  * @property Event $event
  * @property Collection|Vote[] $votes
  *
  * @package App\Models
  */
-class Voter extends Model
+class Elector extends Model
 {
-	protected $table = 'voters';
-	protected $primaryKey = 'voter_id';
+	protected $table = 'electors';
+	protected $primaryKey = 'elector_id';
 
 	protected $casts = [
 		'event_id' => 'int'

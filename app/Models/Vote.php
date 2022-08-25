@@ -10,15 +10,15 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Vote
- * 
+ *
  * @property int $vote_id
- * @property int $voter_id
+ * @property int $elector_id
  * @property int $candidate_id
  * @property int $event_id
- * 
+ *
  * @property Candidate $candidate
  * @property Event $event
- * @property Voter $voter
+ * @property Elector $elector
  *
  * @package App\Models
  */
@@ -29,13 +29,13 @@ class Vote extends Model
 	public $timestamps = false;
 
 	protected $casts = [
-		'voter_id' => 'int',
+		'elector_id' => 'int',
 		'candidate_id' => 'int',
 		'event_id' => 'int'
 	];
 
 	protected $fillable = [
-		'voter_id',
+		'elector_id',
 		'candidate_id',
 		'event_id'
 	];
@@ -52,6 +52,6 @@ class Vote extends Model
 
 	public function voter()
 	{
-		return $this->belongsTo(Voter::class);
+		return $this->belongsTo(Elector::class);
 	}
 }

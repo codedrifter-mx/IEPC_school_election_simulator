@@ -21,17 +21,17 @@ class VoteController extends Controller
 
     public function store(Request $request)
     {
-        // Make a validation through each table: voter, candidate, event with these keys: voter_id, candidate_id, event_id
+        // Make a validation through each table: elector, candidate, event with these keys: elector_id, candidate_id, event_id
         // if the validation fails, return a json with the error messages
         $rules = [
-            'voter_id' => 'required|integer',
+            'elector_id' => 'required|integer',
             'candidate_id' => 'required|integer',
             'event_id' => 'required|integer',
         ];
 
         $msgs = [
-            'voter_id.required' => 'Voter ID is required',
-            'voter_id.integer' => 'Voter ID must be an integer',
+            'elector_id.required' => 'Elector ID is required',
+            'elector_id.integer' => 'Elector ID must be an integer',
             'candidate_id.required' => 'Candidate ID is required',
             'candidate_id.integer' => 'Candidate ID must be an integer',
             'event_id.required' => 'Event ID is required',

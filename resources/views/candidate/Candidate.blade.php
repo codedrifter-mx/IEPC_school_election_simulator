@@ -106,5 +106,12 @@
             </form>
         </div>
     </div>
-    </div>
+
+    <x-slot name="scripts">
+        <script type="text/javascript">
+
+
+        </script>
+    </x-slot>
+
 </x-app-layout>

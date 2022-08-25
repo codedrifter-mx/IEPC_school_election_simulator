@@ -16,10 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-
-
         DB::table('levels')->insert([
             'level' => 'Primaria'
         ]);
@@ -53,15 +49,38 @@ class DatabaseSeeder extends Seeder
 
 
         DB::table('users')->insert([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'name' => 'Primaria Benito Juarez #402',
+            'email' => 'a@a.com',
+            'password' => '$2y$10$X.TEnrR1kcDcjgurs/CwE.n3tqC7kGP6vLVv8vpic.WOqqZEZyZty',
             'level' => 'Primaria',
         ]);
-//        User::factory()->create([
-//            'name' => 'Test User',
-//            'email' => 'test@example.com',
-//            'level' => 'Primaria',
-//        ]);
+
+        DB::table('users')->insert([
+            'name' => 'Secundaria Paraiso #8',
+            'email' => 'b@b.com',
+            'password' => '$2y$10$X.TEnrR1kcDcjgurs/CwE.n3tqC7kGP6vLVv8vpic.WOqqZEZyZty',
+            'level' => 'Secundaria',
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'Preparatoria Diurna #1',
+            'email' => 'c@c.com',
+            'password' => '$2y$10$X.TEnrR1kcDcjgurs/CwE.n3tqC7kGP6vLVv8vpic.WOqqZEZyZty',
+            'level' => 'Preparatoria',
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'Universidad Juarez del estado de Durango #942',
+            'email' => 'd@d.com',
+            'password' => '$2y$10$X.TEnrR1kcDcjgurs/CwE.n3tqC7kGP6vLVv8vpic.WOqqZEZyZty',
+            'level' => 'Universidad',
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'IEPC',
+            'email' => 'e@e.com',
+            'password' => '$2y$10$X.TEnrR1kcDcjgurs/CwE.n3tqC7kGP6vLVv8vpic.WOqqZEZyZty',
+            'level' => 'Administrador',
+        ]);
     }
 }

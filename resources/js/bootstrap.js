@@ -7,7 +7,11 @@ window._ = _;
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+import Swal from 'sweetalert2'
+import toastr from 'toastr';
 import axios from 'axios';
+window.Swal = Swal;
+window.toastr = toastr;
 window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

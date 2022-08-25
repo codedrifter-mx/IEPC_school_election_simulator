@@ -24,12 +24,14 @@
                         Candidatos
                     </x-nav-link>
 
-                    <span class="h-full w-px bg-gray-200" aria-hidden="true"></span>
+                    @if ( Auth::user()->level  === 'Administrador')
+                        <span class="h-full w-px bg-gray-200" aria-hidden="true"></span>
 
 
-                    <x-nav-link :href="route('dashboard_iepc')" :active="request()->routeIs('dashboard_iepc')">
-                        Panel de Analisis IEPC
-                    </x-nav-link>
+                        <x-nav-link :href="route('dashboard_iepc')" :active="request()->routeIs('dashboard_iepc')">
+                            Panel de Analisis IEPC
+                        </x-nav-link>
+                    @endif
                 </div>
 
             </div>
