@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Preparatoria Diurna #1',
             'email' => 'c@c.com',
             'password' => '$2y$10$X.TEnrR1kcDcjgurs/CwE.n3tqC7kGP6vLVv8vpic.WOqqZEZyZty',
-            'level' => 'Preparatoria',
+            'level' => 'Bachillerato',
         ]);
 
         DB::table('users')->insert([
