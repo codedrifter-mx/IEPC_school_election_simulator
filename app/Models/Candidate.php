@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class Candidate
  * 
  * @property int $candidate_id
+ * @property string $candidate_key
  * @property int $event_id
  * @property string $teamname
  * @property string $name
@@ -37,6 +38,7 @@ class Candidate extends Model
 	];
 
 	protected $fillable = [
+		'candidate_key',
 		'event_id',
 		'teamname',
 		'name',

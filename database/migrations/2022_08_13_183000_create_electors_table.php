@@ -16,13 +16,12 @@ return new class extends Migration
     {
         Schema::create('electors', function (Blueprint $table) {
             $table->id('elector_id')->comment('Id votador');
-            $table->unsignedBigInteger('event_id')->comment('Id evento');
-            $table->foreign('event_id')->references('event_id')->on('events');
+            $table->string('elector_key', 8)->unique()->comment('Clave Elector');
             $table->string('name')->comment('Nombres');
             $table->string('paternal_surname')->comment('Apellido paterno');
             $table->string('maternal_surname')->comment('Apellido materno');
-            $table->string('email')->nullable()->comment('Correo votador');
-            $table->string('code')->unique()->comment('Codigo evento');
+            $table->string('email')->nullable()->comment('Correo Elector');
+            $table->string('code')->unique()->comment('Codigo de votacion');
             $table->timestamps();
         });
 

@@ -12,8 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Event
- *
+ * 
  * @property int $event_id
+ * @property string $event_key
  * @property int $user_id
  * @property string $name
  * @property string $schedule
@@ -21,13 +22,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $in_charge
  * @property int $population
  * @property int $groups
- * @property Carbon|null $added_at
  * @property Carbon|null $start_at
  * @property Carbon|null $end_at
- *
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * 
  * @property User $user
- * @property Candidate $candidate
- * @property Collection|Elector[] $electors
+ * @property Collection|Candidate[] $candidates
  * @property Collection|Vote[] $votes
  *
  * @package App\Models
@@ -36,7 +37,6 @@ class Event extends Model
 {
 	protected $table = 'events';
 	protected $primaryKey = 'event_id';
-	public $timestamps = false;
 
 	protected $casts = [
 		'user_id' => 'int',
@@ -45,12 +45,12 @@ class Event extends Model
 	];
 
 	protected $dates = [
-		'added_at',
 		'start_at',
 		'end_at'
 	];
 
 	protected $fillable = [
+		'event_key',
 		'user_id',
 		'name',
 		'schedule',
@@ -58,7 +58,6 @@ class Event extends Model
 		'in_charge',
 		'population',
 		'groups',
-		'added_at',
 		'start_at',
 		'end_at'
 	];
@@ -73,14 +72,9 @@ class Event extends Model
 		return $this->belongsTo(User::class);
 	}
 
-	public function candidate()
+	public function candidates()
 	{
-		return $this->hasOne(Candidate::class);
-	}
-
-	public function electors()
-	{
-		return $this->hasMany(Elector::class);
+		return $this->hasMany(Candidate::class);
 	}
 
 	public function votes()

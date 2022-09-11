@@ -13,6 +13,10 @@ module.exports = {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
             },
+            gridTemplateColumns:
+                {
+                    '40/60': '40% 60%',
+                },
         },
     },
 

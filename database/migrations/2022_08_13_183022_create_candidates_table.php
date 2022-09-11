@@ -15,8 +15,9 @@ return new class extends Migration {
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->id('candidate_id')->comment('Id candidato');
-            $table->unsignedBigInteger('event_id')->unique()->comment('Id evento');
-            $table->foreign('event_id')->references('event_id')->on('events')->comment('Id evento');
+            $table->string('candidate_key', 8)->unique()->comment('Clave del candidato');
+            $table->unsignedBigInteger('event_id')->comment('Id evento');
+            $table->foreign('event_id')->references('event_id')->on('events')->onDelete("cascade")->comment('Id evento');
             $table->string('teamname')->comment('Nombre planilla');
             $table->string('name')->comment('Nombres');
             $table->string('paternal_surname')->comment('Apellido paterno');

@@ -16,6 +16,7 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id('event_id')->comment('Id evento');
+            $table->string('event_key', 8)->unique()->comment('Clave del evento');
             $table->unsignedBigInteger('user_id')->comment('Id organizacion');
             $table->foreign('user_id')->references('user_id')->on('users');
             $table->string('name')->comment('Nombre evento');
@@ -25,9 +26,9 @@ return new class extends Migration
             $table->string('in_charge')->comment('Nombre completo responsable');
             $table->unsignedBigInteger('population')->comment('Poblacion estudiantil');
             $table->unsignedMediumInteger('groups')->comment('Poblacion estudiantil');
-            $table->timestamp('added_at')->nullable()->comment('Creacion de eleccion');
             $table->timestamp('start_at')->nullable()->comment('Inicio de eleccion');
             $table->timestamp('end_at')->nullable()->comment('Fin de eleccion');
+            $table->timestamps();
         });
 
         $table = "events";

@@ -6,6 +6,7 @@ use App\Http\Controllers\VoteController;
 use App\Http\Controllers\ElectorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 
 // Make candidate API routes for index, store, show, edit, update, destroy
 Route::get('candidate_index', [CandidateController::class, 'index'])->name('candidate_index');

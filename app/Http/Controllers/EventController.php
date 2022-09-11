@@ -6,12 +6,32 @@ use App\Models\Event;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Str;
 
 class EventController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::all();
+        // Get user_id from request
+        $user_id = $request->user_id;
+
+        // Get all events where user_id is the owner
+        $events = Event::where('user_id', $user_id)->get();
+
+        // Add a numeric status column, if the event is between start_at and end_at, is 1, if the event is before start_at, is 0, if the event is after end_at, is 2
+        $events->map(function ($event) {
+            $now = now();
+            if ($now->between($event->start_at, $event->end_at)) {
+                $event->status = 1;
+            } elseif ($now->lt($event->start_at)) {
+                $event->status = 0;
+            } else {
+                $event->status = 2;
+            }
+            return $event;
+        });
+
+        //\Log::info($events);
 
         // Return the event
         return response()->json($events, 200);
@@ -19,9 +39,6 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        // Log all the request data
-        \Log::info($request->all());
-
         // Make an array of rules for validation with these keys
         $rules = [
             'name' => 'required|string',
@@ -57,8 +74,8 @@ class EventController extends Controller
         // Make a validator with the rules and msgs
         $request->validate($rules, $msgs);
 
-        // get current datetime and merge it to the request as added_at
-        $request->merge(['added_at' => date('Y-m-d H:i:s')]);
+        // Add event_key to request with a random 8 string with laravel random library
+        $request->request->add(['event_key' => Str::random(8)]);
 
         // If the validator passes, create the event
         $event = Event::create($request->all());
@@ -70,18 +87,21 @@ class EventController extends Controller
     public function show(Request $request)
     {
         // Get id from request
-        $id = $request->id;
+        $event_key = $request->event_key;
 
         // log the id
-//        \Log::info($id);
+        //\Log::info($event_key);
 
-        // Find the event with the id
-        $event = Event::find($id);
+        // Find the event with the $event_key
+        $event = Event::firstWhere('event_key', $event_key);
 
         // If the event is not found, return a 404
         if (!$event) {
             return response()->json(['message' => 'Event not found'], 404);
         }
+
+        // Add a numeric status column, if the event is between start_at and end_at, is 1, if the event is before start_at, is 0, if the event is after end_at, is 2
+        $event->status = $event->start_at->isBefore(now()) ? ($event->end_at->isAfter(now()) ? 1 : 2) : 0;
 
         // Return the event
         return response()->json($event, 200);
@@ -89,12 +109,8 @@ class EventController extends Controller
 
     public function update(Request $request)
     {
-        // Get event_id from request
-        $id = $request->event_id;
-
         // Make an array of rules for validation with these keys
         $rules = [
-            'user_id' => 'required|integer',
             'name' => 'required|string',
             'schedule' => 'required|string',
             'director' => 'required|string',
@@ -107,8 +123,6 @@ class EventController extends Controller
 
         // Make an array of msgs for each rule
         $msgs = [
-            'user_id.required' => 'User ID is required',
-            'user_id.integer' => 'User ID must be an integer',
             'name.required' => 'Name is required',
             'name.string' => 'Name must be a string',
             'schedule.required' => 'Schedule is required',
@@ -131,11 +145,14 @@ class EventController extends Controller
 
         $request->validate($rules, $msgs);
 
-        // log id
-        \Log::info($id);
+        // Get event_key from request
+        $event_key = $request->event_key;
+
+        // Log $event_key
+        //\Log::info($event_key);
 
         // If the validator passes, update the event
-        $event = Event::find($id)->update($request->all());
+        $event = Event::firstWhere('event_key', $event_key)->update($request->all());
 
         // Return the event
         return response()->json($event, 200);
@@ -143,16 +160,15 @@ class EventController extends Controller
 
     public function destroy(Request $request)
     {
+        // Get event_key from request
+        $event_key = $request->event_key;
 
-        // Get event_id from request
-        $id = $request->id;
-
-        //log id
-        \Log::info($id);
-        \Log::info($request);
+        // Log id and request
+        //\Log::info($id);
+        //\Log::info($request);
 
         // Find the event
-        $event = Event::find($id);
+        $event = Event::firstWhere('event_key', $event_key);
 
         // If the event is not found, return a 404
         if (!$event) {
@@ -162,8 +178,7 @@ class EventController extends Controller
         // Delete the event
         $event->delete();
 
-        $events = Event::all();
-
-        return view('event.Event', ['events' => $events])->renderSections()['events'];
+        // Return json code 200
+        return response()->json(['message' => 'Event deleted'], 200);
     }
 }

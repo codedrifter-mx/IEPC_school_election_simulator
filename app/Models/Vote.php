@@ -10,15 +10,15 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Vote
- *
+ * 
  * @property int $vote_id
  * @property int $elector_id
  * @property int $candidate_id
  * @property int $event_id
- *
+ * 
  * @property Candidate $candidate
- * @property Event $event
  * @property Elector $elector
+ * @property Event $event
  *
  * @package App\Models
  */
@@ -45,13 +45,13 @@ class Vote extends Model
 		return $this->belongsTo(Candidate::class);
 	}
 
+	public function elector()
+	{
+		return $this->belongsTo(Elector::class);
+	}
+
 	public function event()
 	{
 		return $this->belongsTo(Event::class);
-	}
-
-	public function voter()
-	{
-		return $this->belongsTo(Elector::class);
 	}
 }

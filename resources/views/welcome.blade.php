@@ -1,43 +1,99 @@
 <x-public-layout>
-    <div class="py-6 min-h-screen">
-        <div class="sm:px-6 mx-2 lg:px-8 ">
-            <div class="shadow sm:rounded-md sm:overflow-hidden">
-                <div class="px-4 py-5 bg-white space-y-6">
+    <div class="py-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="mt-3 md:mt-0 md:col-span-1">
 
-                    {{-- Title Form --}}
-                    <div>
-                        <h1 class="block"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat maecenas volutpat blandit aliquam. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a. Hendrerit gravida rutrum quisque non tellus orci. Habitant morbi tristique senectus et netus et malesuada. Pellentesque elit eget gravida cum sociis natoque penatibus et magnis. Mi proin sed libero enim sed faucibus. Viverra tellus in hac habitasse. Est placerat in egestas erat imperdiet sed euismod nisi. Quam lacus suspendisse faucibus interdum posuere. Velit dignissim sodales ut eu sem integer. Cursus mattis molestie a iaculis at erat. Sed sed risus pretium quam. Non sodales neque sodales ut etiam sit amet nisl. Tortor pretium viverra suspendisse potenti nullam ac.
+                <div class="grid grid-cols-1 md:grid-cols-3 m-3">
+                    <div></div>
+                    <div class="shadow rounded-md overflow-hidden">
+                        <form id="store" class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                            {{-- Title Form --}}
+                            <div class="mt-5 md:mt-0 text-center">
+                                <h1 class="block"> Registro de Electores </h1>
+                            </div>
+                            {{-- Form structure --}}
+                            <div class="grid grid-cols-1 gap-3">
 
-                            Metus dictum at tempor commodo. Integer eget aliquet nibh praesent tristique. Hendrerit gravida rutrum quisque non. Diam maecenas sed enim ut sem viverra. Sit amet aliquam id diam. Penatibus et magnis dis parturient montes nascetur. Aenean euismod elementum nisi quis. Lacinia at quis risus sed. Blandit massa enim nec dui nunc mattis enim. Faucibus purus in massa tempor nec feugiat nisl pretium fusce. Penatibus et magnis dis parturient montes nascetur ridiculus. Vitae congue eu consequat ac felis donec et. Posuere urna nec tincidunt praesent semper feugiat nibh. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Dignissim sodales ut eu sem. Volutpat est velit egestas dui id ornare. Auctor eu augue ut lectus arcu bibendum at. Turpis tincidunt id aliquet risus feugiat in ante metus dictum. Et malesuada fames ac turpis egestas maecenas.
+                                {{-- name --}}
+                                <div>
+                                    <label for="name"
+                                           class="block font-medium text-gray-700">
+                                        Nombres(s) </label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <input type="text" name="name" id="name"
+                                               class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
+                                               placeholder="Nombre">
+                                    </div>
+                                </div>
 
-                            Sit amet justo donec enim diam. Quisque egestas diam in arcu cursus euismod quis viverra. Condimentum vitae sapien pellentesque habitant. Suscipit tellus mauris a diam maecenas sed enim ut sem. Proin fermentum leo vel orci porta non pulvinar. Purus in massa tempor nec feugiat nisl pretium. Tellus rutrum tellus pellentesque eu tincidunt. A pellentesque sit amet porttitor eget dolor morbi. Felis eget velit aliquet sagittis id consectetur purus. Vitae purus faucibus ornare suspendisse sed nisi lacus. Nulla aliquet porttitor lacus luctus. Elit ullamcorper dignissim cras tincidunt lobortis. Gravida dictum fusce ut placerat orci nulla pellentesque dignissim.
+                                {{-- paternal_surname --}}
+                                <div>
+                                    <label for="paternal_surname"
+                                           class="block font-medium text-gray-700">
+                                        Apellido paterno </label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <input type="text" name="paternal_surname" id="paternal_surname"
+                                               class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
+                                               placeholder="Apellido">
+                                    </div>
+                                </div>
 
-                            Leo in vitae turpis massa sed elementum. Tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero. Pretium nibh ipsum consequat nisl vel. Amet luctus venenatis lectus magna. Sed vulputate mi sit amet mauris commodo quis. Vitae purus faucibus ornare suspendisse sed. Tristique senectus et netus et malesuada. Tincidunt arcu non sodales neque sodales ut etiam sit amet. Malesuada fames ac turpis egestas. Eu non diam phasellus vestibulum. Ipsum dolor sit amet consectetur adipiscing elit duis tristique sollicitudin. Varius sit amet mattis vulputate enim nulla. Pretium nibh ipsum consequat nisl vel. Erat pellentesque adipiscing commodo elit at imperdiet dui accumsan. Duis tristique sollicitudin nibh sit. Laoreet suspendisse interdum consectetur libero id faucibus. Dui id ornare arcu odio ut sem nulla. Facilisi etiam dignissim diam quis enim. Velit scelerisque in dictum non. Risus in hendrerit gravida rutrum quisque non tellus orci ac.
+                                {{-- maternal_surname --}}
+                                <div>
+                                    <label for="maternal_surname"
+                                           class="block font-medium text-gray-700">
+                                        Apellido materno</label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <input type="text" name="maternal_surname" id="maternal_surname"
+                                               class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
+                                               placeholder="Apellido">
+                                    </div>
+                                </div>
 
-                            Justo eget magna fermentum iaculis eu non. Proin fermentum leo vel orci porta non pulvinar neque laoreet. Purus faucibus ornare suspendisse sed nisi lacus sed viverra tellus. Scelerisque in dictum non consectetur. Justo donec enim diam vulputate. Mattis rhoncus urna neque viverra justo nec ultrices dui. Sit amet commodo nulla facilisi nullam vehicula ipsum. Feugiat nibh sed pulvinar proin gravida. Fusce ut placerat orci nulla pellentesque dignissim enim sit. Non diam phasellus vestibulum lorem sed risus ultricies. Magna sit amet purus gravida quis blandit turpis cursus. Odio aenean sed adipiscing diam donec. Ac auctor augue mauris augue neque gravida in fermentum et. Integer vitae justo eget magna fermentum iaculis eu non.
+                                @if(Route::is('superior.elector'))
+                                    {{-- email --}}
+                                    <div>
+                                        <label for="email"
+                                               class="block font-medium text-gray-700">
+                                            Email </label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="text" name="email" id="email"
+                                                   class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
+                                                   placeholder="Email">
+                                        </div>
+                                    </div>
+                                @else
+                                    {{-- email --}}
+                                            <input type="hidden" name="email" id="email">
+                                @endif
 
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat maecenas volutpat blandit aliquam. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a. Hendrerit gravida rutrum quisque non tellus orci. Habitant morbi tristique senectus et netus et malesuada. Pellentesque elit eget gravida cum sociis natoque penatibus et magnis. Mi proin sed libero enim sed faucibus. Viverra tellus in hac habitasse. Est placerat in egestas erat imperdiet sed euismod nisi. Quam lacus suspendisse faucibus interdum posuere. Velit dignissim sodales ut eu sem integer. Cursus mattis molestie a iaculis at erat. Sed sed risus pretium quam. Non sodales neque sodales ut etiam sit amet nisl. Tortor pretium viverra suspendisse potenti nullam ac.
 
-                            Metus dictum at tempor commodo. Integer eget aliquet nibh praesent tristique. Hendrerit gravida rutrum quisque non. Diam maecenas sed enim ut sem viverra. Sit amet aliquam id diam. Penatibus et magnis dis parturient montes nascetur. Aenean euismod elementum nisi quis. Lacinia at quis risus sed. Blandit massa enim nec dui nunc mattis enim. Faucibus purus in massa tempor nec feugiat nisl pretium fusce. Penatibus et magnis dis parturient montes nascetur ridiculus. Vitae congue eu consequat ac felis donec et. Posuere urna nec tincidunt praesent semper feugiat nibh. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Dignissim sodales ut eu sem. Volutpat est velit egestas dui id ornare. Auctor eu augue ut lectus arcu bibendum at. Turpis tincidunt id aliquet risus feugiat in ante metus dictum. Et malesuada fames ac turpis egestas maecenas.
+                                {{-- code --}}
+                                <div>
+                                    <label for="code"
+                                           class="block font-medium text-gray-700">
+                                        Crea tu codigo de voto </label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <input type="text" name="code" id="code"
+                                               class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
+                                               placeholder="XXXX1234">
+                                    </div>
+                                </div>
 
-                            Sit amet justo donec enim diam. Quisque egestas diam in arcu cursus euismod quis viverra. Condimentum vitae sapien pellentesque habitant. Suscipit tellus mauris a diam maecenas sed enim ut sem. Proin fermentum leo vel orci porta non pulvinar. Purus in massa tempor nec feugiat nisl pretium. Tellus rutrum tellus pellentesque eu tincidunt. A pellentesque sit amet porttitor eget dolor morbi. Felis eget velit aliquet sagittis id consectetur purus. Vitae purus faucibus ornare suspendisse sed nisi lacus. Nulla aliquet porttitor lacus luctus. Elit ullamcorper dignissim cras tincidunt lobortis. Gravida dictum fusce ut placerat orci nulla pellentesque dignissim.
+                                {{-- insert --}}
+                                <button type="submit"
+                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Registrarse
+                                </button>
 
-                            Leo in vitae turpis massa sed elementum. Tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero. Pretium nibh ipsum consequat nisl vel. Amet luctus venenatis lectus magna. Sed vulputate mi sit amet mauris commodo quis. Vitae purus faucibus ornare suspendisse sed. Tristique senectus et netus et malesuada. Tincidunt arcu non sodales neque sodales ut etiam sit amet. Malesuada fames ac turpis egestas. Eu non diam phasellus vestibulum. Ipsum dolor sit amet consectetur adipiscing elit duis tristique sollicitudin. Varius sit amet mattis vulputate enim nulla. Pretium nibh ipsum consequat nisl vel. Erat pellentesque adipiscing commodo elit at imperdiet dui accumsan. Duis tristique sollicitudin nibh sit. Laoreet suspendisse interdum consectetur libero id faucibus. Dui id ornare arcu odio ut sem nulla. Facilisi etiam dignissim diam quis enim. Velit scelerisque in dictum non. Risus in hendrerit gravida rutrum quisque non tellus orci ac.
+                            </div>
 
-                            Justo eget magna fermentum iaculis eu non. Proin fermentum leo vel orci porta non pulvinar neque laoreet. Purus faucibus ornare suspendisse sed nisi lacus sed viverra tellus. Scelerisque in dictum non consectetur. Justo donec enim diam vulputate. Mattis rhoncus urna neque viverra justo nec ultrices dui. Sit amet commodo nulla facilisi nullam vehicula ipsum. Feugiat nibh sed pulvinar proin gravida. Fusce ut placerat orci nulla pellentesque dignissim enim sit. Non diam phasellus vestibulum lorem sed risus ultricies. Magna sit amet purus gravida quis blandit turpis cursus. Odio aenean sed adipiscing diam donec. Ac auctor augue mauris augue neque gravida in fermentum et. Integer vitae justo eget magna fermentum iaculis eu non.
 
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat maecenas volutpat blandit aliquam. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a. Hendrerit gravida rutrum quisque non tellus orci. Habitant morbi tristique senectus et netus et malesuada. Pellentesque elit eget gravida cum sociis natoque penatibus et magnis. Mi proin sed libero enim sed faucibus. Viverra tellus in hac habitasse. Est placerat in egestas erat imperdiet sed euismod nisi. Quam lacus suspendisse faucibus interdum posuere. Velit dignissim sodales ut eu sem integer. Cursus mattis molestie a iaculis at erat. Sed sed risus pretium quam. Non sodales neque sodales ut etiam sit amet nisl. Tortor pretium viverra suspendisse potenti nullam ac.
-
-                            Metus dictum at tempor commodo. Integer eget aliquet nibh praesent tristique. Hendrerit gravida rutrum quisque non. Diam maecenas sed enim ut sem viverra. Sit amet aliquam id diam. Penatibus et magnis dis parturient montes nascetur. Aenean euismod elementum nisi quis. Lacinia at quis risus sed. Blandit massa enim nec dui nunc mattis enim. Faucibus purus in massa tempor nec feugiat nisl pretium fusce. Penatibus et magnis dis parturient montes nascetur ridiculus. Vitae congue eu consequat ac felis donec et. Posuere urna nec tincidunt praesent semper feugiat nibh. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Dignissim sodales ut eu sem. Volutpat est velit egestas dui id ornare. Auctor eu augue ut lectus arcu bibendum at. Turpis tincidunt id aliquet risus feugiat in ante metus dictum. Et malesuada fames ac turpis egestas maecenas.
-
-                            Sit amet justo donec enim diam. Quisque egestas diam in arcu cursus euismod quis viverra. Condimentum vitae sapien pellentesque habitant. Suscipit tellus mauris a diam maecenas sed enim ut sem. Proin fermentum leo vel orci porta non pulvinar. Purus in massa tempor nec feugiat nisl pretium. Tellus rutrum tellus pellentesque eu tincidunt. A pellentesque sit amet porttitor eget dolor morbi. Felis eget velit aliquet sagittis id consectetur purus. Vitae purus faucibus ornare suspendisse sed nisi lacus. Nulla aliquet porttitor lacus luctus. Elit ullamcorper dignissim cras tincidunt lobortis. Gravida dictum fusce ut placerat orci nulla pellentesque dignissim.
-
-                            Leo in vitae turpis massa sed elementum. Tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero. Pretium nibh ipsum consequat nisl vel. Amet luctus venenatis lectus magna. Sed vulputate mi sit amet mauris commodo quis. Vitae purus faucibus ornare suspendisse sed. Tristique senectus et netus et malesuada. Tincidunt arcu non sodales neque sodales ut etiam sit amet. Malesuada fames ac turpis egestas. Eu non diam phasellus vestibulum. Ipsum dolor sit amet consectetur adipiscing elit duis tristique sollicitudin. Varius sit amet mattis vulputate enim nulla. Pretium nibh ipsum consequat nisl vel. Erat pellentesque adipiscing commodo elit at imperdiet dui accumsan. Duis tristique sollicitudin nibh sit. Laoreet suspendisse interdum consectetur libero id faucibus. Dui id ornare arcu odio ut sem nulla. Facilisi etiam dignissim diam quis enim. Velit scelerisque in dictum non. Risus in hendrerit gravida rutrum quisque non tellus orci ac.
-
-                            Justo eget magna fermentum iaculis eu non. Proin fermentum leo vel orci porta non pulvinar neque laoreet. Purus faucibus ornare suspendisse sed nisi lacus sed viverra tellus. Scelerisque in dictum non consectetur. Justo donec enim diam vulputate. Mattis rhoncus urna neque viverra justo nec ultrices dui. Sit amet commodo nulla facilisi nullam vehicula ipsum. Feugiat nibh sed pulvinar proin gravida. Fusce ut placerat orci nulla pellentesque dignissim enim sit. Non diam phasellus vestibulum lorem sed risus ultricies. Magna sit amet purus gravida quis blandit turpis cursus. Odio aenean sed adipiscing diam donec. Ac auctor augue mauris augue neque gravida in fermentum et. Integer vitae justo eget magna fermentum iaculis eu non.</h1>
+                        </form>
                     </div>
-
+                    <div></div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -45,6 +101,72 @@
     <x-slot name="scripts">
         <script type="text/javascript">
 
+
+            // Create functions: storeElector
+            function storeElector(e) {
+                e.preventDefault();
+
+                // get input values
+                let name = document.getElementById('name').value;
+                let paternal_surname = document.getElementById('paternal_surname').value;
+                let maternal_surname = document.getElementById('maternal_surname').value;
+
+                let email = "";
+                if (document.getElementById("email").style.display !== "none") {
+                    email = document.getElementById('email').value;
+                }
+                let code = document.getElementById('code').value;
+
+                axios.post("{{ route('elector_store') }}", {
+                    name: name,
+                    paternal_surname: paternal_surname,
+                    maternal_surname: maternal_surname,
+                    email: email,
+                    code: code,
+                })
+                    .then(function (response) {
+                        // console.log(response);
+
+                        // clear input values
+                        document.getElementById('name').value = '';
+                        document.getElementById('paternal_surname').value = '';
+                        document.getElementById('maternal_surname').value = '';
+                        if (document.getElementById("email").style.display !== "none") {
+                            document.getElementById('email').value = '';
+                        }
+                        document.getElementById('code').value = '';
+
+                        // Swal success message in spanish about wait the School to give the Event URL
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Registro exitoso!',
+                            text: '¡Espera a que la escuela te proporcione la acceso al evento!',
+                        })
+
+                    })
+                    .catch(function (error) {
+                        // console.log(error);
+                        // console.log(error.response.data.error);
+
+                        for (var key in error.response.data.errors) {
+                            if (error.response.data.errors.hasOwnProperty(key)) {
+                                toastr.error(error.response.data.errors[key]);
+                            }
+                        }
+
+                        // if on error.response.data.error and match the first SQL duplicate entry, show error message with Swal
+                        if (error.response.data.error) {
+                            if (error.response.data.error.includes("Duplicate entry")) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '¡El código de voto ya existe! Por favor, escribe otro.'
+                                })
+                            }
+                        }
+                    });
+            }
+
+            document.getElementById('store').addEventListener('submit', storeElector);
 
         </script>
     </x-slot>

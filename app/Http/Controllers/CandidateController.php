@@ -3,103 +3,112 @@
 namespace App\Http\Controllers;
 
 use App\Models\Candidate;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Str;
 
 class CandidateController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $candidates = Candidate::all();
-        return response()->json($candidates);
-    }
+        // Get user_id from request
+        $event_key= $request->event_key;
 
-    public function create()
-    {
-        return view('candidate.create');
+        // Log the event_key
+//        \Log::info($event_key);
+
+        // Find event id with event_key
+        $event = Event::where('event_key', $event_key)->first();
+
+
+        // Get all candidates where event_key
+        $candidates = Candidate::where('event_id', $event->event_id)->get();
+
+//        \Log::info($candidates);
+
+        // Return the event
+        return response()->json($candidates, 200);
     }
 
     public function store(Request $request)
     {
         // make an array of rules for validation with these keys
         $rules = [
-            'event_id' => 'required|integer',
+            'event_key' => 'required',
             'teamname' => 'required|string',
             'name' => 'required|string',
             'paternal_surname' => 'required|string',
-            'maternal_surname' => 'required|string',
-            'created_at' => 'required|date',
-            'updated_at' => 'required|date',
+            'maternal_surname' => 'required|string'
         ];
 
-        // make an array of msgs for each rule
+        // make an array of msgs for each rule, but in spanish
         $msgs = [
-            'event_id.required' => 'Event ID is required',
-            'event_id.integer' => 'Event ID must be an integer',
-            'teamname.required' => 'Teamname is required',
-            'teamname.string' => 'Teamname must be a string',
-            'name.required' => 'Name is required',
-            'name.string' => 'Name must be a string',
-            'paternal_surname.required' => 'Paternal Surname is required',
-            'paternal_surname.string' => 'Paternal Surname must be a string',
-            'maternal_surname.required' => 'Maternal Surname is required',
-            'maternal_surname.string' => 'Maternal Surname must be a string',
-            'created_at.required' => 'Created At is required',
-            'created_at.date' => 'Created At must be a date',
-            'updated_at.required' => 'Updated At is required',
-            'updated_at.date' => 'Updated At must be a date',
+            'event_key.required' => 'La clave del evento es requerida',
+            'teamname.required' => 'El nombre del equipo es requerido',
+            'teamname.string' => 'El nombre del equipo debe ser un string',
+            'name.required' => 'El nombre es requerido',
+            'name.string' => 'El nombre debe ser un string',
+            'paternal_surname.required' => 'El apellido paterno es requerido',
+            'paternal_surname.string' => 'El apellido paterno debe ser un string',
+            'maternal_surname.required' => 'El apellido materno es requerido',
+            'maternal_surname.string' => 'El apellido materno debe ser un string'
         ];
 
-        // make a validator with the rules and msgs
-        $validator = Validator::make($request->all(), $rules, $msgs);
+        // Make a validator with the rules and msgs
+        $request->validate($rules, $msgs);
 
-        // if the validator fails, return the errors
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->all());
-        }
+        // Find event id with event_key
+        $event = Event::where('event_key', $request->event_key)->first();
+
+        // add event_id to request
+        $request->request->add(['event_id' => $event->event_id]);
+
+        $request->request->add(['candidate_key' => Str::random(8)]);
 
         // if the validator passes, create the candidate
         $candidate = Candidate::create($request->all());
 
         // return the candidate
-        return response()->json($candidate, 201);
-    }
-
-    public function show($id)
-    {
-        // find the candidate with the id
-        $candidate = Candidate::find($id);
-
-        // return the candidate
         return response()->json($candidate, 200);
     }
 
-    public function edit($id)
+    public function show(Request $request)
     {
+        // Get id from request
+        $id = $request->candidate_id;
+
+        // log the id
+//        \Log::info($id);
+
+
         // find the candidate with the id
         $candidate = Candidate::find($id);
 
-        // return the candidate
-        return view('candidate.edit', compact('candidate'));
+        // If the event is not found, return a 404
+        if (!$candidate) {
+            return response()->json(['message' => 'Event not found'], 404);
+        }
+
+        // Return the event
+        return response()->json($candidate, 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        // Get event_key from request
+        $candidate_id = $request->candidate_id;
+
         // make an array of rules for validation with these keys
         $rules = [
-            'event_id' => 'required|integer',
             'teamname' => 'required|string',
             'name' => 'required|string',
             'paternal_surname' => 'required|string',
             'maternal_surname' => 'required|string',
-            'created_at' => 'required|date',
-            'updated_at' => 'required|date',
         ];
 
         // make an array of msgs for each rule
         $msgs = [
-            'event_id.required' => 'Event ID is required',
-            'event_id.integer' => 'Event ID must be an integer',
             'teamname.required' => 'Teamname is required',
             'teamname.string' => 'Teamname must be a string',
             'name.required' => 'Name is required',
@@ -108,39 +117,35 @@ class CandidateController extends Controller
             'paternal_surname.string' => 'Paternal Surname must be a string',
             'maternal_surname.required' => 'Maternal Surname is required',
             'maternal_surname.string' => 'Maternal Surname must be a string',
-            'created_at.required' => 'Created At is required',
-            'created_at.date' => 'Created At must be a date',
-            'updated_at.required' => 'Updated At is required',
-            'updated_at.date' => 'Updated At must be a date',
         ];
 
         // make a validator with the rules and msgs
-        $validator = Validator::make($request->all(), $rules, $msgs);
-
-        // if the validator fails, return the errors
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->all());
-        }
+        $request->validate($rules, $msgs);
 
         // if the validator passes, update the candidate
-        $candidate = Candidate::find($id)->update($request->all());
+        $candidate = Candidate::find($candidate_id)->update($request->all());
 
         // return the candidate
         return response()->json($candidate, 200);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
+        // Get id from request
+        $id = $request->candidate_id;
+
         // find the candidate with the id
         $candidate = Candidate::find($id);
-        // if the candidate is not found, return a 404
+
+        // If the event is not found, return a 404
         if (!$candidate) {
-            return response()->json(['message' => 'Candidate not found'], 404);
+            return response()->json(['message' => 'Event not found'], 404);
         }
-        // delete the candidate
+
+        // Delete the candidate
         $candidate->delete();
 
-        // return a 204
-        return response()->json(null, 204);
+        // Return the candidate
+        return response()->json($candidate, 200);
     }
 }
