@@ -32,7 +32,7 @@
                         <form id="store" class="col-span-3 md:col-span-1 grid grid-cols-1 gap-4">
                             @csrf
                             <input type="hidden" id="user_id" name="user_id" value="">
-                            <input type="hidden" id="candidate_id" name="candidate_id">
+                            <input type="hidden" id="candidate_key" name="candidate_key">
 
                             {{-- teamname --}}
                             <div>
@@ -241,7 +241,7 @@
                                 </td>`;
                             t += ` <th>
                                                     <button class="btn btn-square btn-outline"
-                                                            onclick="setCandidate(` + candidates[i].candidate_id + `)">
+                                                            onclick="setCandidate('` + candidates[i].candidate_key + `')">
                                                         <svg width="24" stroke-width="1.5" height="24"
                                                              viewBox="0 0 24 24" fill="none"
                                                              xmlns="http://www.w3.org/2000/svg">
@@ -264,7 +264,7 @@
                                                 </th>`;
                             t += `<th>
                                                     <button class="btn btn-square btn-outline"
-                                                            onclick="dropCandidate(` + candidates[i].candidate_id + `)">
+                                                            onclick="dropCandidate('` + candidates[i].candidate_key + `')">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
                                                              fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -334,17 +334,17 @@
                     });
             }
 
-            function setCandidate(candidate_id) {
+            function setCandidate(candidate_key) {
 
                 axios.get("{{ route('candidate_show') }}", {
                     params: {
-                        candidate_id: candidate_id
+                        candidate_key: candidate_key
                     }
                 })
                     .then(function (response) {
                         // console.log(response);
                         // set input values
-                        document.getElementById('candidate_id').value = response.data.candidate_id;
+                        document.getElementById('candidate_key').value = response.data.candidate_key;
                         document.getElementById('teamname').value = response.data.teamname;
                         document.getElementById('name').value = response.data.name;
 
@@ -372,21 +372,19 @@
                 e.preventDefault();
 
                 // get input values
-                let candidate_id = document.getElementById('candidate_id').value;
+                let candidate_key = document.getElementById('candidate_key').value;
                 let teamname = document.getElementById('teamname').value;
                 let name = document.getElementById('name').value;
 
                 axios.post("{{ route('candidate_update') }}", {
-                    candidate_id: candidate_id,
+                    candidate_key: candidate_key,
                     teamname: teamname,
                     name: name,
-                    paternal_surname: paternal_surname,
-                    maternal_surname: maternal_surname,
                 })
                     .then(function (response) {
                         // console.log(response);
                         // clear input values
-                        document.getElementById('candidate_id').value = '';
+                        document.getElementById('candidate_key').value = '';
                         document.getElementById('teamname').value = '';
                         document.getElementById('name').value = '';
                         // refresh table
@@ -403,6 +401,7 @@
                         toastr.success('Candidato editado correctamente');
                     })
                     .catch(function (error) {
+                        console.log(error);
                         for (var key in error.response.data.errors) {
                             if (error.response.data.errors.hasOwnProperty(key)) {
                                 toastr.error(error.response.data.errors[key]);
@@ -411,8 +410,8 @@
                     });
             }
 
-            // Create a dropCandidate function with an candidate_id parameter, Use Swal to confirm the deletion
-            function dropCandidate(candidate_id) {
+            // Create a dropCandidate function with an candidate_key parameter, Use Swal to confirm the deletion
+            function dropCandidate(candidate_key) {
                 Swal.fire({
                     title: '¿Estás seguro?',
                     text: "¡No podrás revertir esto!",
@@ -424,7 +423,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         axios.post("{{ route('candidate_destroy') }}", {
-                            candidate_id: candidate_id,
+                            candidate_key: candidate_key,
                         })
                             .then(function (response) {
                                 // console.log(response);

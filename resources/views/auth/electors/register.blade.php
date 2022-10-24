@@ -87,6 +87,10 @@
                                 <div class="p-6 break-all rounded bg-primary text-center"><a
                                         class="text-white font-bold"
                                         id="link" href=""></a></div>
+                                <button id="know_button"
+                                        class="btn-block w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Terminar Votación
+                                </button>
                             </div>
                         </div>
                     </div>

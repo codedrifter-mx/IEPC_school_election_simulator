@@ -161,12 +161,6 @@
 
             let global_event_key = '';
 
-            // create function to populate table from $events variable
-            function populateTable() {
-                // update component
-                Livewire.components.getComponentsByName('component-name')[0].$wire.$refresh()
-
-            }
 
             // function to create event
             function storeEvent(e) {
@@ -182,7 +176,6 @@
                 let responsible = document.getElementById("responsible").value;
                 let responsible_phone = document.getElementById("responsible_phone").value;
                 let start_at = document.getElementById("start_at").value;
-                let end_at = document.getElementById("end_at").value;
 
 
                 // axios post request
@@ -196,8 +189,7 @@
                     director: director,
                     responsible: responsible,
                     responsible_phone: responsible_phone,
-                    start_at: start_at,
-                    end_at: end_at
+                    start_at: start_at
                 })
                     .then(function (response) {
                         toastr.success('Evento creado con éxito');
@@ -212,14 +204,10 @@
                         document.getElementById("responsible").value = '';
                         document.getElementById("responsible_phone").value = '';
 
-                        // Populate table
-                        populateTable();
                     })
                     .catch(function (error) {
-                        // console.log(error);
-                        // console.log(error.response.data.errors);
+                        console.log(error);
 
-                        // for each errors with toastr
                         for (var key in error.response.data.errors) {
                             if (error.response.data.errors.hasOwnProperty(key)) {
                                 toastr.error(error.response.data.errors[key]);
@@ -242,7 +230,6 @@
                 let population = document.getElementById('population').value;
                 let groups = document.getElementById('groups').value;
                 let start_at = document.getElementById('start_at').value;
-                let end_at = document.getElementById('end_at').value;
 
                 // axios post request
                 axios.post("{{ route('event_update') }}", {
@@ -253,8 +240,7 @@
                     responsible: responsible,
                     population: population,
                     groups: groups,
-                    start_at: start_at,
-                    end_at: end_at,
+                    start_at: start_at
                 })
                     .then(function (response) {
                         // console.log(response);
@@ -269,7 +255,6 @@
                         document.getElementById('population').value = '';
                         document.getElementById('groups').value = '';
                         document.getElementById('start_at').value = '';
-                        document.getElementById('end_at').value = '';
 
                         // change the button text to "Crear evento"
                         document.getElementById('submit_button').innerHTML = "Crear evento";
@@ -278,7 +263,6 @@
                         document.getElementById('form_event').removeEventListener('submit', editEvent);
                         document.getElementById('form_event').addEventListener('submit', storeEvent);
 
-                        populateTable();
                     })
                     .catch(function (error) {
                         // console.log(error);
@@ -292,6 +276,18 @@
                         }
                     });
             }
+
+            function stringToDateMXFormat(string) {
+                let date = new Date(string);
+                return date.toLocaleString("es-MX", {timeZone: "America/Mexico_City"});
+            }
+
+            // function to conver string to date yyyy-MM-ddThh:mm format
+            function stringToDate(string) {
+                let date = new Date(string);
+                return date.toISOString().slice(0, 16);
+            }
+
 
             // Create a set event function, get all the only event data and put it in the form
             function setEvent(event_key) {
@@ -311,13 +307,14 @@
                         // put the event data in the form inputs
                         document.getElementById('event_key').value = response.data.event_key;
                         document.getElementById('name').value = response.data.name;
+                        document.getElementById('cycle').value = response.data.cycle;
                         document.getElementById('schedule').value = response.data.schedule;
                         document.getElementById('director').value = response.data.director;
                         document.getElementById('responsible').value = response.data.responsible;
+                        document.getElementById('responsible_phone').value = response.data.responsible_phone;
                         document.getElementById('population').value = response.data.population;
                         document.getElementById('groups').value = response.data.groups;
                         document.getElementById('start_at').value = stringToDate(response.data.start_at);
-                        document.getElementById('end_at').value = stringToDate(response.data.end_at);
 
                         // change the button text to "Modificar evento"
                         document.getElementById('submit_button').innerHTML = "Modificar";
@@ -357,22 +354,9 @@
                             event_key: event_key
                         })
                             .then(function (response) {
-                                // console.log(response);
-
-                                populateTable();
-
-                                // Sweet alert
-                                Swal.fire(
-                                    '¡Eliminado!',
-                                    'El evento ha sido eliminado.',
-                                    'success'
-                                )
-
-
+                                toastr.success('El evento ha sido eliminado.');
                             })
                             .catch(function (error) {
-                                // console.log(error);
-                                // console.log(error.response.data.errors);
 
                                 // for each errors with toastr
                                 for (var key in error.response.data.errors) {
@@ -404,13 +388,11 @@
                     });
             }
 
-            // When DOM is ready, execute populateTable function
             document.addEventListener('DOMContentLoaded', function () {
                 // Set on submit_button button the submit event to storeEvent function
                 document.getElementById('form_event').addEventListener('submit', storeEvent);
                 document.getElementById('user_id').value = "{{ Auth::user()->user_id }}";
 
-                // populateTable();
             });
 
 

@@ -48,8 +48,7 @@ class EventController extends Controller
             'director' => 'required|string',
             'responsible' => 'required|string',
             'responsible_phone' => 'required|string',
-            'start_at' => 'required|date',
-            'end_at' => 'required|date',
+            'start_at' => 'required|date'
         ];
 
         // messages, but in spanish
@@ -72,13 +71,14 @@ class EventController extends Controller
             'responsible_phone.string' => 'El teléfono del responsable debe ser una cadena de texto',
             'start_at.required' => 'La fecha de inicio es requerida',
             'start_at.date' => 'La fecha de inicio debe ser una fecha',
-            'end_at.required' => 'La fecha de fin es requerida',
-            'end_at.date' => 'La fecha de fin debe ser una fecha',
         ];
 
         $request->validate($rules, $msgs);
 
         $request->request->add(['event_key' => Str::random(8)]);
+
+        // add end_at to request with start_at
+        $request->request->add(['end_at' => $request->start_at]);
 
         // log $request
         \Log::info($request->all());
@@ -114,8 +114,7 @@ class EventController extends Controller
             'responsible' => 'required|string',
             'population' => 'required|integer',
             'groups' => 'required|integer',
-            'start_at' => 'required|date',
-            'end_at' => 'required|date',
+            'start_at' => 'required|date'
         ];
 
         $msgs = [
@@ -132,9 +131,7 @@ class EventController extends Controller
             'groups.required' => 'El número de grupos es requerido',
             'groups.integer' => 'El número de grupos debe ser un entero',
             'start_at.required' => 'La fecha de inicio es requerida',
-            'start_at.date' => 'La fecha de inicio debe ser una fecha',
-            'end_at.required' => 'La fecha de fin es requerida',
-            'end_at.date' => 'La fecha de fin debe ser una fecha',
+            'start_at.date' => 'La fecha de inicio debe ser una fecha'
         ];
 
         $request->validate($rules, $msgs);

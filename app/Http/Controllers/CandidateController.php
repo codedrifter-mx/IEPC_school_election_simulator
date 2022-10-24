@@ -101,21 +101,14 @@ class CandidateController extends Controller
 
         $rules = [
             'teamname' => 'required|string',
-            'name' => 'required|string',
-            'paternal_surname' => 'required|string',
-            'maternal_surname' => 'required|string',
+            'name' => 'required|string'
         ];
 
         $msgs = [
             'teamname.required' => 'El nombre del equipo es requerido',
             'teamname.string' => 'El nombre del equipo debe ser un string',
             'name.required' => 'El nombre es requerido',
-            'name.string' => 'El nombre debe ser un string',
-            'paternal_surname.required' => 'El apellido paterno es requerido',
-            'paternal_surname.string' => 'El apellido paterno debe ser un string',
-            'maternal_surname.required' => 'El apellido materno es requerido',
-            'maternal_surname.string' => 'El apellido materno debe ser un string'
-        ];
+            'name.string' => 'El nombre debe ser un string'        ];
 
         $request->validate($rules, $msgs);
 
