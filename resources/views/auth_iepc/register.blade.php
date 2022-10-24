@@ -14,42 +14,23 @@
 
             <!-- Name -->
             <div>
-                <x-label for="name" :value="__('Nombre de Institución')" />
+                <x-label for="name" :value="__('Nombre de la o el funcionario público')" />
 
                 <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
             </div>
 
-            <!-- Municipio -->
+            <!-- charge -->
             <div class="mt-4">
-                <x-label for="municipio" :value="__('Municipio')" />
+                <x-label for="charge" :value="__('Cargo')" />
 
-                <x-input id="municipio" class="block mt-1 w-full" type="text" name="municipio" :value="old('municipio')" required />
-            </div>
-
-            <!-- Domicilio -->
-            <div class="mt-4">
-                <x-label for="domicilio" :value="__('Domicilio')" />
-
-                <x-input id="domicilio" class="block mt-1 w-full" type="text" name="domicilio" :value="old('domicilio')" required />
+                <x-input id="charge" class="block mt-1 w-full" type="text" name="charge" :value="old('charge')" required />
             </div>
 
             <!-- Email Address -->
             <div class="mt-4">
-                <x-label for="email" :value="__('Correo Electronico')" />
+                <x-label for="email" :value="__('Correo electrónico institucional')" />
 
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
-            </div>
-
-            <div class="mt-4">
-                <x-label for="level" :value="__('Nivel Educativo')" />
-
-                <select id="level" name="level"
-                        class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block mt-1 w-full rounded-md sm:text-sm border-gray-300" required autofocus>
-                    <option>Primaria</option>
-                    <option>Secundaria</option>
-                    <option>Preparatoria</option>
-                    <option>Universidad</option>
-                </select>
             </div>
 
             <!-- Password -->
@@ -57,9 +38,9 @@
                 <x-label for="password" :value="__('Contraseña')" />
 
                 <x-input id="password" class="block mt-1 w-full"
-                                type="password"
-                                name="password"
-                                required autocomplete="new-password" />
+                         type="password"
+                         name="password"
+                         required autocomplete="new-password" />
             </div>
 
             <!-- Confirm Password -->
@@ -67,8 +48,8 @@
                 <x-label for="password_confirmation" :value="__('Confirmar Contraseña')" />
 
                 <x-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required />
+                         type="password"
+                         name="password_confirmation" required />
             </div>
 
             <div class="flex items-center justify-end mt-4">

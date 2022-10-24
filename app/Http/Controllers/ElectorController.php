@@ -3,18 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Elector;
+use App\Models\Event;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Str;
 
 class ElectorController extends Controller
 {
-    public function index()
-    {
-        $electors = Elector::all();
-        return response()->json($electors);
-    }
-
     public function store(Request $request)
     {
         // make an array of rules for validation with these keys
@@ -51,66 +47,11 @@ class ElectorController extends Controller
         }
     }
 
-    public function show($id)
+    public function view($key = null)
     {
-        $elector = Elector::find($id);
-        return response()->json($elector);
-    }
+        $event = Event::where('user_id', Auth::user()->user_id)->get();
 
-    public function update(Request $request, $id)
-    {
-        // make an array of rules for validation with these keys
-        $rules = [
-            'event_key' => 'required',
-            'name' => 'required|string',
-            'paternal_surname' => 'required|string',
-            'maternal_surname' => 'required|string',
-            'email' => 'required|string',
-            'code' => 'required|string',
-            'created_at' => 'required|date',
-            'updated_at' => 'required|date',
-        ];
-
-        // make an array of msgs for each rule
-        $msgs = [
-            'event_key.required' => 'Event ID is required',
-            'name.required' => 'Name is required',
-            'name.string' => 'Name must be a string',
-            'paternal_surname.required' => 'Paternal Surname is required',
-            'paternal_surname.string' => 'Paternal Surname must be a string',
-            'maternal_surname.required' => 'Maternal Surname is required',
-            'maternal_surname.string' => 'Maternal Surname must be a string',
-            'email.required' => 'Email is required',
-            'email.string' => 'Email must be a string',
-            'code.required' => 'Code is required',
-            'code.string' => 'Code must be a string',
-            'created_at.required' => 'Created At is required',
-            'created_at.date' => 'Created At must be a date',
-            'updated_at.required' => 'Updated At is required',
-            'updated_at.date' => 'Updated At must be a date',
-        ];
-
-        // make a validator with the rules and msgs
-        $validator = Validator::make($request->all(), $rules, $msgs);
-
-        // if the validator fails, return the errors
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->all());
-        }
-
-        // if the validator passes, update the user
-        $elector = Elector::find($id);
-        $elector->update($request->all());
-
-        // return the user
-        return response()->json($elector);
-    }
-
-    public function destroy($id)
-    {
-        $elector = Elector::find($id);
-        $elector->delete();
-
-        return response()->json(['success' => true]);
+        // return the view with the event
+        return view('auth.electors.register')->with('events', $event);
     }
 }

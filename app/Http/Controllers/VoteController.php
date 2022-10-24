@@ -10,12 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class VoteController extends Controller
 {
-    public function index()
-    {
-        $votes = Vote::all();
-        return response()->json($votes);
-    }
-
     public function view($key)
     {
         // Laravel Log $key variable
@@ -70,5 +64,4 @@ class VoteController extends Controller
 
         return response()->json($vote);
     }
-
 }

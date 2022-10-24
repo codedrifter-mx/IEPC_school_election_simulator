@@ -10,6 +10,7 @@ window._ = _;
 import Swal from 'sweetalert2'
 import toastr from 'toastr';
 import axios from 'axios';
+import Flickity from 'flickity';
 window.Swal = Swal;
 window.toastr = toastr;
 window.axios = axios;

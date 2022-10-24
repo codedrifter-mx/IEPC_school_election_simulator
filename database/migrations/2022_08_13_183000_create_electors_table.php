@@ -17,11 +17,18 @@ return new class extends Migration
         Schema::create('electors', function (Blueprint $table) {
             $table->id('elector_id')->comment('Id votador');
             $table->string('elector_key', 8)->unique()->comment('Clave Elector');
-            $table->string('name')->comment('Nombres');
+            $table->string('event_key');
+            $table->foreign('event_key')->references('event_key')->on('events')->onDelete("cascade")->comment('Clave evento');
+
             $table->string('paternal_surname')->comment('Apellido paterno');
             $table->string('maternal_surname')->comment('Apellido materno');
+            $table->string('name')->comment('Nombres');
+            $table->string('grade')->comment('Grado');
+            $table->string('group')->comment('Grupo');
+
             $table->string('email')->nullable()->comment('Correo Elector');
-            $table->string('code')->unique()->comment('Codigo de votacion');
+
+            $table->string('code')->unique()->comment('Codigo votacion');
             $table->timestamps();
         });
 

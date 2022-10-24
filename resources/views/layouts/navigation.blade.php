@@ -12,26 +12,53 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-{{--                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">--}}
-{{--                        Panel de Administración--}}
-{{--                    </x-nav-link>--}}
 
-                    <x-nav-link :href="route('events')" :active="request()->routeIs('events')">
-                        Eventos
-                    </x-nav-link>
 
-                    <x-nav-link :href="route('candidates')" :active="request()->routeIs('candidates')">
-                        Candidatos
-                    </x-nav-link>
 
                     @if ( Auth::user()->level  === 'Administrador')
-                        <span class="h-full w-px bg-gray-200" aria-hidden="true"></span>
 
+                            <x-nav-link >
+                            Elecciones Activas
+                        </x-nav-link>
 
-                        <x-nav-link :href="route('dashboard_iepc')" :active="request()->routeIs('dashboard_iepc')">
-                            Panel de Analisis IEPC
+                        <x-nav-link :>
+                            Datos por validar
+                        </x-nav-link>
+
+                        <x-nav-link  >
+                            Registro nominal
+                        </x-nav-link>
+
+                        <x-nav-link >
+                            Votacion
+                        </x-nav-link>
+
+                        <x-nav-link  >
+                            Resultados
+                        </x-nav-link>
+
+                        <x-nav-link >
+                            Encuestas
+                        </x-nav-link>
+
+                        <x-nav-link >
+                            Reportes
+                        </x-nav-link>
+
+                    @else
+                        <x-nav-link :href="route('events')" :active="request()->routeIs('events')">
+                            1.- Realiza tu registro
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('candidates')" :active="request()->routeIs('candidates')">
+                            2.- Ingresa los datos de la elección
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('register_electors')" :active="request()->routeIs('register_electors')">
+                            3.- Fases de Votación
                         </x-nav-link>
                     @endif
+
                 </div>
 
             </div>
@@ -89,10 +116,6 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            {{-- Create all x-nav-link but now as x-responsive-nav-link  --}}
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                Panel de Administración
-            </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('events')" :active="request()->routeIs('events')">
                 Eventos
@@ -100,10 +123,6 @@
 
             <x-responsive-nav-link :href="route('candidates')" :active="request()->routeIs('candidates')">
                 Candidatos
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link :href="route('dashboard_iepc')" :active="request()->routeIs('dashboard_iepc')">
-                Dashboard IEPC
             </x-responsive-nav-link>
 
         </div>

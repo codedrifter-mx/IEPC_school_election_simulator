@@ -1,7 +1,13 @@
 @import "toastr";
+/*import flickity*/
+@import "flickity";
+
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* external css: flickity.css */
 
 

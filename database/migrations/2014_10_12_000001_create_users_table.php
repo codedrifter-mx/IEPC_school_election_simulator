@@ -15,13 +15,17 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('user_id')->comment('Id organizacion');;
-            $table->string('name')->comment('Nombre organizacion');
-            $table->string('email')->unique()->comment('Correo organizacion');
-            $table->timestamp('email_verified_at')->nullable()->comment('Verificacion organizacion');
-            $table->string('password')->comment('Contrasena organizacion');
+            $table->id('user_id')->comment('Id usuario');
+            $table->string('name')->comment('Nombre organizacion / funcionario');
+            $table->string('charge')->nullable()->comment('Cargo funcionario');
+            $table->string('municipality')->nullable()->comment('Municipio');
+            $table->string('address')->nullable()->comment('Domicilio');
+            $table->string('email')->unique()->comment('Correo');
+            $table->timestamp('email_verified_at')->nullable()->comment('Verificacion');
             $table->string('level');
-            $table->foreign('level')->references('level')->on('levels')->comment('Nivel escolar');
+            $table->foreign('level')->references('level')->on('levels')->comment('Nivel');
+            $table->string('password')->comment('Contrasena organizacion');
+
 
             $table->rememberToken()->comment('Interno');
             $table->timestamps();

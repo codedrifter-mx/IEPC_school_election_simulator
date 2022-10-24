@@ -23,15 +23,18 @@ class DatabaseSeeder extends Seeder
             'level' => 'Secundaria'
         ]);
         DB::table('levels')->insert([
-            'level' => 'Bachillerato'
+            'level' => 'Preparatoria'
         ]);
         DB::table('levels')->insert([
             'level' => 'Universidad'
         ]);
         DB::table('levels')->insert([
-            'level' => 'Administrador'
+            'level' => 'Otro'
         ]);
 
+        DB::table('levels')->insert([
+            'level' => 'Administrador'
+        ]);
 
 
         DB::table('schedules')->insert([
@@ -66,7 +69,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Preparatoria Diurna #1',
             'email' => 'c@c.com',
             'password' => '$2y$10$X.TEnrR1kcDcjgurs/CwE.n3tqC7kGP6vLVv8vpic.WOqqZEZyZty',
-            'level' => 'Bachillerato',
+            'level' => 'Preparatoria',
         ]);
 
         DB::table('users')->insert([

@@ -2,6 +2,21 @@
     <div class="py-6">
         <div class="sm:px-6 mx-2 lg:px-8">
             <div class="shadow sm:rounded-md sm:overflow-hidden">
+                <div class="px-4 py-5 mb-5 bg-white space-y-6 sm:p-6">
+
+                    <div class="mt-5 md:mt-0 md:col-span-2">
+                        <h1 class="block"> Selecciona un evento </h1>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="col-span-3">
+                            <label for="event_key" class="block text-sm font-medium text-gray-700">Elije un evento</label>
+                            <select id="event_key" name="event_key"
+                                    class="my-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div id="validation-form" class="px-4 py-5 bg-white space-y-6 sm:p-6">
 
                     {{-- Title Form --}}
@@ -13,25 +28,17 @@
                     {{-- Form structure --}}
                     <div class="grid grid-cols-3 gap-4">
 
-                        <div class="col-span-3">
-                            <label for="event_key" class="block text-sm font-medium text-gray-700">Elije una
-                                votacion</label>
-                            <select id="event_key" name="event_key"
-                                    class="my-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                            </select>
-                        </div>
-
                         {{-- Form --}}
-                        <form class="grid grid-cols-1 gap-1 col-span-3 md:col-span-1 place-items-center" id="store">
+                        <form id="store" class="col-span-3 md:col-span-1 grid grid-cols-1 gap-4">
                             @csrf
                             <input type="hidden" id="user_id" name="user_id" value="">
                             <input type="hidden" id="candidate_id" name="candidate_id">
 
                             {{-- teamname --}}
-                            <div class="rounded-md shadow-sm grid grid-cols-2 gap-4 aling-items-center">
+                            <div>
                                 <label for="teamname"
-                                       class="text-sm text-right ">
-                                    Nombre de Equipo </label>
+                                       class="text-sm text-right">
+                                    Nombre de Planilla </label>
                                 <div class="my-1 flex rounded-md shadow-sm">
                                     <input type="text" name="teamname" id="teamname"
                                            class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
@@ -39,11 +46,22 @@
                                 </div>
                             </div>
 
+                            {{-- Blob --}}
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                       for="photo">Logotipo de la planilla</label>
+                                <input class="block w-full text-sm text-slate-500
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-full file:border-0
+      file:text-sm file:font-semibold" id="photo" type="file" name="photo">
+
+                            </div>
+
                             {{-- name --}}
-                            <div class="rounded-md shadow-sm grid grid-cols-2 gap-4 place-items-center">
+                            <div>
                                 <label for="name"
-                                       class="block text-sm font-medium text-gray-700 text-right">
-                                    Nombres del candidato </label>
+                                       class="text-sm text-right">
+                                    Nombre completo del candidato representante</label>
                                 <div class="my-1 flex rounded-md shadow-sm">
                                     <input type="text" name="name" id="name"
                                            class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
@@ -51,59 +69,17 @@
                                 </div>
                             </div>
 
-                            {{-- paternal_surname --}}
-                            <div class="rounded-md shadow-sm grid grid-cols-2 gap-4 place-items-center">
-                                <label for="paternal_surname"
-                                       class="block text-sm font-medium text-gray-700 text-right">
-                                    Apellido paterno del candidato </label>
-                                <div class="my-1 flex rounded-md shadow-sm">
-                                    <input type="text" name="paternal_surname" id="paternal_surname"
-                                           class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
-                                           placeholder="Apellido">
-                                </div>
-                            </div>
-
-                            {{-- maternal_surname --}}
-                            <div class="rounded-md shadow-sm grid grid-cols-2 gap-4 place-items-center">
-                                <label for="maternal_surname"
-                                       class="block text-sm font-medium text-gray-700 text-right">
-                                    Apellido materno del candidato </label>
-                                <div class="my-1 flex rounded-md shadow-sm">
-                                    <input type="text" name="maternal_surname" id="maternal_surname"
-                                           class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
-                                           placeholder="Apellido">
-                                </div>
-                            </div>
-
                             {{-- Blob --}}
-                            <div class="w-full">
-                                <label class="my-1 block text-sm font-medium text-gray-700"> Foto
-                                    (Opcional) </label>
-                                <div
-                                    class="my-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                                    <div class="space-y-1 text-center">
-                                        <svg class="mx-auto h-12 w-12 text-gray-400"
-                                             stroke="currentColor"
-                                             fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                            <path
-                                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                stroke-width="2" stroke-linecap="round"
-                                                stroke-linejoin="round"/>
-                                        </svg>
-                                        <div class="flex text-sm text-gray-600">
-                                            <label for="photo"
-                                                   class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                                                <span>Sube el archivo</span>
-                                                <input id="photo" name="photo"
-                                                       type="file"
-                                                       class="sr-only">
-                                            </label>
-                                            <p class="pl-1">o arrasta y suelta</p>
-                                        </div>
-                                        <p class="text-xs text-gray-500">PNG, JPG, GIF menos de 10 MB</p>
-                                    </div>
-                                </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                       for="photo">Video de propuestas</label>
+                                <input class="block w-full text-sm text-slate-500
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-full file:border-0
+      file:text-sm file:font-semibold" id="video" type="file" name="video">
+
                             </div>
+
 
                             {{-- Button Form --}}
                             <div>
@@ -124,8 +100,7 @@
                                         <tr>
                                             <th>Nombre de equipo</th>
                                             <th>Nombre</th>
-                                            <th>Apellido Paterno</th>
-                                            <th>Apellido Materno</th>
+                                            <th>Ver</th>
                                             <th>Editar</th>
                                             <th>Borrar</th>
                                         </tr>
@@ -138,6 +113,43 @@
                         </div>
                     </div>
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="checkbox" id="viewCandidateModal" class="modal-toggle"/>
+    <div class="modal">
+        <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
+            <div class="grid grid-cols-40/60">
+                <div class="p-6 col-span-2 md:col-span-1">
+                    <img class="max-w-full m-0 p-6" id="modal_photo" src="" alt="photo">
+                </div>
+                <table id="events" class="table table-compact w-full col-span-2 md:col-span-1">
+                    <!-- head -->
+                    <thead>
+                    <tr>
+                        <th>Caracteristica</th>
+                        <th>Valor</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Identificador</td>
+                        <td id="modal_candidate_key"></td>
+                    </tr>
+                    <tr>
+                        <td>Equipo</td>
+                        <td id="modal_teamname"></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre</td>
+                        <td id="modal_name"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="modal-action col-span-3">
+                    <label for="viewCandidateModal" class="btn">Cerrar</label>
                 </div>
             </div>
         </div>
@@ -215,9 +227,18 @@
                             t += "<tr>";
                             t += "<td>" + candidates[i].teamname + "</td>";
                             t += "<td>" + candidates[i].name + "</td>";
-                            t += "<td>" + candidates[i].paternal_surname + "</td>";
-                            t += "<td>" + candidates[i].maternal_surname + "</td>";
-
+                            t += `<td>
+                                    <button class="btn btn-square btn-outline"
+                                            onclick="showCandidate('` + candidates[i].candidate_key + `')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                             height="16" fill="currentColor" class="bi bi-eye-fill"
+                                             viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                            <path
+                                                d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                                        </svg>
+                                    </button>
+                                </td>`;
                             t += ` <th>
                                                     <button class="btn btn-square btn-outline"
                                                             onclick="setCandidate(` + candidates[i].candidate_id + `)">
@@ -272,26 +293,31 @@
                 let select_event_key = document.getElementById("event_key");
                 let event_key = select_event_key.options[select_event_key.selectedIndex].value;
 
+                // create a formdata object
+                let formData = new FormData();
+
                 // get input values
                 let teamname = document.getElementById('teamname').value;
                 let name = document.getElementById('name').value;
-                let paternal_surname = document.getElementById('paternal_surname').value;
-                let maternal_surname = document.getElementById('maternal_surname').value;
 
-                axios.post("{{ route('candidate_store') }}", {
-                    event_key: event_key,
-                    teamname: teamname,
-                    name: name,
-                    paternal_surname: paternal_surname,
-                    maternal_surname: maternal_surname,
-                })
+                // get photo input
+                let photo = document.getElementById('photo').files[0];
+                let video = document.getElementById('video').files[0];
+
+                //append values to formData
+                formData.append('event_key', event_key);
+                formData.append('teamname', teamname);
+                formData.append('name', name);
+                formData.append('photo', photo);
+
+
+                // axios post on candidate_store laravel route, with all input values and photo input
+                axios.post("{{ route('candidate_store') }}", formData)
                     .then(function (response) {
-                        // console.log(response);
+                        console.log(response);
                         // clear input values
                         document.getElementById('teamname').value = '';
                         document.getElementById('name').value = '';
-                        document.getElementById('paternal_surname').value = '';
-                        document.getElementById('maternal_surname').value = '';
                         // refresh table
                         populateTable();
 
@@ -321,8 +347,6 @@
                         document.getElementById('candidate_id').value = response.data.candidate_id;
                         document.getElementById('teamname').value = response.data.teamname;
                         document.getElementById('name').value = response.data.name;
-                        document.getElementById('paternal_surname').value = response.data.paternal_surname;
-                        document.getElementById('maternal_surname').value = response.data.maternal_surname;
 
                         // change the button text to "Modificar evento"
                         document.getElementById('form_button').innerHTML = 'Modificar candidato';
@@ -351,8 +375,6 @@
                 let candidate_id = document.getElementById('candidate_id').value;
                 let teamname = document.getElementById('teamname').value;
                 let name = document.getElementById('name').value;
-                let paternal_surname = document.getElementById('paternal_surname').value;
-                let maternal_surname = document.getElementById('maternal_surname').value;
 
                 axios.post("{{ route('candidate_update') }}", {
                     candidate_id: candidate_id,
@@ -367,8 +389,6 @@
                         document.getElementById('candidate_id').value = '';
                         document.getElementById('teamname').value = '';
                         document.getElementById('name').value = '';
-                        document.getElementById('paternal_surname').value = '';
-                        document.getElementById('maternal_surname').value = '';
                         // refresh table
                         populateTable();
 
@@ -419,6 +439,36 @@
                             });
                     }
                 })
+            }
+
+            function showCandidate(candidate_key) {
+
+                // console.log(event_key)
+
+                // axios get request
+                axios.get("{{ route('candidate_show') }}",
+                    {
+                        params: {
+                            candidate_key: candidate_key
+                        }
+                    })
+                    .then(function (response) {
+                        // console.log(response);
+                        document.getElementById("modal_photo").src = window.location.origin + "/candidate/image/" + response.data.candidate_key;
+
+
+                        // put the candidate data in the modal
+                        document.getElementById('modal_candidate_key').innerHTML = response.data.candidate_key;
+                        document.getElementById('modal_teamname').innerHTML = response.data.teamname;
+                        document.getElementById('modal_name').innerHTML = response.data.name;
+
+
+                        // check the checkbot id="viewEventModal" to show modal
+                        document.getElementById('viewCandidateModal').checked = true;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
 
             // Set store eventListener to storeCandidate function

@@ -97,10 +97,12 @@
                     .then(function (response) {
                         let candidates = response.data;
 
-                        // console.log(candidates);
+                        console.log(candidates);
 
                         var t = "";
                         for (var i = 0; i < response.data.length; i++) {
+
+                            let src = window.location.origin + "/candidate/image/" + candidates[i].candidate_key;
 
                             t += `<div class="max-w-xs w-[13.5rem] m-2">
                                     <div class="relative">
@@ -108,8 +110,7 @@
                                                class="hidden peer">
                                         <label for="` + 'candidate_' + i + `"
                                                class="card flex rounded-xl bg-white bg-opacity-90 backdrop-blur-2xl shadow-xl hover:bg-opacity-25 peer-checked:bg-purple-900 peer-checked:text-white cursor-pointer transition">
-                                            <figure class=""><img src="https://placeimg.com/400/225/arch" alt="` + 'candidate_' + i + `"
-                                                                  class="object-cover h-[10.5rem]"/></figure>
+                                            <figure class="object-fit"><img src="` + src + `" alt="` + 'candidate_' + i + `" class=" h-[14.5rem]"/></figure>
                                             <div class="p-4">
                                                 <div>
                                                     <h3 class="card-title text-center">Equipo: ` + candidates[i].teamname + `</h3>
@@ -223,7 +224,6 @@
             }
 
             document.getElementById('vote').addEventListener('click', storeVote);
-
 
             document.addEventListener('DOMContentLoaded', function () {
                 indexCandidates();

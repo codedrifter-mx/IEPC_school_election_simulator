@@ -19,15 +19,21 @@ return new class extends Migration
             $table->string('event_key', 8)->unique()->comment('Clave del evento');
             $table->unsignedBigInteger('user_id')->comment('Id organizacion');
             $table->foreign('user_id')->references('user_id')->on('users');
+
             $table->string('name')->comment('Nombre evento');
-            $table->string('schedule')->comment('Horario');
+            $table->string('cycle')->comment('Ciclo Escolar');
+            $table->unsignedBigInteger('population')->comment('Total Alumnos');
+            $table->unsignedMediumInteger('groups')->comment('Total Grupos');
+            $table->string('schedule')->comment('Turno');
             $table->foreign('schedule')->references('schedule')->on('schedules');
+
             $table->string('director')->comment('Nombre completo director');
-            $table->string('in_charge')->comment('Nombre completo responsable');
-            $table->unsignedBigInteger('population')->comment('Poblacion estudiantil');
-            $table->unsignedMediumInteger('groups')->comment('Poblacion estudiantil');
-            $table->timestamp('start_at')->nullable()->comment('Inicio de eleccion');
+            $table->string('responsible')->comment('Nombre completo responsable');
+            $table->string('responsible_phone')->comment('Telefono responsable');
+
+            $table->timestamp('start_at')->comment('Inicio de eleccion');
             $table->timestamp('end_at')->nullable()->comment('Fin de eleccion');
+            $table->boolean('approved')->default(false)->comment('Aprobado IEPC');
             $table->timestamps();
         });
 
