@@ -23,6 +23,11 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
+    public function create_admin()
+    {
+        return view('auth_iepc.register');
+    }
+
     /**
      * Handle an incoming registration request.
      *
@@ -31,6 +36,8 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
+
+
     public function store(Request $request)
     {
         // Create validation rules
@@ -68,6 +75,54 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'level' => $request->level,
+            'password' => Hash::make($request->password),
+        ]);
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect(RouteServiceProvider::HOME);
+    }
+
+    public function storeAdmin(Request $request)
+    {
+        // Create validation rules
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
+            'charge' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ];
+
+        // Create validation messages on spanish
+        $messages = [
+            'name.required' => 'El campo nombre es obligatorio.',
+            'name.string' => 'El campo nombre debe ser una cadena de caracteres.',
+            'name.max' => 'El campo nombre no debe ser mayor a 255 caracteres.',
+            'charge.required' => 'El campo cargo es obligatorio.',
+            'charge.string' => 'El campo cargo debe ser una cadena de caracteres.',
+            'charge.max' => 'El campo cargo no debe ser mayor a 255 caracteres.',
+            'email.required' => 'El campo email es obligatorio.',
+            'email.string' => 'El campo email debe ser una cadena de caracteres.',
+            'email.email' => 'El campo email debe ser un email válido.',
+            'email.max' => 'El campo email no debe ser mayor a 255 caracteres.',
+            'email.unique' => 'El campo email ya se encuentra registrado.',
+            'password.required' => 'El campo contraseña es obligatorio.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'password.min' => 'El campo contraseña debe tener al menos 8 caracteres.',
+            'password.max' => 'El campo contraseña no debe ser mayor a 255 caracteres.',
+            'password.regex' => 'El campo contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número.',
+        ];
+
+        // Create validation with messages
+        $request->validate($rules, $messages);
+
+        $user = User::create([
+            'name' => $request->name,
+            'charge' => $request->charge,
+            'email' => $request->email,
+            'level' => 'Administrador',
             'password' => Hash::make($request->password),
         ]);
 

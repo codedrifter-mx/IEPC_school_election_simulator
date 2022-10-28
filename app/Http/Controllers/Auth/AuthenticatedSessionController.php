@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
+use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 
 class AuthenticatedSessionController extends Controller
 {
@@ -31,6 +32,17 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        // if user is not email verified, return to login page with error message
+        if (!Auth::user()->email_verified_at) {
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+
+            return redirect('/');
+        }
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

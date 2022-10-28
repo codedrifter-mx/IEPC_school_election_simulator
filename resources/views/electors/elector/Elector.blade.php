@@ -103,6 +103,14 @@
                                                    placeholder="XXXX1234">
                                         </div>
                                     </div>
+
+                                    {{-- Aviso de privacidad checkbox with flex--}}
+                                    <div class="flex items-center text-center p-1 mt-3">
+                                        <input type="checkbox" name="privacy" id="privacy"  class="m-2">
+                                        <label
+                                               class="link block font-medium text-gray-700" onclick=
+                                                  "document.getElementById('viewprivacy').checked = true;">Acepto el aviso de privacidad </label>
+                                    </div>
                                 </div>
 
                                 {{-- insert --}}
@@ -123,6 +131,50 @@
         </div>
     </div>
 
+    <input type="checkbox" id="viewCandidateModal" class="modal-toggle"/>
+    <div class="modal">
+        <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
+            <div class="grid grid-cols-3">
+
+                <div class="modal-action col-span-3">
+                    <label for="viewCandidateModal" class="btn">Cerrar</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="checkbox" id="viewprivacy" class="modal-toggle"/>
+    <div class="modal">
+        <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
+            <div class="grid grid-cols-1">
+
+                <div>
+                    <p>
+                        AVISO DE PRIVACIDAD SIMPLIFICADO
+
+                        El Instituto Electoral y de Participación Ciudadana del Estado de Durango informa que es el
+                        responsable del tratamiento de los datos personales que se recaben, los cuales serán protegidos
+                        conforme a las leyes aplicables en la materia y serán utilizados únicamente para los fines de la
+                        elección estudiantil.
+
+                        Si deseas ejercer los derechos de acceso, rectificación, cancelación u oposición de datos
+                        personales,
+                        puedes hacerlo directamente en la Unidad de Técnica de Transparencia del Instituto Electoral y
+                        de
+                        Participación Ciudadana del Estado de Durango, ubicado en calle Litio sin número, colonia Ciudad
+                        Industrial, Durango, Dgo. C.P. 34208; en estrados, al correo electrónico:
+                        ut.transparencia@iepcdurango.mx o a través de la plataforma nacional de transparencia
+                        http://www.plataformadetransparencia.org.mx., igualmente se hace del conocimiento la dirección
+                        electrónica del sitio web institucional: www.iepcdurango.mx.
+                    </p>
+                </div>
+                <div class="modal-action col-span-3">
+                    <label for="viewprivacy" class="btn">Cerrar</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <x-slot name="scripts">
         <script type="text/javascript">
 
@@ -134,18 +186,16 @@
                 let name = document.getElementById('name').value;
                 let paternal_surname = document.getElementById('paternal_surname').value;
                 let maternal_surname = document.getElementById('maternal_surname').value;
-
-                let email = "";
-                if (document.getElementById("email").style.display !== "none") {
-                    email = document.getElementById('email').value;
-                }
+                let grade = document.getElementById('grade').value;
+                let group = document.getElementById('group').value;
                 let code = document.getElementById('code').value;
 
                 axios.post("{{ route('elector_store') }}", {
                     name: name,
                     paternal_surname: paternal_surname,
                     maternal_surname: maternal_surname,
-                    email: email,
+                    grade: grade,
+                    group: group,
                     code: code,
                 })
                     .then(function (response) {
@@ -155,16 +205,26 @@
                         document.getElementById('name').value = '';
                         document.getElementById('paternal_surname').value = '';
                         document.getElementById('maternal_surname').value = '';
-                        if (document.getElementById("email").style.display !== "none") {
-                            document.getElementById('email').value = '';
-                        }
+                        document.getElementById('grade').value = '';
+                        document.getElementById('group').value = '';
                         document.getElementById('code').value = '';
 
-                        // Swal success message in spanish about wait the School to give the Event URL
+                        let msg = '¡Si la olvidas no podrás votar el día de la elección! '
+                            + 'Te invitamos a consultar la sección “Conoce a tus candidatos y candidatas y revisa sus propuestas”'
+                            + 'antes de emitir tu voto.'
+
+
                         Swal.fire({
+                            title: 'Haz concluido tu registro, te recomendamos que tomes nota de la clave que generaste y la conserves',
+                            text: msg,
                             icon: 'success',
-                            title: '¡Registro exitoso!',
-                            text: '¡Espera a que la escuela te proporcione la acceso al evento!',
+                            confirmButtonText: 'Conoce a tus candidatos',
+                            // black space not leaveble
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                document.getElementById('viewCandidateModal').checked = true;
+                            }
                         })
 
                     })
@@ -189,7 +249,6 @@
                         }
                     });
             }
-
 
 
             document.getElementById('store').addEventListener('submit', storeElector);

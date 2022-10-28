@@ -18,6 +18,8 @@ class ElectorController extends Controller
             'name' => 'required|string',
             'paternal_surname' => 'required|string',
             'maternal_surname' => 'required|string',
+            'grade' => 'required|string',
+            'group' => 'required|string',
             'code' => 'required|string'
         ];
 
@@ -29,6 +31,10 @@ class ElectorController extends Controller
             'paternal_surname.string' => 'El apellido paterno debe ser una cadena de texto',
             'maternal_surname.required' => 'El apellido materno es requerido',
             'maternal_surname.string' => 'El apellido materno debe ser una cadena de texto',
+            'grade.required' => 'El grado es requerido',
+            'grade.string' => 'El grado debe ser una cadena de texto',
+            'group.required' => 'El grupo es requerido',
+            'group.string' => 'El grupo debe ser una cadena de texto',
             'code.required' => 'El código es requerido',
             'code.string' => 'El código debe ser una cadena de texto'
         ];
@@ -36,16 +42,22 @@ class ElectorController extends Controller
         // make a validator with the rules and msgs
         $request->validate($rules, $msgs);
 
-        $request->request->add(['elector_key' => Str::random(8)]);
+//        $request->request->add(['elector_key' => Str::random(8)]);
+//        // combine name, paternal_surname and maternal_surname and delete paternal_surname and maternal_surname afterwards
+//        $request->request->add(['name' => $request->name . ' ' . $request->paternal_surname . ' ' . $request->maternal_surname]);
+//        $request->request->remove('paternal_surname');
+//        $request->request->remove('maternal_surname');
+//
+//        $elector = Elector::create($request->all());
+//        return response()->json($elector);
 
-        // if the validator passes, create the user, inside a try catch, in case of error, return json error
-        try {
-            $elector = Elector::create($request->all());
-            return response()->json($elector);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
+        // success json
+        return response()->json([
+            'success' => true,
+            'message' => 'Elector registrado correctamente'
+        ]);
     }
+
 
     public function view($key = null)
     {
