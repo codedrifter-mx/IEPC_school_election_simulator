@@ -134,6 +134,17 @@
                                        value="{{ date('Y-m-d\TH:i') }}">
                             </div>
 
+                            {{-- end_at --}}
+                            <div>
+                                <label for="end_at"
+                                       class="block text-sm font-medium text-gray-700">
+                                    Fecha de fin de la votación </label>
+                                <input type="datetime-local" name="end_at" id="end_at"
+                                       class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+                                       value="{{ date('Y-m-d\TH:i', strtotime('+14 day')) }}">
+                            </div>
+
+
                             {{-- Button Form --}}
                             <div>
                                 <button id="submit_button"
@@ -176,6 +187,7 @@
                 let responsible = document.getElementById("responsible").value;
                 let responsible_phone = document.getElementById("responsible_phone").value;
                 let start_at = document.getElementById("start_at").value;
+                let end_at = document.getElementById("end_at").value;
 
 
                 // axios post request
@@ -189,7 +201,8 @@
                     director: director,
                     responsible: responsible,
                     responsible_phone: responsible_phone,
-                    start_at: start_at
+                    start_at: start_at,
+                    end_at: end_at,
                 })
                     .then(function (response) {
                         toastr.success('Evento creado con éxito');
@@ -230,6 +243,7 @@
                 let population = document.getElementById('population').value;
                 let groups = document.getElementById('groups').value;
                 let start_at = document.getElementById('start_at').value;
+                let end_at = document.getElementById('end_at').value;
 
                 // axios post request
                 axios.post("{{ route('event_update') }}", {
@@ -240,7 +254,8 @@
                     responsible: responsible,
                     population: population,
                     groups: groups,
-                    start_at: start_at
+                    start_at: start_at,
+                    end_at: end_at,
                 })
                     .then(function (response) {
                         // console.log(response);
@@ -254,7 +269,6 @@
                         document.getElementById('responsible').value = '';
                         document.getElementById('population').value = '';
                         document.getElementById('groups').value = '';
-                        document.getElementById('start_at').value = '';
 
                         // change the button text to "Crear evento"
                         document.getElementById('submit_button').innerHTML = "Crear evento";
@@ -305,16 +319,17 @@
                         // console.log(response);
 
                         // put the event data in the form inputs
-                        document.getElementById('event_key').value = response.data.event_key;
-                        document.getElementById('name').value = response.data.name;
-                        document.getElementById('cycle').value = response.data.cycle;
-                        document.getElementById('schedule').value = response.data.schedule;
-                        document.getElementById('director').value = response.data.director;
-                        document.getElementById('responsible').value = response.data.responsible;
-                        document.getElementById('responsible_phone').value = response.data.responsible_phone;
-                        document.getElementById('population').value = response.data.population;
-                        document.getElementById('groups').value = response.data.groups;
-                        document.getElementById('start_at').value = stringToDate(response.data.start_at);
+                        document.getElementById('event_key').value = response.data.data.event_key;
+                        document.getElementById('name').value = response.data.data.name;
+                        document.getElementById('cycle').value = response.data.data.cycle;
+                        document.getElementById('schedule').value = response.data.data.schedule;
+                        document.getElementById('director').value = response.data.data.director;
+                        document.getElementById('responsible').value = response.data.data.responsible;
+                        document.getElementById('responsible_phone').value = response.data.data.responsible_phone;
+                        document.getElementById('population').value = response.data.data.population;
+                        document.getElementById('groups').value = response.data.data.groups;
+                        document.getElementById('start_at').value = stringToDate(response.data.data.start_at);
+                        document.getElementById('end_at').value = stringToDate(response.data.data.end_at);
 
                         // change the button text to "Modificar evento"
                         document.getElementById('submit_button').innerHTML = "Modificar";
@@ -325,7 +340,7 @@
                         document.getElementById('form_event').addEventListener('submit', editEvent);
 
                         // show toastr info message that you are editing the event, but in spanish
-                        toastr.info('Estas editando el evento ' + response.data.name);
+                        toastr.info('Estas editando el evento ' + response.data.data.name);
                     })
                     .catch(function (error) {
                         console.log(error);

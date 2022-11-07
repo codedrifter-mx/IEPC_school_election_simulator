@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Candidate;
 use App\Models\Event;
 use App\Models\Vote;
 use Auth;
@@ -99,10 +100,46 @@ class EventController extends Controller
             return response()->json(['message' => 'Evento no encontrado'], 404);
         }
 
-        // Add a numeric status column, if the event is between start_at and end_at, is 1, if the event is before start_at, is 0, if the event is after end_at, is 2
-        $event->status = $event->start_at->isBefore(now()) ? ($event->end_at->isAfter(now()) ? 1 : 2) : 0;
+        // Add a numeric status column, if the event is between start_at and end_at, is 1, if the event is before start_at, is 0, if the event is after end_at, is 2, if the event is null, is 3
+        $now = now();
 
-        return response()->json($event);
+        // log now
+        \Log::info($now);
+
+        if ($now->between($event->start_at, $event->end_at)) {
+            $event->status = 1;
+        } elseif ($now->lt($event->start_at)) {
+            $event->status = 0;
+        } elseif ($now->gt($event->end_at)) {
+            $event->status = 2;
+        }
+
+
+        if ($event->end_at == null) {
+            $event->status = 3;
+        }
+
+        // if tha candidates with this event_key are odd or less than 2, status is 4
+        $candidates = Candidate::where('event_id', $event->event_id)->get();
+
+        if (count($candidates) % 2 != 0 || count($candidates) < 2) {
+            $event->status = 4;
+        }
+
+        \Log::info($event);
+
+        // if event end_at is empty, send a 400 with a message
+        if ($event->status == 3) {
+            return response()->json([
+                'data' => $event,
+                'message' => 'El evento aun no ha sido validado por el IEPC'
+            ], 201);
+        } else {
+            return response()->json([
+                'data' => $event,
+                'message' => 'Evento validado'
+            ], 200);
+        }
     }
 
     public function update(Request $request)
@@ -161,6 +198,23 @@ class EventController extends Controller
         $event->delete();
 
         return response()->json(['message' => 'Evento borrado']);
+    }
+
+    // stop function to modify end_at to now
+    public function stop(Request $request)
+    {
+        $event_key = $request->event_key;
+        $event = Event::firstWhere('event_key', $event_key);
+
+        if (!$event) {
+            return response()->json(['message' => 'Evento no encontrado'], 500);
+        }
+
+        $event->end_at = now();
+        $event->save();
+
+        // return 200 json
+        return response()->json(['message' => 'Evento detenido'], 200);
     }
 
     public function getFichaTecnica(Request $request)

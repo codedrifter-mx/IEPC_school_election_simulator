@@ -148,7 +148,7 @@
                     .then(function (response) {
                         // console.log(response);
 
-                        document.getElementById('title').innerHTML = response.data.name;
+                        document.getElementById('title').innerHTML = response.data.data.name;
 
                     })
                     .catch(function (error) {

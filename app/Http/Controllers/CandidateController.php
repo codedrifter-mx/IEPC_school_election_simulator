@@ -23,8 +23,9 @@ class CandidateController extends Controller
         $event = Event::where('event_key', $event_key)->first();
 
 
-        // Get all candidates where event_key
-        $candidates = Candidate::where('event_id', $event->event_id)->get();
+        // Get all candidates where event_key, and remove 'nulo' candidate
+        $candidates = Candidate::where('event_id', $event->event_id)->where('name', '!=', 'Nulo')->get();
+
 
 //        \Log::info($candidates);
 
@@ -63,6 +64,11 @@ class CandidateController extends Controller
 
         $request->request->add(['candidate_key' => Str::random(8)]);
 
+        // if there is more than 10 candidates in the event, return error message about max candidates
+        if (Candidate::where('event_id', $event->event_id)->count() >= 11) {
+            return response()->json(['message' => 'El número máximo de candidatos es 10'], 203);
+        }
+
         // if the validator passes, create the candidate
         $candidate = Candidate::create($request->all());
 
@@ -75,11 +81,47 @@ class CandidateController extends Controller
             Storage::disk('public')->put('candidates/' . $candidate->candidate_key . '.jpg', $image);
         }
 
+        // if request has video file, save it
+        if ($request->hasFile('video')) {
+            // save the video in 'public/candidates', $candidate->candidate_key . '.mp4'
+            Storage::disk('public')->put('candidates/' . $candidate->candidate_key . '.mp4', $request->file('video'));
+        }
+
+        // create a 'nulo' candidate, if its not already created on this event_key
+        if (Candidate::where('event_id', $event->event_id)->where('name', 'nulo')->count() == 0) {
+            $nulo = new Candidate();
+            $nulo->candidate_key = Str::random(8);
+            $nulo->event_id = $event->event_id;
+            $nulo->teamname = 'nulo';
+            $nulo->name = 'nulo';
+            $nulo->paternal_surname = 'nulo';
+            $nulo->maternal_surname = 'nulo';
+            $nulo->save();
+        }
 
 
+        // if there is odd number of candidates, send a json warning
+        $candidates = Candidate::where('event_id', $event->event_id)->get();
 
-        // return the candidate
-        return response()->json($candidate, 200);
+        if ((count($candidates) - 1) % 2 != 0) {
+            return response()->json([
+                'message' => 'El número de candidatos es impar, por favor agrega otro candidato',
+                'candidate' => $candidate,
+            ], 201);
+        }
+
+        // if event end_at is empty, return a successful message but with a warning about validation
+        if ($event->end_at == null) {
+            return response()->json([
+                'message' => 'Candidato creado con éxito, para la siguiente fase, espere a que el IEPC valide su evento y fecha fin',
+                'candidate' => $candidate,
+            ], 201);
+        } else {
+            return response()->json([
+                'message' => 'Candidato creado con éxito, puedes avanzar a las fases de votacion',
+                'candidate' => $candidate,
+            ], 200);
+        }
     }
 
     public function show(Request $request)
@@ -148,6 +190,17 @@ class CandidateController extends Controller
             Storage::disk('public')->delete('candidates/' . $candidate_key . '.jpg');
         } catch (\Exception $e) {
             \Log::info($e);
+        }
+
+        // if there is odd number of candidates, send a json warning
+        $event = Event::where('event_id', $candidate->event_id)->first();
+        $candidates = Candidate::where('event_id', $event->event_id)->get();
+
+        if (count($candidates) % 2 != 0) {
+            return response()->json([
+                'message' => 'El número de candidatos es impar, por favor agrega otro candidato',
+                'candidate' => $candidate,
+            ], 201);
         }
 
         return response()->json(['message' => 'Evento borrado']);

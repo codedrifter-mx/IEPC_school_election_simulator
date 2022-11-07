@@ -14,34 +14,40 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
 
 
-
                     @if ( Auth::user()->level  === 'Administrador')
 
-                            <x-nav-link >
+                        <x-nav-link :href="route('admin_active_events')"
+                                    :active="request()->routeIs('admin_active_events')">
                             Elecciones Activas
                         </x-nav-link>
 
-                        <x-nav-link :>
+                        <x-nav-link :href="route('admin_validate_events')"
+                                    :active="request()->routeIs('admin_validate_events')">
                             Datos por validar
                         </x-nav-link>
 
-                        <x-nav-link  >
+                        <x-nav-link :href="route('admin_nominal')"
+                        :active="request()->routeIs('admin_nominal')">
                             Registro nominal
                         </x-nav-link>
 
-                        <x-nav-link >
+                        <x-nav-link :href="route('admin_election')"
+                                    :active="request()->routeIs('admin_election')">
                             Votacion
                         </x-nav-link>
 
-                        <x-nav-link  >
+                        <x-nav-link :href="route('admin_results')"
+                        :active="request()->routeIs('admin_results')">
                             Resultados
                         </x-nav-link>
 
-                        <x-nav-link >
+                        <x-nav-link :href="route('admin_satisfaction')"
+                                    :active="request()->routeIs('admin_satisfaction')">
                             Encuestas
                         </x-nav-link>
 
-                        <x-nav-link >
+                        <x-nav-link :href="route('admin_reports')"
+                                    :active="request()->routeIs('admin_reports')">
                             Reportes
                         </x-nav-link>
 
@@ -54,7 +60,8 @@
                             2.- Ingresa los datos de la elección
                         </x-nav-link>
 
-                        <x-nav-link :href="route('register_electors')" :active="request()->routeIs('register_electors')">
+                        <x-nav-link :href="route('register_electors')"
+                                    :active="request()->routeIs('register_electors')">
                             3.- Fases de Votación
                         </x-nav-link>
                     @endif

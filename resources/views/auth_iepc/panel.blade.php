@@ -28,6 +28,60 @@
                         </button>
                     </a>
                 </div>
+
+                <div>
+                    <a href="{{ route('logout') }}">
+                        <button
+                            class="btn-block inline-flex w-full mt-2 mb-2 text-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {{ __('Elecciones Activas') }}
+                        </button>
+                    </a>
+                </div>
+
+                <div>
+                    <a href="{{ route('logout') }}">
+                        <button
+                            class="btn-block inline-flex w-full mt-2 mb-2 text-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {{ __('Datos por validar') }}
+                        </button>
+                    </a>
+                </div>
+
+                <div>
+                    <a href="{{ route('logout') }}">
+                        <button
+                            class="btn-block inline-flex w-full mt-2 mb-2 text-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {{ __('Registro nominal de elecciones escolares') }}
+                        </button>
+                    </a>
+                </div>
+
+                <div>
+                    <a href="{{ route('logout') }}">
+                        <button
+                            class="btn-block inline-flex w-full mt-2 mb-2 text-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {{ __('Votacion') }}
+                        </button>
+                    </a>
+                </div>
+
+                <div>
+                    <a href="{{ route('logout') }}">
+                        <button
+                            class="btn-block inline-flex w-full mt-2 mb-2 text-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {{ __('Resultados y constancias') }}
+                        </button>
+                    </a>
+                </div>
+
+                <div>
+                    <a href="{{ route('admin_satisfaction') }}">
+                        <button
+                            class="btn-block inline-flex w-full mt-2 mb-2 text-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {{ __('Encuesta de satisfacción') }}
+                        </button>
+                    </a>
+                </div>
             @endif
 
         @else

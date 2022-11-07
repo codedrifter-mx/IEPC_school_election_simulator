@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class EventsTable extends DataTableComponent
+class AdminEventsTable extends DataTableComponent
 {
     public string $tableName = 'events';
 
@@ -38,15 +38,8 @@ class EventsTable extends DataTableComponent
             // end_at column as 'Fecha de fin' for events, with filter, sort and search
             Column::make('Fecha de fin', 'end_at')
                 ->sortable()
-            // if end_at empty, show badge "IEPC por confirmar"
+                // if end_at empty, show badge "IEPC por confirmar"
                 ->label(fn($row) => $row->end_at == null ? '<span class="badge badge-warning">IEPC por confirmar</span>' : $row->end_at)
-                ->html(),
-            Column::make('Editar', 'event_key')
-                ->label(fn($row) => '<button onclick="setEvent(`' . $row->event_key . '`)" class="btn btn-primary btn-sm">Editar</button>')
-                ->html(),
-            // add a 'Borrar' button column
-            Column::make('Borrar', 'event_key')
-                ->label(fn($row) => '<button onclick="dropEvent(`' . $row->event_key . '`)" class="btn btn-danger btn-sm">Borrar</button>')
                 ->html(),
         ];
     }
@@ -57,7 +50,7 @@ class EventsTable extends DataTableComponent
 
         return Event::query()
             ->selectRaw('events.*, IF(events.start_at <= NOW() AND events.end_at >= NOW(), 1, IF(events.start_at > NOW(), 0, IF(events.end_at < NOW(), 2, 3))) as status')
-            ->where('user_id', Auth::user()->user_id);
+            ->where('end_at', '>=', now());
     }
 
     // compu

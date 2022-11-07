@@ -2,7 +2,7 @@
     <div class="py-6">
         <div class="sm:px-6 mx-2 lg:px-8">
             <div class="shadow sm:rounded-md sm:overflow-hidden">
-                <div class="px-4 py-5 mb-5 bg-white space-y-6 sm:p-6">
+                <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
 
                     <div class="mt-5 md:mt-0 md:col-span-2">
                         <h1 class="block"> Selecciona un evento </h1>
@@ -10,146 +10,154 @@
 
                     <div class="grid grid-cols-3 gap-4">
                         <div class="col-span-3">
-                            <label for="event_key" class="block text-sm font-medium text-gray-700">Elije un evento</label>
+                            <label for="event_key" class="block text-sm font-medium text-gray-700">Elije un
+                                evento</label>
                             <select id="event_key" name="event_key"
                                     class="my-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                             </select>
                         </div>
                     </div>
                 </div>
-                <div id="validation-form" class="px-4 py-5 bg-white space-y-6 sm:p-6">
+            </div>
+        </div>
 
-                    {{-- Title Form --}}
-                    <div class="mt-5 md:mt-0 md:col-span-2">
-                        <h1 class="block"> Nuevo Candidato </h1>
-                    </div>
+        <div class="py-6">
+            <div class="sm:px-6 mx-2 lg:px-8">
+                <div class="shadow sm:rounded-md sm:overflow-hidden">
+                    <div id="validation-form" class="px-4 py-5 bg-white space-y-6 sm:p-6">
+
+                        {{-- Title Form --}}
+                        <div class="mt-5 md:mt-0 md:col-span-2">
+                            <h1 class="block"> Nuevo Candidato </h1>
+                        </div>
 
 
-                    {{-- Form structure --}}
-                    <div class="grid grid-cols-3 gap-4">
+                        {{-- Form structure --}}
+                        <div class="flex flex-wrap gap-2">
 
-                        {{-- Form --}}
-                        <form id="store" class="col-span-3 md:col-span-1 grid grid-cols-1 gap-4">
-                            @csrf
-                            <input type="hidden" id="user_id" name="user_id" value="">
-                            <input type="hidden" id="candidate_key" name="candidate_key">
+                            {{-- Form --}}
+                            <form id="store" class="flex-initial basis-2/5">
+                                @csrf
+                                <input type="hidden" id="user_id" name="user_id" value="">
+                                <input type="hidden" id="candidate_key" name="candidate_key">
 
-                            {{-- teamname --}}
-                            <div>
-                                <label for="teamname"
-                                       class="text-sm text-right">
-                                    Nombre de Planilla </label>
-                                <div class="my-1 flex rounded-md shadow-sm">
-                                    <input type="text" name="teamname" id="teamname"
-                                           class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
-                                           placeholder="Equipo">
+                                {{-- teamname --}}
+                                <div>
+                                    <label for="teamname"
+                                           class="text-sm text-right">
+                                        Nombre de Planilla </label>
+                                    <div class="my-1 flex rounded-md shadow-sm">
+                                        <input type="text" name="teamname" id="teamname"
+                                               class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+                                               placeholder="Equipo">
+                                    </div>
                                 </div>
-                            </div>
 
-                            {{-- Blob --}}
-                            <div>
-                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                       for="photo">Logotipo de la planilla</label>
-                                <input class="block w-full text-sm text-slate-500
+                                {{-- Blob --}}
+                                <div>
+                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                           for="photo">Logotipo de la planilla</label>
+                                    <input class="block w-full text-sm text-slate-500
       file:mr-4 file:py-2 file:px-4
       file:rounded-full file:border-0
       file:text-sm file:font-semibold" id="photo" type="file" name="photo">
 
-                            </div>
-
-                            {{-- name --}}
-                            <div>
-                                <label for="name"
-                                       class="text-sm text-right">
-                                    Nombre completo del candidato representante</label>
-                                <div class="my-1 flex rounded-md shadow-sm">
-                                    <input type="text" name="name" id="name"
-                                           class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
-                                           placeholder="Nombre">
                                 </div>
-                            </div>
 
-                            {{-- Blob --}}
-                            <div>
-                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                       for="photo">Video de propuestas</label>
-                                <input class="block w-full text-sm text-slate-500
+                                {{-- name --}}
+                                <div>
+                                    <label for="name"
+                                           class="text-sm text-right">
+                                        Nombre completo del candidato representante</label>
+                                    <div class="my-1 flex rounded-md shadow-sm">
+                                        <input type="text" name="name" id="name"
+                                               class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+                                               placeholder="Nombre">
+                                    </div>
+                                </div>
+
+                                {{-- Blob --}}
+                                <div>
+                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                           for="photo">Video de propuestas</label>
+                                    <input class="block w-full text-sm text-slate-500
       file:mr-4 file:py-2 file:px-4
       file:rounded-full file:border-0
       file:text-sm file:font-semibold" id="video" type="file" name="video">
 
-                            </div>
+                                </div>
 
 
-                            {{-- Button Form --}}
-                            <div>
-                                <button id="form_button"
-                                        class="btn-block inline-flex w-full py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Guardar
-                                </button>
-                            </div>
-                        </form>
+                                {{-- Button Form --}}
+                                <div>
+                                    <button id="form_button"
+                                            class="btn-block inline-flex w-full py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Guardar
+                                    </button>
+                                </div>
+                            </form>
 
-                        {{-- Table --}}
-                        <div class="col-span-3 md:col-span-2">
-                            <div class="col-span-3 md:col-span-2">
-                                <div class="overflow-x-auto">
-                                    <table id="candidates" class="table table-compact w-full">
-                                        <!-- head -->
-                                        <thead>
-                                        <tr>
-                                            <th>Nombre de equipo</th>
-                                            <th>Nombre</th>
-                                            <th>Ver</th>
-                                            <th>Editar</th>
-                                            <th>Borrar</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="candidates_tbody">
-                                        </tbody>
-                                    </table>
+                            {{-- Table --}}
+                            <div class="flex-1 overflow-x-auto">
+                                <div class="">
+                                    <div class="">
+                                        <table id="candidates" class="table table-compact w-full">
+                                            <!-- head -->
+                                            <thead>
+                                            <tr>
+                                                <th>Planilla</th>
+                                                <th>Candidato</th>
+                                                <th>Ver</th>
+                                                <th>Editar</th>
+                                                <th>Borrar</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="candidates_tbody">
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <input type="checkbox" id="viewCandidateModal" class="modal-toggle"/>
-    <div class="modal">
-        <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
-            <div class="grid grid-cols-40/60">
-                <div class="p-6 col-span-2 md:col-span-1">
-                    <img class="max-w-full m-0 p-6" id="modal_photo" src="" alt="photo">
-                </div>
-                <table id="events" class="table table-compact w-full col-span-2 md:col-span-1">
-                    <!-- head -->
-                    <thead>
-                    <tr>
-                        <th>Caracteristica</th>
-                        <th>Valor</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Identificador</td>
-                        <td id="modal_candidate_key"></td>
-                    </tr>
-                    <tr>
-                        <td>Equipo</td>
-                        <td id="modal_teamname"></td>
-                    </tr>
-                    <tr>
-                        <td>Nombre</td>
-                        <td id="modal_name"></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="modal-action col-span-3">
-                    <label for="viewCandidateModal" class="btn">Cerrar</label>
+        <input type="checkbox" id="viewCandidateModal" class="modal-toggle"/>
+        <div class="modal">
+            <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
+                <div class="grid grid-cols-40/60">
+                    <div class="p-6 col-span-2 md:col-span-1">
+                        <img class="max-w-full m-0 p-6" id="modal_photo" src="" alt="photo">
+                    </div>
+                    <table id="events" class="table table-compact w-full col-span-2 md:col-span-1">
+                        <!-- head -->
+                        <thead>
+                        <tr>
+                            <th>Caracteristica</th>
+                            <th>Valor</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Identificador</td>
+                            <td id="modal_candidate_key"></td>
+                        </tr>
+                        <tr>
+                            <td>Equipo</td>
+                            <td id="modal_teamname"></td>
+                        </tr>
+                        <tr>
+                            <td>Nombre</td>
+                            <td id="modal_name"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="modal-action col-span-3">
+                        <label for="viewCandidateModal" class="btn">Cerrar</label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -321,8 +329,14 @@
                         // refresh table
                         populateTable();
 
-                        // toastr success message, but in spanish
-                        toastr.success('Candidato registrado con éxito');
+                        // toastr success message with response.data.message, if it has code 201, warning message otherwise
+                        if (response.status === 200) {
+                            toastr.success(response.data.message);
+                        } else if (response.status === 203) {
+                            toastr.error(response.data.message);
+                        }  else {
+                            toastr.warning(response.data.message);
+                        }
 
                     })
                     .catch(function (error) {

@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         // if user is not email verified, return to login page with error message
-        if (!Auth::user()->email_verified_at) {
+        if (!Auth::user()->email_verified_at && Auth::user()->level == 'Administrador') {
             Auth::guard('web')->logout();
 
             $request->session()->invalidate();
@@ -42,6 +42,8 @@ class AuthenticatedSessionController extends Controller
             $request->session()->regenerateToken();
 
             return redirect('/');
+        } else if (Auth::user()->level == 'Administrador') {
+            return redirect('/admin/active_events');
         }
 
         return redirect()->intended(RouteServiceProvider::HOME);

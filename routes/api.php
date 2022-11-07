@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\VoteController;
@@ -26,6 +27,7 @@ Route::post('event_store', [EventController::class, 'store'])->name('event_store
 Route::get('event_show', [EventController::class, 'show'])->name('event_show');
 Route::post('event_update', [EventController::class, 'update'])->name('event_update');
 Route::post('event_destroy', [EventController::class, 'destroy'])->name('event_destroy');
+Route::post('event_stop', [EventController::class, 'stop'])->name('event_stop');
 
 // Make elector API routes for store
 Route::post('elector_store', [ElectorController::class, 'store'])->name('elector_store');
@@ -35,3 +37,9 @@ Route::post('vote_store', [VoteController::class, 'store'])->name('vote_store');
 
 // get getFichaTecnica
 Route::get('getFichaTecnica', [EventController::class, 'getFichaTecnica'])->name('getFichaTecnica');
+
+// AdminController
+// Admin send email
+Route::post('get_events', [AdminController::class, 'index_events'])->name('index_events');
+Route::post('send_email', [AdminController::class, 'sendEmail'])->name('send_email');
+

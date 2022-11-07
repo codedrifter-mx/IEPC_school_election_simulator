@@ -8,9 +8,10 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 // public
 Route::view('/', 'welcome')->name('welcome');
-Route::view('/elector', 'electors.elector.Elector')->name('elector');
-Route::get('/votacion/{key?}', [VoteController::class, 'view'])->name('votacion');
-Route::get('/superior/votacion/{key}', [VoteController::class, 'view'])->name('superior.votacion');
+Route::view('/votacion/registro/{event_key}', 'electors.elector.Elector')->name('elector');
+Route::get('/votacion/{event_key}', [VoteController::class, 'view'])->name('votacion');
+
+
 
 // auth
 Route::view('/panel', 'auth.panel')->name('panel');
@@ -24,13 +25,35 @@ Route::view('/admin/register', 'auth_iepc.register')->name('admin_register');
 Route::view('/admin/login', 'auth_iepc.login')->name('admin_login');
 Route::view('/admin/panel', 'auth_iepc.panel')->name('admin_panel');
 
+Route::view('/admin/active_events', 'auth_iepc.active_events')->name('admin_active_events');
+Route::view('/admin/validate_events', 'auth_iepc.validate_events')->name('admin_validate_events');
+Route::view('/admin/nominal', 'auth_iepc.nominal')->name('admin_nominal');
+Route::view('/admin/election', 'auth_iepc.election')->name('admin_election');
+Route::view('/admin/results', 'auth_iepc.results')->name('admin_results');
+Route::view('/admin/satisfaction', 'auth_iepc.satisfaction')->name('admin_satisfaction');
+Route::view('/admin/reports', 'auth_iepc.reports')->name('admin_reports');
+
+
+
+
 
 // QR event code
-Route::get('/qrcode/{key}', function ($key) {
-    $image = QrCode::size(1024)->generate(request()->getHttpHost().'/votacion/' . $key);
+Route::get('/qr_register/{key}', function ($event_key) {
+    $image = QrCode::size(1024)->generate(request()->getHttpHost().'/votacion/register' . $event_key);
 
     return response($image)->header('Content-type','image/svg+xml');
 })->name('qr');
+
+Route::get('/qr_vote/{key}', function ($event_key) {
+    $image = QrCode::size(1024)->generate(request()->getHttpHost().'/votacion/' . $event_key);
+
+    return response($image)->header('Content-type','image/svg+xml');
+})->name('qr');
+
+
+
+
+
 
 // Candidate stored image
 Route::get('/candidate/image/{candidate_key}', function ($candidate_key) {
