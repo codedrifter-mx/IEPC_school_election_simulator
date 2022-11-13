@@ -23,22 +23,7 @@
 
                         <x-nav-link :href="route('admin_validate_events')"
                                     :active="request()->routeIs('admin_validate_events')">
-                            Datos por validar
-                        </x-nav-link>
-
-                        <x-nav-link :href="route('admin_nominal')"
-                        :active="request()->routeIs('admin_nominal')">
-                            Registro nominal
-                        </x-nav-link>
-
-                        <x-nav-link :href="route('admin_election')"
-                                    :active="request()->routeIs('admin_election')">
-                            Votacion
-                        </x-nav-link>
-
-                        <x-nav-link :href="route('admin_results')"
-                        :active="request()->routeIs('admin_results')">
-                            Resultados
+                            Eventos por validar
                         </x-nav-link>
 
                         <x-nav-link :href="route('admin_satisfaction')"

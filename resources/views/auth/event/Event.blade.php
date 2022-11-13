@@ -131,7 +131,7 @@
                                     Fecha de inicio de la votación </label>
                                 <input type="datetime-local" name="start_at" id="start_at"
                                        class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
-                                       value="{{ date('Y-m-d\TH:i') }}">
+                                       value="{{ date('Y-m-d\TH:i', mktime(1,0,0)) }}">
                             </div>
 
                             {{-- end_at --}}
@@ -141,7 +141,7 @@
                                     Fecha de fin de la votación </label>
                                 <input type="datetime-local" name="end_at" id="end_at"
                                        class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
-                                       value="{{ date('Y-m-d\TH:i', strtotime('+14 day')) }}">
+                                       value="{{ date('Y-m-d\TH:i', mktime(23,59,0)+(14*24*60*60)) }}">
                             </div>
 
 
@@ -407,6 +407,7 @@
                 // Set on submit_button button the submit event to storeEvent function
                 document.getElementById('form_event').addEventListener('submit', storeEvent);
                 document.getElementById('user_id').value = "{{ Auth::user()->user_id }}";
+
 
             });
 

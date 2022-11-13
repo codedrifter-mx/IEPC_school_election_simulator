@@ -41,8 +41,10 @@ class AuthenticatedSessionController extends Controller
 
             $request->session()->regenerateToken();
 
-            return redirect('/');
-        } else if (Auth::user()->level == 'Administrador') {
+            return redirect('/rejected');
+        }
+
+        if (Auth::user()->level == 'Administrador') {
             return redirect('/admin/active_events');
         }
 

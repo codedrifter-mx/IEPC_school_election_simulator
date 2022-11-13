@@ -42,14 +42,11 @@ class ElectorController extends Controller
         // make a validator with the rules and msgs
         $request->validate($rules, $msgs);
 
-//        $request->request->add(['elector_key' => Str::random(8)]);
-//        // combine name, paternal_surname and maternal_surname and delete paternal_surname and maternal_surname afterwards
-//        $request->request->add(['name' => $request->name . ' ' . $request->paternal_surname . ' ' . $request->maternal_surname]);
-//        $request->request->remove('paternal_surname');
-//        $request->request->remove('maternal_surname');
-//
-//        $elector = Elector::create($request->all());
-//        return response()->json($elector);
+        $request->request->add(['elector_key' => Str::random(8)]);
+        // combine name, paternal_surname and maternal_surname and delete paternal_surname and maternal_surname afterwards
+
+        $elector = Elector::create($request->all());
+
 
         // success json
         return response()->json([

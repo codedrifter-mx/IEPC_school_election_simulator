@@ -84,6 +84,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'e@e.com',
             'password' => '$2y$10$X.TEnrR1kcDcjgurs/CwE.n3tqC7kGP6vLVv8vpic.WOqqZEZyZty',
             'level' => 'Administrador',
+            'email_verified_at' => '2022-01-01 00:00:00',
         ]);
     }
 }

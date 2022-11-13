@@ -53,7 +53,7 @@ class AdminValidateTable extends DataTableComponent
 
         return Event::query()
             ->selectRaw('events.*, IF(events.start_at <= NOW() AND events.end_at >= NOW(), 1, IF(events.start_at > NOW(), 0, IF(events.end_at < NOW(), 2, 3))) as status')
-            ->where('end_at', '>=', now());
+            ->where('approved', 0);
     }
 
     // compu

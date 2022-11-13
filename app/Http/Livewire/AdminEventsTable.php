@@ -22,25 +22,32 @@ class AdminEventsTable extends DataTableComponent
     {
         return [
             Column::make('Estado', 'status')
-                ->sortable()
+                ->format(
+                    fn($value, $row, Column $column) => $row->status
+                )
+                ->sortable(
+                    fn(Builder $query, string $direction) => $query->orderBy('status')
+                )
                 ->label(fn($row) => $row->status == 0 ? '<span class="badge badge-danger">Inactivo</span>' : ($row->status == 1 ? '<span class="badge badge-success">Activo</span>' : '<span class="badge badge-warning">Finalizado</span>'))
                 ->html(),
-            // add event_key column, but hide it
             Column::make('Event Key', 'event_key')
                 ->hideIf(true),
-            // name column as 'Evento' for events, with filter, sort and search
+            Column::make('Escuela', 'user.name')
+                ->sortable()
+                ->searchable(),
             Column::make('Evento', 'name')
                 ->sortable()
                 ->searchable(),
-            // start_at column as 'Fecha de inicio' for events, with filter, sort and search
-            Column::make('Fecha de inicio', 'start_at')
-                ->sortable(),
-            // end_at column as 'Fecha de fin' for events, with filter, sort and search
-            Column::make('Fecha de fin', 'end_at')
-                ->sortable()
-                // if end_at empty, show badge "IEPC por confirmar"
-                ->label(fn($row) => $row->end_at == null ? '<span class="badge badge-warning">IEPC por confirmar</span>' : $row->end_at)
+            Column::make('Registro nominal', 'event_key')
+                ->label(fn($row) => '<button onclick="validateEvent(`' . $row->event_key . '`)" class="btn btn-primary btn-sm">Registro nominal</button>')
                 ->html(),
+            Column::make('Votacion', 'event_key')
+                ->label(fn($row) => '<button onclick="validateEvent(`' . $row->event_key . '`)" class="btn btn-primary btn-sm">Votacion</button>')
+                ->html(),
+            Column::make('Resultados', 'event_key')
+                ->label(fn($row) => '<button onclick="validateEvent(`' . $row->event_key . '`)" class="btn btn-primary btn-sm">Resultados</button>')
+                ->html(),
+
         ];
     }
 
@@ -50,7 +57,9 @@ class AdminEventsTable extends DataTableComponent
 
         return Event::query()
             ->selectRaw('events.*, IF(events.start_at <= NOW() AND events.end_at >= NOW(), 1, IF(events.start_at > NOW(), 0, IF(events.end_at < NOW(), 2, 3))) as status')
-            ->where('end_at', '>=', now());
+            ->where('end_at', '>=', now())
+            // with user table left join
+            ->leftJoin('users', 'events.user_id', '=', 'users.user_id');
     }
 
     // compu

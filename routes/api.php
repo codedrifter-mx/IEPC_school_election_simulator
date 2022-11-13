@@ -25,6 +25,7 @@ Route::post('candidate_destroy', [CandidateController::class, 'destroy'])->name(
 Route::get('event_index', [EventController::class, 'index'])->name('event_index');
 Route::post('event_store', [EventController::class, 'store'])->name('event_store');
 Route::get('event_show', [EventController::class, 'show'])->name('event_show');
+Route::get('event_showToValidate', [EventController::class, 'showToValidate'])->name('event_showToValidate');
 Route::post('event_update', [EventController::class, 'update'])->name('event_update');
 Route::post('event_destroy', [EventController::class, 'destroy'])->name('event_destroy');
 Route::post('event_stop', [EventController::class, 'stop'])->name('event_stop');

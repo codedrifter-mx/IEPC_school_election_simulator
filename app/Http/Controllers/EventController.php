@@ -49,7 +49,8 @@ class EventController extends Controller
             'director' => 'required|string',
             'responsible' => 'required|string',
             'responsible_phone' => 'required|string',
-            'start_at' => 'required|date'
+            'start_at' => 'required|date',
+            'end_at' => 'required|date'
         ];
 
         // messages, but in spanish
@@ -72,14 +73,13 @@ class EventController extends Controller
             'responsible_phone.string' => 'El teléfono del responsable debe ser una cadena de texto',
             'start_at.required' => 'La fecha de inicio es requerida',
             'start_at.date' => 'La fecha de inicio debe ser una fecha',
+            'end_at.required' => 'La fecha de fin es requerida',
+            'end_at.date' => 'La fecha de fin debe ser una fecha'
         ];
 
         $request->validate($rules, $msgs);
 
         $request->request->add(['event_key' => Str::random(8)]);
-
-        // add end_at to request with start_at
-        $request->request->add(['end_at' => $request->start_at]);
 
         // log $request
         \Log::info($request->all());
@@ -115,14 +115,14 @@ class EventController extends Controller
         }
 
 
-        if ($event->end_at == null) {
+        if ($event->approved == 0) {
             $event->status = 3;
         }
 
         // if tha candidates with this event_key are odd or less than 2, status is 4
         $candidates = Candidate::where('event_id', $event->event_id)->get();
 
-        if (count($candidates) % 2 != 0 || count($candidates) < 2) {
+        if ((count($candidates) - 1) % 2 != 0 || (count($candidates) - 1) < 2) {
             $event->status = 4;
         }
 
@@ -142,8 +142,45 @@ class EventController extends Controller
         }
     }
 
+    public function showToValidate(Request $request)
+    {
+        // get all event with approved = 0
+        $events = Event::where('approved', 0)->get();
+
+
+        return response()->json([
+            'data' => $events,
+            'message' => 'Evento validado'
+        ], 200);
+
+    }
+
     public function update(Request $request)
     {
+        // if request has approved, validate it
+        if ($request->has('approved')) {
+            //
+            $event_key = $request->event_key;
+
+            $event = Event::firstWhere('event_key', $event_key);
+
+            if (!$event) {
+                return response()->json(['message' => 'Evento no encontrado'], 404);
+            }
+
+            // just update end_at and approved
+            $event->update([
+                'end_at' => $request->end_at,
+                'approved' => $request->approved
+            ]);
+
+            return response()->json([
+                'data' => $event,
+                'message' => 'Evento validado'
+            ], 200);
+        }
+
+
         $rules = [
             'name' => 'required|string',
             'schedule' => 'required|string',
@@ -233,7 +270,6 @@ class EventController extends Controller
         }
 
 
-
         // get votes inner join with candidates
         $votes = DB::table('votes')
             ->join('candidates', 'votes.candidate_id', '=', 'candidates.candidate_id')
@@ -288,15 +324,14 @@ class EventController extends Controller
         $encargado = $event->responsible;
 
 
-
         $fpdi = new Fpdi;
 
         // get pdf template on public/pdf/default/1_ficha_tecnica.pdf
         $pageCount = $fpdi->setSourceFile(public_path('pdf/default/1_ficha_tecnica.pdf'));
 
-        for ($i=1; $i<=$pageCount; $i++) {
-            $template   = $fpdi->importPage($i);
-            $size       = $fpdi->getTemplateSize($template);
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $template = $fpdi->importPage($i);
+            $size = $fpdi->getTemplateSize($template);
             $fpdi->AddPage($size['orientation'], array($size['width'], $size['height']));
             $fpdi->useTemplate($template);
 
@@ -306,47 +341,47 @@ class EventController extends Controller
             $left = 63;
             $top = 61;
             $text = $nombre_escuela;
-            $fpdi->Text($left,$top,$text);
+            $fpdi->Text($left, $top, $text);
 
             $left = 61.5;
             $top = 83;
             $text = $fecha_inicio;
-            $fpdi->Text($left,$top,$text);
+            $fpdi->Text($left, $top, $text);
 
             $left = 93;
             $top = 83;
             $text = $hora_inicio;
-            $fpdi->Text($left,$top,$text);
+            $fpdi->Text($left, $top, $text);
 
             $left = 112;
             $top = 83;
             $text = $fecha_fin;
-            $fpdi->Text($left,$top,$text);
+            $fpdi->Text($left, $top, $text);
 
             $left = 140;
             $top = 83;
             $text = $hora_fin;
-            $fpdi->Text($left,$top,$text);
+            $fpdi->Text($left, $top, $text);
 
             $left = 63;
             $top = 100;
             $text = $poblacion;
-            $fpdi->Text($left,$top,$text);
+            $fpdi->Text($left, $top, $text);
 
             $left = 63;
             $top = 120;
             $text = $votos;
-            $fpdi->Text($left,$top,$text);
+            $fpdi->Text($left, $top, $text);
 
             $left = 63;
             $top = 140;
             $text = $nulos;
-            $fpdi->Text($left,$top,$text);
+            $fpdi->Text($left, $top, $text);
 
             $left = 63;
             $top = 180;
             $text = $votos_por_candidato;
-            $fpdi->Text($left,$top,$text);
+            $fpdi->Text($left, $top, $text);
 
 
 //            $left = 63;
@@ -362,21 +397,18 @@ class EventController extends Controller
 
         }
 
-        $file = $fpdi->Output('S',$event->event_key  . '.pdf');
+        $file = $fpdi->Output('S', $event->event_key . '.pdf');
 
-        Storage::disk('public')->put('/pdf/ficha/' . $event->event_key  . '.pdf', $file);
+        Storage::disk('public')->put('/pdf/ficha/' . $event->event_key . '.pdf', $file);
 
         // Storage::disk() but with S3
-        Storage::disk('s3')->put('/pdf/ficha/' . $event->event_key  . '.pdf', $file);
+        Storage::disk('s3')->put('/pdf/ficha/' . $event->event_key . '.pdf', $file);
 
         // get s3 url
-        $url = Storage::disk('s3')->url('/pdf/ficha/' . $event->event_key  . '.pdf');
+        $url = Storage::disk('s3')->url('/pdf/ficha/' . $event->event_key . '.pdf');
 
         //log if the file exists on s3
-        \Log::info('File exists: ' . Storage::disk('s3')->exists('/pdf/ficha/' . $event->event_key  . '.pdf'));
-
-
-
+        \Log::info('File exists: ' . Storage::disk('s3')->exists('/pdf/ficha/' . $event->event_key . '.pdf'));
 
 
         // return json success

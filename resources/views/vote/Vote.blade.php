@@ -2,14 +2,49 @@
     <div class="py-3">
         <div class="sm:px-4 lg:px-6">
             <div class="md:mt-0 md:col-span-1">
-                <div class="grid grid-cols-1 md:grid-cols-3 m-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                    <div></div>
+                    <div class="col-span-3 md:col-span-1 shadow rounded-md overflow-hidden">
+                        <div class="px-4 py-5 bg-white sm:p-6">
+                            <div class="grid grid-cols-1 gap-3">
+
+                                {{-- code --}}
+                                <div>
+                                    <label for="code"
+                                           class="block font-medium text-gray-700 text-center">
+                                        1.- Ingresa tu codigo de voto </label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <input type="text" name="code" id="code"
+                                               class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
+                                               placeholder="XXXX1234">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div></div>
+
+                    <div></div>
+                    <div class="col-span-3 md:col-span-1 shadow rounded-md overflow-hidden">
+                        <div class="px-4 py-5 bg-white sm:p-6">
+                            <div class="grid grid-cols-1 gap-3">
+
+                                <button type="button"
+                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    2.- Conoce a los candidatos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div></div>
 
                     <div class="col-span-3 shadow rounded-md overflow-hidden">
                         <div class="p-4 bg-gray-200">
                             {{-- Title Form --}}
                             <div class="text-center">
                                 <h1 class="block" id="title">Votacion</h1>
-                                <p class="block">¡Elije a tu candidato preferido!</p>
+                                <p class="block">Paso 3: Vota por la planilla de tu preferencia</p>
                             </div>
                             {{-- Form structure --}}
                             <div class="flex flex-wrap justify-center" id="candidates">
@@ -50,17 +85,6 @@
                         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                             <div class="grid grid-cols-1 gap-3">
 
-                                {{-- code --}}
-                                <div>
-                                    <label for="code"
-                                           class="block font-medium text-gray-700 text-center">
-                                        Codigo de voto </label>
-                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                        <input type="text" name="code" id="code"
-                                               class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
-                                               placeholder="XXXX1234">
-                                    </div>
-                                </div>
 
                                 {{-- insert --}}
                                 <button type="button"
@@ -75,6 +99,7 @@
                         </div>
                     </div>
                     <div></div>
+
 
                 </div>
             </div>
@@ -114,7 +139,7 @@
                                             <div class="p-4">
                                                 <div>
                                                     <h3 class="card-title text-center">Equipo: ` + candidates[i].teamname + `</h3>
-                                                    <p>` + candidates[i].name + ' ' + candidates[i].paternal_surname + ' ' + candidates[i].maternal_surname + `</p>
+                                                    <p>` + candidates[i].name + `</p>
                                                 </div>
                                             </div>
                                         </label>

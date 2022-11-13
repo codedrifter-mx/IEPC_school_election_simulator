@@ -134,7 +134,11 @@
     <input type="checkbox" id="viewCandidateModal" class="modal-toggle"/>
     <div class="modal">
         <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
-            <div class="grid grid-cols-3">
+            <div class="grid grid-cols-1">
+
+                <div class="flex flex-wrap justify-center" id="candidates">
+
+                </div>
 
                 <div class="modal-action col-span-3">
                     <label for="viewCandidateModal" class="btn">Cerrar</label>
@@ -182,6 +186,17 @@
             function storeElector(e) {
                 e.preventDefault();
 
+                // get event_key from $event_key
+                let event_key = '{{ $event_key }}';
+
+                // is privacy checked?
+                if (!document.getElementById('privacy').checked) {
+                    // toaster error
+                    toastr.error("Debes aceptar el aviso de privacidad");
+
+                    return;
+                }
+
                 // get input values
                 let name = document.getElementById('name').value;
                 let paternal_surname = document.getElementById('paternal_surname').value;
@@ -191,6 +206,7 @@
                 let code = document.getElementById('code').value;
 
                 axios.post("{{ route('elector_store') }}", {
+                    event_key: event_key,
                     name: name,
                     paternal_surname: paternal_surname,
                     maternal_surname: maternal_surname,
@@ -223,6 +239,9 @@
                             allowOutsideClick: false,
                         }).then((result) => {
                             if (result.isConfirmed) {
+
+                                indexCandidates(event_key);
+
                                 document.getElementById('viewCandidateModal').checked = true;
                             }
                         })
@@ -250,8 +269,75 @@
                     });
             }
 
+            // Create indexCandidates to fill all candidates as cards
+            function indexCandidates(event_key) {
 
-            document.getElementById('store').addEventListener('submit', storeElector);
+                axios.get("{{ route('candidate_index') }}", {
+                    params: {
+                        event_key: event_key
+                    }
+                })
+                    .then(function (response) {
+                        let candidates = response.data;
+
+                        var t = "";
+                        for (var i = 0; i < response.data.length; i++) {
+
+                            let src = window.location.origin + "/candidate/image/" + candidates[i].candidate_key;
+
+                            t += `<div class="max-w-xs w-[13.5rem] m-2">
+                                    <div class="relative">
+                                        <div for="` + 'candidate_' + i + `"
+                                               class="card flex rounded-xl bg-white bg-opacity-90 backdrop-blur-2xl shadow-xl hover:bg-opacity-25 peer-checked:bg-purple-900 peer-checked:text-whitetransition">
+                                            <figure class="object-fit"><img src="` + src + `" alt="` + 'candidate_' + i + `" class=" h-[14.5rem]"/></figure>
+                                            <div class="p-4">
+                                                <div>
+                                                    <h3 class="card-title text-center">Equipo: ` + candidates[i].teamname + `</h3>
+                                                    <p>` + candidates[i].name +`</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        }
+
+                        document.getElementById("candidates").innerHTML = '';
+                        document.getElementById("candidates").innerHTML += t;
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                // axios get request
+                axios.get("{{ route('event_show') }}",
+                    {
+                        params: {
+                            event_key: event_key
+                        }
+                    })
+                    .then(function (response) {
+                        // console.log(response);
+
+                        document.getElementById('title').innerHTML = response.data.data.name;
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+
+
+
+
+            // when document loaded
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('store').addEventListener('submit', storeElector);
+                indexCandidates('{{ $event_key }}');
+                document.getElementById('viewCandidateModal').checked = true;
+
+            });
 
         </script>
     </x-slot>

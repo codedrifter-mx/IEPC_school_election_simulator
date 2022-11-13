@@ -33,6 +33,16 @@
     </div>
 
     <x-slot name="scripts">
+
+        // if route has /rejected, show toaster error
+        @if (Route::currentRouteName() == 'rejected')
+            <script>
+                window.addEventListener('load', function () {
+                    toastr.error('Tu cuenta aun no ha sido aprobada por el IEPC');
+                });
+            </script>
+        @endif
+
     </x-slot>
 
 </x-public-layout>
