@@ -10,8 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Redirect;
 use Str;
 use setasign\Fpdi\Fpdi;
+use STS\ZipStream\ZipStreamFacade as ZipStream;
+use ZipArchive;
 
 class EventController extends Controller
 {
@@ -81,9 +84,6 @@ class EventController extends Controller
 
         $request->request->add(['event_key' => Str::random(8)]);
 
-        // log $request
-        \Log::info($request->all());
-
 
         $event = Event::create($request->all());
 
@@ -102,9 +102,6 @@ class EventController extends Controller
 
         // Add a numeric status column, if the event is between start_at and end_at, is 1, if the event is before start_at, is 0, if the event is after end_at, is 2, if the event is null, is 3
         $now = now();
-
-        // log now
-        \Log::info($now);
 
         if ($now->between($event->start_at, $event->end_at)) {
             $event->status = 1;
@@ -125,8 +122,6 @@ class EventController extends Controller
         if ((count($candidates) - 1) % 2 != 0 || (count($candidates) - 1) < 2) {
             $event->status = 4;
         }
-
-        \Log::info($event);
 
         // if event end_at is empty, send a 400 with a message
         if ($event->status == 3) {
@@ -170,6 +165,7 @@ class EventController extends Controller
 
             // just update end_at and approved
             $event->update([
+                'start_at' => $request->start_at,
                 'end_at' => $request->end_at,
                 'approved' => $request->approved
             ]);
@@ -254,74 +250,121 @@ class EventController extends Controller
         return response()->json(['message' => 'Evento detenido'], 200);
     }
 
-    public function getFichaTecnica(Request $request)
+    public function getDetails(Request $request)
     {
         $event_key = $request->event_key;
 
-        // get $event inner joined with users table
-        $event = DB::table('events')
+        $event = Event::firstWhere('event_key', $event_key);
+
+        if (!$event) {
+            return response()->json(['message' => 'Evento no encontrado'], 500);
+        }
+
+        // Query with * event, join with user
+        $event = Event::select('events.*', 'users.name as user_name', 'users.email as user_email')
             ->join('users', 'events.user_id', '=', 'users.user_id')
-            ->select('events.*', 'users.name as user_name')
             ->where('events.event_key', $event_key)
             ->first();
 
-        if (!$event) {
-            return response()->json(['message' => 'Event not found'], 404);
-        }
-
-
-        // get votes inner join with candidates
-        $votes = DB::table('votes')
-            ->join('candidates', 'votes.candidate_id', '=', 'candidates.candidate_id')
-            // select votes.* and candidates.name + candidates.paternal_surname + candidates.maternal_surname as candidate_name
-            ->select('votes.*', 'candidates.*')
-            ->where('votes.event_id', $event->event_id)
+        // Query with candidates, join with votes, by event_key, count votes
+        $candidates = Candidate::select('candidates.name', DB::raw('count(votes.vote_id) as votes'))
+            ->join('votes', 'candidates.candidate_id', '=', 'votes.candidate_id', 'left')
+            ->where('candidates.event_id', $event->event_id)
+            ->groupBy('candidates.name')
+            ->orderBy('votes', 'desc')
             ->get();
-        if (!$votes) {
-            return response()->json(['message' => 'Votes not found'], 404);
+
+        $data = [
+            'name' => $event->name,
+            'schedule' => $event->schedule,
+            'cycle' => $event->cycle,
+            'population' => $event->population,
+            'total_votes' => $candidates->sum('votes'),
+            // json $candidates->pluck('name') as key and $candidates->pluck('votes') as value
+            'candidates' => $candidates->pluck('votes', 'name'),
+            'no_votes' => $event->population - $candidates->sum('votes')
+        ];
+
+        // return data
+        return response()->json($data);
+    }
+
+    public function getResults(Request $request)
+    {
+        $event_key = $request->event_key;
+
+        $event = Event::firstWhere('event_key', $event_key);
+
+        if (!$event) {
+            return response()->json(['message' => 'Evento no encontrado'], 500);
         }
 
-        // get users name limit 1
-        $nombre_escuela = $event->user_name;
+        // Query with * event, join with user
+        $event = Event::select('events.*', 'users.name as user_name', 'users.email as user_email')
+            ->join('users', 'events.user_id', '=', 'users.user_id')
+            ->where('events.event_key', $event_key)
+            ->first();
 
-        // get event start_at on format 'd/m/Y' using strtotime
-        $fecha_inicio = date('d/m/Y', strtotime($event->start_at));
+        // Query with candidates, join with votes, by event_key, count votes
+        $candidates = Candidate::select('candidates.name', DB::raw('count(votes.vote_id) as votes'))
+            ->join('votes', 'candidates.candidate_id', '=', 'votes.candidate_id', 'left')
+            ->where('candidates.event_id', $event->event_id)
+            ->groupBy('candidates.name')
+            ->orderBy('votes', 'desc')
+            ->get();
 
-        // get event start_at on time format 'H:i'
-        $hora_inicio = date('H:i', strtotime($event->start_at));
+        $data = [
+            'name' => $event->name,
+            'schedule' => $event->schedule,
+            'cycle' => $event->cycle,
+            'population' => $event->population,
+            'groups' => $event->groups,
+            'total_votes' => $candidates->sum('votes'),
+            // json $candidates->pluck('name') as key and $candidates->pluck('votes') as value
+            'candidates' => $candidates->pluck('votes', 'name'),
+            'no_votes' => $event->population - $candidates->sum('votes'),
+            'start_at' => $event->start_at,
+            'end_at' => $event->end_at
+        ];
 
-        // get event end_at on format 'd/m/Y'
-        $fecha_fin = date('d/m/Y', strtotime($event->end_at));
+        // return data
+        return response()->json($data);
+    }
 
-        // get event end_at on time format 'H:i'
-        $hora_fin = date('H:i', strtotime($event->end_at));
+    public function getResultsPdf(Request $request)
+    {
+        $event_key = $request->event_key;
 
-        // get event population
-        $poblacion = $event->population;
+        $event = Event::firstWhere('event_key', $event_key);
 
-        // get all votes count
-        $votos = $votes->count();
+        if (!$event) {
+            return response()->json(['message' => 'Evento no encontrado'], 500);
+        }
 
-        // get all votes count inner join candidates where candidate name is 'Nulo'
-        $nulos = $votes->where('name', 'Nulo')->count();
+        // Query with * event, join with user
+        $event = Event::select('events.*', 'users.name as user_name', 'users.email as user_email')
+            ->join('users', 'events.user_id', '=', 'users.user_id')
+            ->where('events.event_key', $event_key)
+            ->first();
 
-        // get candidate winner with most votes
-        $ganador = $votes->where('name', '!=', 'Nulo')->sortByDesc('votes')->first();
+        // Query with candidates, join with votes, by event_key, count votes
+        $candidates = Candidate::select('candidates.name', DB::raw('count(votes.vote_id) as votes'))
+            ->join('votes', 'candidates.candidate_id', '=', 'votes.candidate_id', 'left')
+            ->where('candidates.event_id', $event->event_id)
+            ->groupBy('candidates.name')
+            ->orderBy('votes', 'desc')
+            ->get();
 
-//        // get a groupbby candidate name and count the votes order by desc
-//        $votos_por_candidato = $votes->groupBy('candidate_name')->countBy()->sortDesc();
-//
-//        // get candidate name with most votes
-//        $candidato_ganador = $votos_por_candidato->keys()->first();
-
-        // get a groupbby candidate name and count the votes
-        $votos_por_candidato = $votes->groupBy('name')->map(function ($item, $key) {
-            return $item->count();
-        });
-
-
-        // get responsible name
-        $encargado = $event->responsible;
+        $data = [
+            'name' => $event->name,
+            'schedule' => $event->schedule,
+            'cycle' => $event->cycle,
+            'population' => $event->population,
+            'total_votes' => $candidates->sum('votes'),
+            // json $candidates->pluck('name') as key and $candidates->pluck('votes') as value
+            'candidates' => $candidates->pluck('votes', 'name'),
+            'no_votes' => $event->population - $candidates->sum('votes')
+        ];
 
 
         $fpdi = new Fpdi;
@@ -340,78 +383,146 @@ class EventController extends Controller
 
             $left = 63;
             $top = 61;
-            $text = $nombre_escuela;
+            $text = $data['name'];
             $fpdi->Text($left, $top, $text);
 
             $left = 61.5;
             $top = 83;
-            $text = $fecha_inicio;
+            $text = $data['schedule'];
             $fpdi->Text($left, $top, $text);
 
-            $left = 93;
-            $top = 83;
-            $text = $hora_inicio;
+            $left = 61.5;
+            $top = 95;
+            $text = $data['cycle'];
             $fpdi->Text($left, $top, $text);
 
-            $left = 112;
-            $top = 83;
-            $text = $fecha_fin;
+            $left = 61.5;
+            $top = 107;
+            $text = $data['population'];
             $fpdi->Text($left, $top, $text);
 
-            $left = 140;
-            $top = 83;
-            $text = $hora_fin;
+            $left = 61.5;
+            $top = 119;
+            $text = $data['total_votes'];
             $fpdi->Text($left, $top, $text);
 
-            $left = 63;
-            $top = 100;
-            $text = $poblacion;
+            $left = 61.5;
+            $top = 131;
+            $text = $data['no_votes'];
             $fpdi->Text($left, $top, $text);
 
-            $left = 63;
-            $top = 120;
-            $text = $votos;
+            $left = 61.5;
+            $top = 143;
+            $text = $data['candidates'];
             $fpdi->Text($left, $top, $text);
-
-            $left = 63;
-            $top = 140;
-            $text = $nulos;
-            $fpdi->Text($left, $top, $text);
-
-            $left = 63;
-            $top = 180;
-            $text = $votos_por_candidato;
-            $fpdi->Text($left, $top, $text);
-
-
-//            $left = 63;
-//            $top = 210;
-//            $text = $ganador->teamname;
-//            $fpdi->Text($left,$top,$text);
-//
-//            $left = 63;
-//            $top = 230;
-//            $text = $ganador->name . ' ' . $ganador->paternal_surname . ' ' . $ganador->maternal_surname;
-//            $fpdi->Text($left,$top,$text);
-
 
         }
 
         $file = $fpdi->Output('S', $event->event_key . '.pdf');
-
-        Storage::disk('public')->put('/pdf/ficha/' . $event->event_key . '.pdf', $file);
-
-        // Storage::disk() but with S3
         Storage::disk('s3')->put('/pdf/ficha/' . $event->event_key . '.pdf', $file);
-
-        // get s3 url
         $url = Storage::disk('s3')->url('/pdf/ficha/' . $event->event_key . '.pdf');
 
-        //log if the file exists on s3
-        \Log::info('File exists: ' . Storage::disk('s3')->exists('/pdf/ficha/' . $event->event_key . '.pdf'));
+        return response()->json(['url' => $url]);
+    }
 
+    public function getMajority(Request $request)
+    {
+        $event_key = $request->event_key;
 
-        // return json success
-        return response()->json(['message' => $event->event_key]);
+        $event = Event::firstWhere('event_key', $event_key);
+
+        if (!$event) {
+            return response()->json(['message' => 'Evento no encontrado'], 500);
+        }
+
+        $event = Event::select('events.*', 'users.name as user_name', 'users.email as user_email')
+            ->join('users', 'events.user_id', '=', 'users.user_id')
+            ->where('events.event_key', $event_key)
+            ->first();
+
+        $candidates = Candidate::select('candidates.teamname', DB::raw('count(votes.vote_id) as votes'))
+            ->join('votes', 'candidates.candidate_id', '=', 'votes.candidate_id', 'left')
+            ->where('candidates.event_id', $event->event_id)
+            ->groupBy('candidates.teamname')
+            ->orderBy('votes', 'desc')
+            ->get();
+
+        $data = [
+            'name' => $event->name,
+            'candidates' => $candidates->pluck('votes', 'teamname'),
+            'end_at' => $event->end_at,
+            'director' => $event->director,
+        ];
+
+        $data['candidates'] = $data['candidates']->sortDesc();
+
+        $top_candidate = $data['candidates']->first();
+        $top_candidates = $data['candidates']->filter(function ($value, $key) use ($top_candidate) {
+            return $value == $top_candidate;
+        });
+
+        $top_candidates_array = [];
+        foreach ($top_candidates as $key => $value) {
+            $fpdi = new Fpdi;
+            $pageCount = $fpdi->setSourceFile(public_path('pdf/default/3_constancia.pdf'));
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $template = $fpdi->importPage($i);
+                $size = $fpdi->getTemplateSize($template);
+                $fpdi->AddPage($size['orientation'], array($size['width'], $size['height']));
+                $fpdi->useTemplate($template);
+                $fpdi->SetFont("helvetica", "", 13);
+
+                $left = 63;
+                $top = 61;
+                $text = $data['name'];
+                $fpdi->Text($left, $top, $text);
+
+                $left = 61.5;
+                $top = 83;
+                $text = $key;
+                $fpdi->Text($left, $top, $text);
+
+                //$data['end_at']
+                $left = 61.5;
+                $top = 95;
+                $text = $data['end_at'];
+                $fpdi->Text($left, $top, $text);
+
+                //director
+                $left = 61.5;
+                $top = 107;
+                $text = $data['director'];
+                $fpdi->Text($left, $top, $text);
+            }
+
+            $file = $fpdi->Output('S', $event->event_key . '.pdf');
+            Storage::disk('s3')->put('/pdf/majority/' . $event->event_key . '/' . $key . '.pdf', $file);
+            $url = Storage::disk('s3')->url('/pdf/majority/' . $event->event_key . '/' . $key . '.pdf');
+
+            $top_candidates_array[$key] = $url;
+        }
+
+        // if ($top_candidates->count() == 1) then just download the pdf, otherwise download a zip file with all pdf url with response()->download
+        if ($top_candidates->count() == 1) {
+            return response()->json(['url' => $top_candidates_array[$top_candidates->keys()->first()]]);
+        } else {
+
+            // zip each file from $top_candidates_array and return the zip file
+            $zip = new ZipArchive;
+            $zip_name = $event->event_key . '.zip';
+            $zip->open($zip_name, ZipArchive::CREATE);
+            foreach ($top_candidates_array as $key => $value) {
+                $zip->addFromString($key . '.pdf', file_get_contents($value));
+            }
+            $zip->close();
+
+            // make $zip compatible to upload to s3
+            $zip = file_get_contents($zip_name);
+
+            Storage::disk('s3')->put('/pdf/majority/' . $event->event_key . '/'. $event->event_key .'.zip', $zip);
+            $url = Storage::disk('s3')->url('/pdf/majority/' . $event->event_key . '/'. $event->event_key .'.zip');
+
+            return response()->json(['url' => $url]);
+        }
     }
 }

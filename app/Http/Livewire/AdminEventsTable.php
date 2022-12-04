@@ -39,13 +39,10 @@ class AdminEventsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Registro nominal', 'event_key')
-                ->label(fn($row) => '<button onclick="validateEvent(`' . $row->event_key . '`)" class="btn btn-primary btn-sm">Registro nominal</button>')
-                ->html(),
-            Column::make('Votacion', 'event_key')
-                ->label(fn($row) => '<button onclick="validateEvent(`' . $row->event_key . '`)" class="btn btn-primary btn-sm">Votacion</button>')
+                ->label(fn($row) => '<button onclick="showNominal(`' . $row->event_key . '`)" class="btn btn-primary btn-sm">Registro nominal</button>')
                 ->html(),
             Column::make('Resultados', 'event_key')
-                ->label(fn($row) => '<button onclick="validateEvent(`' . $row->event_key . '`)" class="btn btn-primary btn-sm">Resultados</button>')
+                ->label(fn($row) => '<button onclick="showResultsModal(`' . $row->event_key . '`)" class="btn btn-primary btn-sm">Resultados</button>')
                 ->html(),
 
         ];
@@ -57,7 +54,7 @@ class AdminEventsTable extends DataTableComponent
 
         return Event::query()
             ->selectRaw('events.*, IF(events.start_at <= NOW() AND events.end_at >= NOW(), 1, IF(events.start_at > NOW(), 0, IF(events.end_at < NOW(), 2, 3))) as status')
-            ->where('end_at', '>=', now())
+            ->where('approved', '!=', 0)
             // with user table left join
             ->leftJoin('users', 'events.user_id', '=', 'users.user_id');
     }

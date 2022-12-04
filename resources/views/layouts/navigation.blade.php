@@ -31,10 +31,10 @@
                             Encuestas
                         </x-nav-link>
 
-                        <x-nav-link :href="route('admin_reports')"
-                                    :active="request()->routeIs('admin_reports')">
-                            Reportes
-                        </x-nav-link>
+{{--                        <x-nav-link :href="route('admin_reports')"--}}
+{{--                                    :active="request()->routeIs('admin_reports')">--}}
+{{--                            Reportes--}}
+{{--                        </x-nav-link>--}}
 
                     @else
                         <x-nav-link :href="route('events')" :active="request()->routeIs('events')">

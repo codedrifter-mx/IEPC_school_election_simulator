@@ -29,6 +29,10 @@ Route::get('event_showToValidate', [EventController::class, 'showToValidate'])->
 Route::post('event_update', [EventController::class, 'update'])->name('event_update');
 Route::post('event_destroy', [EventController::class, 'destroy'])->name('event_destroy');
 Route::post('event_stop', [EventController::class, 'stop'])->name('event_stop');
+Route::get('event_details', [EventController::class, 'getDetails'])->name('event_details');
+Route::get('event_getResults', [EventController::class, 'getResults'])->name('event_getResults');
+Route::get('event_getResultsPdf', [EventController::class, 'getResultsPdf'])->name('event_getResultsPdf');
+Route::get('event_getMajority', [EventController::class, 'getMajority'])->name('event_getMajority');
 
 // Make elector API routes for store
 Route::post('elector_store', [ElectorController::class, 'store'])->name('elector_store');
@@ -36,11 +40,7 @@ Route::post('elector_store', [ElectorController::class, 'store'])->name('elector
 // Make vote API routes to store
 Route::post('vote_store', [VoteController::class, 'store'])->name('vote_store');
 
-// get getFichaTecnica
-Route::get('getFichaTecnica', [EventController::class, 'getFichaTecnica'])->name('getFichaTecnica');
 
-// AdminController
-// Admin send email
 Route::post('get_events', [AdminController::class, 'index_events'])->name('index_events');
 Route::post('send_email', [AdminController::class, 'sendEmail'])->name('send_email');
 

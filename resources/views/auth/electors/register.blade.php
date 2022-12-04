@@ -20,7 +20,6 @@
                                         </select>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -51,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <div class=" mx-auto sm:px-2 lg:px-4">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="mt-3 md:mt-0 md:col-span-1">
                 <div class="grid grid-cols-1 md:grid-cols-3 m-3">
                     <div class="p-2 col-span-2 md:col-span-1" id="first">
@@ -87,7 +86,7 @@
                                     <div class="text-white font-bold" id="timer">0d 0h 0m 0s</div>
                                 </div>
 
-                                <button id="know_button"
+                                <button id="stop_button"
                                         class="btn-block w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     Terminar Votación
                                 </button>
@@ -103,19 +102,19 @@
                                     <h1 class="block">Fase 3: Resultados y constancias</h1>
                                 </div>
 
-                                <button id="know_button"
+                                <button id="details_button"
                                         class="btn-block w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     Conoce los resultados de la elección
                                 </button>
-                                <button id="know_button"
+                                <button id="results_button"
                                         class="btn-block w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     Descargar cartel de resultados
                                 </button>
-                                <button id="know_button"
+                                <button id="journey_button"
                                         class="btn-block w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     Descargar Acta de la Jornada Electoral
                                 </button>
-                                <button id="know_button"
+                                <button id="majority_button"
                                         class="btn-block w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     Descargar Constancia de Mayoría y Validez
                                 </button>
@@ -125,6 +124,54 @@
                 </div>
 
             </div>
+        </div>
+    </div>
+
+    <input type="checkbox" id="viewDetails" class="modal-toggle"/>
+    <div class="modal">
+        <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
+                <table id="events" class="table table-compact w-full col-span-2 md:col-span-1">
+                    <!-- head -->
+                    <thead>
+                    <tr>
+                        <th>Caracteristica</th>
+                        <th>Valor</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Institución educativa</td>
+                        <td id="details_name"></td>
+                    </tr>
+                    <tr>
+                        <td>Turno</td>
+                        <td id="details_schedule"></td>
+                    </tr>
+                    <tr>
+                        <td>Ciclo escolar</td>
+                        <td id="details_cycle"></td>
+                    </tr>
+                    <tr>
+                        <td>Total de Estudiantes</td>
+                        <td id="details_population"></td>
+                    </tr>
+                    <tr>
+                        <td>Total de Votos</td>
+                        <td id="details_total_votes"></td>
+                    </tr>
+                    <tr>
+                        <td>Desglose por planilla</td>
+                        <td id="details_candidates"></td>
+                    </tr>
+                    <tr>
+                        <td>Abstencionismo</td>
+                        <td id="details_no_votes"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="modal-action col-span-3">
+                    <label for="viewDetails" class="btn">Cerrar</label>
+                </div>
         </div>
     </div>
 
@@ -199,7 +246,7 @@
 
                                 // Time calculations for days, hours, minutes and seconds
                                 var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) - 5;
                                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
@@ -297,11 +344,9 @@
                 let event_key = document.getElementById('event_key').value;
 
 
-                axios.post("{{ route('event_show') }}",
+                axios.post("{{ route('event_stop') }}",
                     {
-                        params: {
-                            event_key: event_key
-                        }
+                        event_key: event_key
                     })
                     .then(function (response) {
                         // show toastr success
@@ -315,11 +360,100 @@
                     });
             }
 
+            // function to show details
+            function showDetails() {
+                let event_key = document.getElementById('event_key').value;
+
+                axios.get("{{ route('event_details') }}",
+                    {
+                        params: {
+                            event_key: event_key
+                        }
+                    })
+                    .then(function (response) {
+
+                        console.log(response)
+                        // fill all details_* with data
+                        document.getElementById('details_name').innerHTML = response.data.name;
+                        document.getElementById('details_schedule').innerHTML = response.data.schedule;
+                        document.getElementById('details_cycle').innerHTML = response.data.cycle;
+                        document.getElementById('details_population').innerHTML = response.data.population;
+                        document.getElementById('details_total_votes').innerHTML = response.data.total_votes;
+                        // document.getElementById('details_candidates').innerHTML = response.data.candidates;
+                        document.getElementById('details_no_votes').innerHTML = response.data.no_votes;
+
+
+                        var table = "<table>";
+                        for (let key in response.data.candidates) {
+                            table += `<tr><td>${key}</td><td>${response.data.candidates[key]}</td></tr>`;
+                        }
+                        table += "</table>";
+
+                        document.getElementById("details_candidates").innerHTML = table;
+
+                        document.getElementById('viewDetails').checked = true;
+
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                        // show toastr error
+                        toastr.error(error.response.data);
+                    });
+            }
+
+            // function to show details
+            function showResults() {
+                let event_key = document.getElementById('event_key').value;
+
+                axios.get("{{ route('event_getResultsPdf') }}",
+                    {
+                        params: {
+                            event_key: event_key
+                        }
+                    })
+                    .then(function (response) {
+                        window.open(response.data.url, '_blank');
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                        // show toastr error
+                        toastr.error(error.response.data);
+                    });
+            }
+
+            // function to show details
+            function showMajority() {
+                //show info toastr that it can take a while
+                toastr.info("Este proceso puede tardar unos segundos en descargar...");
+
+                let event_key = document.getElementById('event_key').value;
+
+                axios.get("{{ route('event_getMajority') }}",
+                    {
+                        params: {
+                            event_key: event_key
+                        }
+                    })
+                    .then(function (response) {
+                        window.open(response.data.url, '_blank');
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                        // show toastr error
+                        toastr.error(error.response.data);
+                    });
+            }
+
+
 
             // When DOM is ready, execute populateTable function
             document.addEventListener('DOMContentLoaded', function () {
                 // When document.getElementById('events') changes, refresh the table
                 document.getElementById('event_key').addEventListener('change', showEvent);
+                document.getElementById('stop_button').addEventListener('click', stopEvent);
+                document.getElementById('details_button').addEventListener('click', showDetails);
+                document.getElementById('results_button').addEventListener('click', showResults);
+                document.getElementById('majority_button').addEventListener('click', showMajority);
 
                 showEvent();
             });

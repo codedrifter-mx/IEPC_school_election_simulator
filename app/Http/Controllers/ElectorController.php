@@ -45,6 +45,18 @@ class ElectorController extends Controller
         $request->request->add(['elector_key' => Str::random(8)]);
         // combine name, paternal_surname and maternal_surname and delete paternal_surname and maternal_surname afterwards
 
+        // search if the code exists in the database
+        $event = Elector::where('code', $request->code)->first();
+
+        // if the code exists, then return an error\
+        if ($event) {
+            return response()->json([
+                'message' => 'El código ya existe, elige otro'
+            ], 400);
+        }
+
+
+
         $elector = Elector::create($request->all());
 
 

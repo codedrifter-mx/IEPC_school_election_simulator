@@ -31,6 +31,23 @@
 
                 <div>
                     <div class="flex flex-col">
+                        <label for="start_at" class="block text-sm font-medium text-gray-700">Fecha de inicio propuesto</label>
+                        <div class="mt-1">
+                            <input type="text" name="end_at" id="start_at"
+                                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md bg-gray-200"
+                                   disabled>
+                        </div>
+                    </div>
+
+                    <label for="start_at_new"
+                           class="mt-3 block text-sm font-medium text-gray-700">
+                        Fecha de fin de la votación </label>
+                    <input type="datetime-local" name="end_at" id="start_at_new"
+                           class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+                           pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
+                    >
+
+                    <div class="flex flex-col mt-3">
                         <label for="end_at" class="block text-sm font-medium text-gray-700">Fecha de fin
                             propuesto</label>
                         <div class="mt-1">
@@ -63,33 +80,32 @@
     <x-slot name="scripts">
         <script type="text/javascript">
 
-            // function to conver string to date dd-mm-YYYYThh:mm format
-            function stringToDate(string) {
-                let date = new Date(string);
-                let day = date.getDate();
-                let month = date.getMonth() + 1;
-                let year = date.getFullYear();
-                let hour = date.getHours();
-                let minutes = date.getMinutes();
-                let seconds = date.getSeconds();
+            // function to convert php datetime to string d-m-Y H:i:s on UTC
+            function convertDate(date) {
+                let dateObj = new Date(date);
+                let month = dateObj.getUTCMonth() + 1; //months from 1-12
+                let day = dateObj.getUTCDate();
+                let year = dateObj.getUTCFullYear();
+                let hours = dateObj.getUTCHours().toString().padStart(2, '0');
+                let minutes = dateObj.getUTCMinutes().toString().padStart(2, '0');
+                let seconds = dateObj.getUTCSeconds().toString().padStart(2, '0');
 
-                if (day < 10) {
-                    day = '0' + day;
-                }
-                if (month < 10) {
-                    month = '0' + month;
-                }
-                if (hour < 10) {
-                    hour = '0' + hour;
-                }
-                if (minutes < 10) {
-                    minutes = '0' + minutes;
-                }
-                if (seconds < 10) {
-                    seconds = '0' + seconds;
-                }
+                let newdate = day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                return newdate;
+            }
 
-                return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
+            // function to convert date to yyyy-MM-ddThh:mm
+            function convertDateToInput(date) {
+                let dateObj = new Date(date);
+                let month = dateObj.getUTCMonth() + 1; //months from 1-12
+                let day = dateObj.getUTCDate();
+                let year = dateObj.getUTCFullYear();
+                let hours = dateObj.getUTCHours().toString().padStart(2, '0');
+                let minutes = dateObj.getUTCMinutes().toString().padStart(2, '0');
+                let seconds = dateObj.getUTCSeconds().toString().padStart(2, '0');
+
+                let newdate = year + "-" + month + "-" + day + "T" + hours + ":" + minutes;
+                return newdate;
             }
 
             function validateEvent(event_key) {
@@ -104,41 +120,47 @@
                         }
                     })
                     .then(function (response) {
+                        response = response.data;
+
                         console.log(response);
-                        document.getElementById('end_at').value = stringToDate(response.data.data.end_at).replace('T', ' ');
-                        document.getElementById('end_at_new').value = stringToDate(response.data.data.end_at);
+
+                        document.getElementById('end_at').value = convertDate(response.data.end_at);
+                        document.getElementById('end_at_new').value = convertDateToInput(response.data.end_at);
+                        document.getElementById('start_at').value = convertDate(response.data.start_at);
+                        document.getElementById('start_at_new').value = convertDateToInput(response.data.start_at);
                     })
                     .catch(function (error) {
-                        // show toastr error
                         toastr.error(error.response.data.message);
                     });
             }
 
-                function updateEvent() {
-                    event_key = document.getElementById('event_key').value;
-                    end_at = document.getElementById('end_at_new').value;
+            function updateEvent() {
+                let event_key = document.getElementById('event_key').value;
+                let start_at = document.getElementById('start_at_new').value;
+                let end_at = document.getElementById('end_at_new').value;
 
-                    //event update route
-                    axios.post("{{ route('event_update') }}",
-                        {
-                            event_key: event_key,
-                            end_at: end_at,
-                            approved: true
-                        })
-                        .then(function (response) {
-                            toastr.success(response.data.message);
+                //event update route
+                axios.post("{{ route('event_update') }}",
+                    {
+                        event_key: event_key,
+                        start_at: start_at,
+                        end_at: end_at,
+                        approved: true
+                    })
+                    .then(function (response) {
+                        toastr.success(response.data.message);
 
-                            //close modal
-                            document.getElementById('viewValidationModal').checked = false;
+                        //close modal
+                        document.getElementById('viewValidationModal').checked = false;
 
-                        })
-                        .catch(function (error) {
-                            toastr.error(error.response.data.message);
-                        });
-                }
+                    })
+                    .catch(function (error) {
+                        toastr.error(error.response.data.message);
+                    });
+            }
 
 
-                document.getElementById('validate_event').addEventListener('click', updateEvent);
+            document.getElementById('validate_event').addEventListener('click', updateEvent);
 
 
         </script>

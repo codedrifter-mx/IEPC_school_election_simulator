@@ -33,8 +33,6 @@
     </div>
 
     <x-slot name="scripts">
-
-        // if route has /rejected, show toaster error
         @if (Route::currentRouteName() == 'rejected')
             <script>
                 window.addEventListener('load', function () {

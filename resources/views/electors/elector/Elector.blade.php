@@ -221,8 +221,6 @@
                         document.getElementById('name').value = '';
                         document.getElementById('paternal_surname').value = '';
                         document.getElementById('maternal_surname').value = '';
-                        document.getElementById('grade').value = '';
-                        document.getElementById('group').value = '';
                         document.getElementById('code').value = '';
 
                         let msg = '¡Si la olvidas no podrás votar el día de la elección! '
@@ -244,26 +242,27 @@
 
                                 document.getElementById('viewCandidateModal').checked = true;
                             }
-                        })
+                        }).catch(function (error) {
+                            // console.log(error);
+                            // console.log(error.response.data.error);
+
+                            for (var key in error.response.data.errors) {
+                                if (error.response.data.errors.hasOwnProperty(key)) {
+                                    toastr.error(error.response.data.errors[key]);
+                                }
+                            }
+                        });
 
                     })
                     .catch(function (error) {
                         // console.log(error);
                         // console.log(error.response.data.error);
 
+                        toastr.error(error.response.data.message)
+
                         for (var key in error.response.data.errors) {
                             if (error.response.data.errors.hasOwnProperty(key)) {
                                 toastr.error(error.response.data.errors[key]);
-                            }
-                        }
-
-                        // if on error.response.data.error and match the first SQL duplicate entry, show error message with Swal
-                        if (error.response.data.error) {
-                            if (error.response.data.error.includes("Duplicate entry")) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: '¡El código de voto ya existe! Por favor, escribe otro.'
-                                })
                             }
                         }
                     });
@@ -335,7 +334,6 @@
             document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('store').addEventListener('submit', storeElector);
                 indexCandidates('{{ $event_key }}');
-                document.getElementById('viewCandidateModal').checked = true;
 
             });
 

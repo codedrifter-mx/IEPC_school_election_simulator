@@ -33,9 +33,14 @@
                                 <label for="cycle"
                                        class="block text-sm font-medium text-gray-700">
                                     Ciclo escolar </label>
-                                <input type="text" name="cycle" id="cycle"
-                                       class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
-                                       placeholder="Ejemplo: 2020-2021">
+                                <select id="cycle" name="cycle"
+                                        class="focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                    <option value="2020-2021">2020-2021</option>
+                                    <option value="2021-2022">2021-2022</option>
+                                    <option value="2022-2023">2022-2023</option>
+                                    <option value="2023-2024">2023-2024</option>
+                                    <option value="2024-2025">2024-2025</option>
+                                </select>
                             </div>
 
                             {{-- population --}}
@@ -383,24 +388,6 @@
                             });
                     }
                 })
-            }
-
-            // create getFichaTecnica function
-            function getFichaTecnica() {
-                axios.get("{{ route('getFichaTecnica') }}",
-                    {
-                        params: {
-                            event_key: global_event_key
-                        }
-                    })
-                    .then(function (response) {
-                        console.log(response);
-                        // show another tab with the follow link: [hostname]/pdf/ficha/[global_event_key]
-                        window.open(window.location.origin + "/s3/pdf/ficha/" + global_event_key);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
             }
 
             document.addEventListener('DOMContentLoaded', function () {
