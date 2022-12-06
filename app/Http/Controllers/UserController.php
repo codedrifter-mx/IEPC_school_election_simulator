@@ -58,6 +58,41 @@ class UserController extends Controller
         return response()->json($user, 201);
     }
 
+    // update
+    public function update(Request $request)
+    {
+
+        // find user by user_id
+        $user = User::find($request->user_id);
+
+        // if not found, return error
+        if (!$user) {
+            return response()->json(['error' => 'No existe el usuario'], 404);
+        }
+
+        // if the validator passes, update the user
+        $user->update($request->all());
+        // return the succes message
+        return response()->json(['message' => 'Usuario Aprovado'], 200);
+    }
+
+    //destroy
+    public function destroy(Request $request)
+    {
+        // find user by user_id
+        $user = User::find($request->user_id);
+
+        // if not found, return error
+        if (!$user) {
+            return response()->json(['error' => 'No existe el usuario'], 404);
+        }
+
+        // if the validator passes, delete the user
+        $user->delete();
+        // return the user
+        return response()->json(['message' => 'Usuario eliminado'], 200);
+    }
+
     public function show($id)
     {
         $user = User::find($id);

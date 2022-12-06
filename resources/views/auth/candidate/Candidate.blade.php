@@ -56,7 +56,7 @@
                                 {{-- Blob --}}
                                 <div>
                                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                           for="photo">Logotipo de la planilla</label>
+                                           for="photo">Logotipo de la planilla / Fotografia del candidato</label>
                                     <input class="block w-full text-sm text-slate-500
       file:mr-4 file:py-2 file:px-4
       file:rounded-full file:border-0
@@ -76,22 +76,22 @@
                                     </div>
                                 </div>
 
-                                {{-- Blob --}}
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                           for="photo">Video de propuestas</label>
-                                    <input class="block w-full text-sm text-slate-500
-      file:mr-4 file:py-2 file:px-4
-      file:rounded-full file:border-0
-      file:text-sm file:font-semibold" id="video" type="file" name="video">
+{{--                                --}}{{-- Blob --}}
+{{--                                <div>--}}
+{{--                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"--}}
+{{--                                           for="photo">Video de propuestas</label>--}}
+{{--                                    <input class="block w-full text-sm text-slate-500--}}
+{{--      file:mr-4 file:py-2 file:px-4--}}
+{{--      file:rounded-full file:border-0--}}
+{{--      file:text-sm file:font-semibold" id="video" type="file" name="video">--}}
 
-                                </div>
+{{--                                </div>--}}
 
 
                                 {{-- Button Form --}}
                                 <div>
                                     <button id="form_button"
-                                            class="btn-block inline-flex w-full py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            class="btn-block inline-flex w-full mt-3 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                         Guardar
                                     </button>
                                 </div>
@@ -310,7 +310,7 @@
 
                 // get photo input
                 let photo = document.getElementById('photo').files[0];
-                let video = document.getElementById('video').files[0];
+                // let video = document.getElementById('video').files[0];
 
                 //append values to formData
                 formData.append('event_key', event_key);

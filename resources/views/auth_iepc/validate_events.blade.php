@@ -23,6 +23,30 @@
         </div>
     </div>
 
+    <div class="py-6">
+        <div class="sm:px-6 mx-2 lg:px-8">
+            <div class="shadow sm:rounded-md sm:overflow-hidden">
+                <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+
+                    {{-- Title Form --}}
+                    <div class="mt-5 md:mt-0 ">
+                        <h1 class="block">Validacion de usuarios</h1>
+                    </div>
+
+                    <div class="grid grid-cols-6 gap-4" id="form_event">
+
+                        {{-- Table --}}
+                        <div class="col-span-6">
+                            <div class="overflow-x-auto">
+                                <livewire:admin-users-table/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <input type="checkbox" id="viewValidationModal" class="modal-toggle"/>
     <div class="modal">
         <div class="modal-box modal-bottom ">
@@ -79,7 +103,6 @@
 
     <x-slot name="scripts">
         <script type="text/javascript">
-
             // function to convert php datetime to string d-m-Y H:i:s on UTC
             function convertDate(date) {
                 let dateObj = new Date(date);
@@ -97,8 +120,8 @@
             // function to convert date to yyyy-MM-ddThh:mm
             function convertDateToInput(date) {
                 let dateObj = new Date(date);
-                let month = dateObj.getUTCMonth() + 1; //months from 1-12
-                let day = dateObj.getUTCDate();
+                let month = (dateObj.getUTCMonth() + 1).toString().padStart(2, '0'); //months from 1-12
+                let day = dateObj.getUTCDate().toString().padStart(2, '0');
                 let year = dateObj.getUTCFullYear();
                 let hours = dateObj.getUTCHours().toString().padStart(2, '0');
                 let minutes = dateObj.getUTCMinutes().toString().padStart(2, '0');
@@ -153,6 +176,37 @@
                         //close modal
                         document.getElementById('viewValidationModal').checked = false;
 
+                    })
+                    .catch(function (error) {
+                        toastr.error(error.response.data.message);
+                    });
+            }
+
+            function accept(user_id) {
+
+                // get now() converted to php datetime
+                let now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+                axios.post("{{ route('user_update') }}",
+                    {
+                        user_id: user_id,
+                        email_verified_at: now,
+                    })
+                    .then(function (response) {
+                        toastr.success(response.data.message);
+                    })
+                    .catch(function (error) {
+                        toastr.error(error.response.data.message);
+                    });
+            }
+
+            function deny(user_id) {
+                axios.post("{{ route('user_destroy') }}",
+                    {
+                        user_id: user_id
+                    })
+                    .then(function (response) {
+                        toastr.success(response.data.message);
                     })
                     .catch(function (error) {
                         toastr.error(error.response.data.message);

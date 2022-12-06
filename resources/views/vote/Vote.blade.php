@@ -25,26 +25,26 @@
                     </div>
                     <div></div>
 
-                    <div></div>
-                    <div class="col-span-3 md:col-span-1 shadow rounded-md overflow-hidden">
-                        <div class="px-4 py-5 bg-white sm:p-6">
-                            <div class="grid grid-cols-1 gap-3">
+{{--                    <div></div>--}}
+{{--                    <div class="col-span-3 md:col-span-1 shadow rounded-md overflow-hidden">--}}
+{{--                        <div class="px-4 py-5 bg-white sm:p-6">--}}
+{{--                            <div class="grid grid-cols-1 gap-3">--}}
 
-                                <button type="button"
-                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    2.- Conoce a los candidatos
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div></div>
+{{--                                <button type="button"--}}
+{{--                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">--}}
+{{--                                    2.- Conoce a los candidatos--}}
+{{--                                </button>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div></div>--}}
 
                     <div class="col-span-3 shadow rounded-md overflow-hidden">
                         <div class="p-4 bg-gray-200">
                             {{-- Title Form --}}
                             <div class="text-center">
                                 <h1 class="block" id="title">Votacion</h1>
-                                <p class="block">Paso 3: Vota por la planilla de tu preferencia</p>
+                                <p class="block">Paso 2: Vota por la planilla de tu preferencia</p>
                             </div>
                             {{-- Form structure --}}
                             <div class="flex flex-wrap justify-center" id="candidates">

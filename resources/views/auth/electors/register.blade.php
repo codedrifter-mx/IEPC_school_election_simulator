@@ -41,6 +41,10 @@
                                 <td id="event_start_date"></td>
                             </tr>
                             <tr>
+                                <td>Fin de Votaciones</td>
+                                <td id="event_end_date"></td>
+                            </tr>
+                            <tr>
                                 <td>Estado</td>
                                 <td id="event_status"></td>
                             </tr>
@@ -82,7 +86,7 @@
                                         id="link_vote" href=""></a></div>
 
                                 {{-- timer between start_at and now--}}
-                                <div class="p-6 break-all rounded bg-primary text-center">
+                                <div class="p-6 break-all rounded bg-primary text-center" id="timer_upper">
                                     <div class="text-white font-bold" id="timer">0d 0h 0m 0s</div>
                                 </div>
 
@@ -178,11 +182,15 @@
     <x-slot name="scripts">
         <script type="text/javascript">
 
+            var x = null;
+
             // Create a showEvent function, it takes the event id as a parameter, get all the event data and put it in the modal
             function showEvent() {
 
                 // get event_key from combobox
                 let event_key = document.getElementById('event_key').value;
+
+
 
                 axios.get("{{ route('event_show') }}",
                     {
@@ -191,7 +199,7 @@
                         }
                     })
                     .then(function (response) {
-                        // console.log(response);
+                        console.log(response);
                         // if status 201, show toaster
                         if (response.data.data.status === 201) {
                             toastr.error(response.data.message);
@@ -200,12 +208,27 @@
 
                         document.getElementById('event_director').innerHTML = response.data.data.director;
                         document.getElementById('event_responsible').innerHTML = response.data.data.responsible;
+                        document.getElementById('event_start_date').innerHTML = convertDate(response.data.data.start_at);
+                        document.getElementById('event_end_date').innerHTML = convertDate(response.data.data.end_at);
+
+                        document.getElementById('link_register').innerHTML = window.location.origin + "/votacion/registro/" + response.data.data.event_key;
+                        document.getElementById('link_register').href = window.location.origin + "/votacion/registro/" + response.data.data.event_key;
+                        document.getElementById("qr_register").src = window.location.origin + "/qr_register/" + response.data.data.event_key;
+
+                        document.getElementById('link_vote').innerHTML = window.location.origin + "/votacion/" + response.data.data.event_key;
+                        document.getElementById('link_vote').href = window.location.origin + "/votacion/" + response.data.data.event_key;
+                        document.getElementById("qr_vote").src = window.location.origin + "/qr_vote/" + response.data.data.event_key;
 
                         // enable first and second divs opacoity 1 and pointerEvents
                         document.getElementById('first').style.opacity = 1;
                         document.getElementById('first').style.pointerEvents = 'auto';
                         document.getElementById('second').style.opacity = 1;
                         document.getElementById('second').style.pointerEvents = 'auto';
+
+                        // remove timer_upper inner html and add again <div class="text-white font-bold" id="timer">0d 0h 0m 0s</div>
+                        document.getElementById('timer_upper').innerHTML = '<div class="text-white font-bold" id="timer">0d 0h 0m 0s</div>';
+                        // delete x object if exists
+                        clearInterval(x);
 
                         // if response.data.status is 0, add a badge with the text "Inactivo", if is 1, add a badge with the text "Activo", if is 2, add a badge with the text "Finalizado"
                         if (response.data.data.status === 0) {
@@ -228,7 +251,7 @@
                             document.getElementById('third').style.pointerEvents = "none";
 
                             // enable clock text as a timer between start_at and current time
-                            var countDownDate = response.data.data.start_at;
+                            let countDownDate = response.data.data.start_at;
                             if (countDownDate) {
                                 countDownDate = new Date(countDownDate);
                             } else {
@@ -236,22 +259,27 @@
                                 localStorage.setItem('startDate', countDownDate);
                             }
 
-                            var x = setInterval(function () {
+                            x = setInterval(function () {
 
-                                // Get todays date and time
-                                var now = new Date().getTime();
+                                // Get todays date and time convert to timezone
+                                let now = new Date();
+                                let utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                                let utc_countDownDate = countDownDate.getTime() + (countDownDate.getTimezoneOffset() * 60000);
+
 
                                 // Find the distance between now an the count down date
-                                var distance = now - countDownDate.getTime();
+                                let distance = utc - utc_countDownDate;
 
-                                // Time calculations for days, hours, minutes and seconds
-                                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) - 5;
-                                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                                let dateObj = new Date(distance);
+                                let month = dateObj.getMonth();
+                                let day = dateObj.getDate() - 1;
+                                let hours = dateObj.getHours().toString().padStart(2, '0');
+                                let minutes = dateObj.getMinutes().toString().padStart(2, '0');
+                                let seconds = dateObj.getSeconds().toString().padStart(2, '0');
+
 
                                 // Output the result in an element with id="demo"
-                                document.getElementById("timer").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+                                document.getElementById("timer").innerHTML = day + "d " + hours + "h " + minutes + "m " + seconds + "s ";
                             }, 1000);
 
 
@@ -269,6 +297,17 @@
                             // able third
                             document.getElementById('third').style.opacity = "1";
                             document.getElementById('third').style.pointerEvents = "auto";
+
+                            // remove link_register and qr_register, link_vote and qr_vote
+                            document.getElementById('link_register').innerHTML = "";
+                            document.getElementById('link_register').href = "";
+                            document.getElementById("qr_register").src = "";
+
+                            document.getElementById('link_vote').innerHTML = "";
+                            document.getElementById('link_vote').href = "";
+                            document.getElementById("qr_vote").src = "";
+
+
                         } else if (response.data.data.status === 3) {
                             document.getElementById('event_status').innerHTML = '<span class="badge badge-secondary">Falta validacion IEPC</span>';
 
@@ -282,6 +321,15 @@
                             document.getElementById('second').style.pointerEvents = "none";
                             document.getElementById('third').style.opacity = "0.5";
                             document.getElementById('third').style.pointerEvents = "none";
+
+                            // remove link_register and qr_register, link_vote and qr_vote
+                            document.getElementById('link_register').innerHTML = "";
+                            document.getElementById('link_register').href = "";
+                            document.getElementById("qr_register").src = "";
+
+                            document.getElementById('link_vote').innerHTML = "";
+                            document.getElementById('link_vote').href = "";
+                            document.getElementById("qr_vote").src = "";
                         } else if (response.data.data.status === 4) {
                             document.getElementById('event_status').innerHTML = '<span class="badge badge-secondary">Candidatos Insuficientes</span>';
 
@@ -295,17 +343,18 @@
                             document.getElementById('second').style.pointerEvents = "none";
                             document.getElementById('third').style.opacity = "0.5";
                             document.getElementById('third').style.pointerEvents = "none";
+
+                            // remove link_register and qr_register, link_vote and qr_vote
+                            document.getElementById('link_register').innerHTML = "";
+                            document.getElementById('link_register').href = "";
+                            document.getElementById("qr_register").src = "";
+
+                            document.getElementById('link_vote').innerHTML = "";
+                            document.getElementById('link_vote').href = "";
+                            document.getElementById("qr_vote").src = "";
                         }
 
-                        document.getElementById('event_start_date').innerHTML = stringToDateMXFormat(response.data.data.start_at);
 
-                        document.getElementById('link_register').innerHTML = window.location.origin + "/votacion/registro/" + response.data.data.event_key;
-                        document.getElementById('link_register').href = window.location.origin + "/votacion/registro/" + response.data.data.event_key;
-                        document.getElementById("qr_register").src = window.location.origin + "/qr_register/" + response.data.data.event_key;
-
-                        document.getElementById('link_vote').innerHTML = window.location.origin + "/votacion/" + response.data.data.event_key;
-                        document.getElementById('link_vote').href = window.location.origin + "/votacion/" + response.data.data.event_key;
-                        document.getElementById("qr_vote").src = window.location.origin + "/qr_vote/" + response.data.data.event_key;
 
                     })
                     .catch(function (error) {
@@ -328,9 +377,32 @@
                     });
             }
 
-            function stringToDateMXFormat(string) {
-                let date = new Date(string);
-                return date.toLocaleString("es-MX", {timeZone: "America/Mexico_City"});
+            // function to convert php datetime to string d-m-Y H:i:s on UTC
+            function convertDate(date) {
+                let dateObj = new Date(date);
+                let month = dateObj.getUTCMonth() + 1; //months from 1-12
+                let day = dateObj.getUTCDate();
+                let year = dateObj.getUTCFullYear();
+                let hours = dateObj.getUTCHours().toString().padStart(2, '0');
+                let minutes = dateObj.getUTCMinutes().toString().padStart(2, '0');
+                let seconds = dateObj.getUTCSeconds().toString().padStart(2, '0');
+
+                let newdate = day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                return newdate;
+            }
+
+            // function to convert date to yyyy-MM-ddThh:mm
+            function convertDateToInput(date) {
+                let dateObj = new Date(date);
+                let month = (dateObj.getUTCMonth() + 1).toString().padStart(2, '0'); //months from 1-12
+                let day = dateObj.getUTCDate().toString().padStart(2, '0');
+                let year = dateObj.getUTCFullYear();
+                let hours = dateObj.getUTCHours().toString().padStart(2, '0');
+                let minutes = dateObj.getUTCMinutes().toString().padStart(2, '0');
+                let seconds = dateObj.getUTCSeconds().toString().padStart(2, '0');
+
+                let newdate = year + "-" + month + "-" + day + "T" + hours + ":" + minutes;
+                return newdate;
             }
 
             // function to conver string to date yyyy-MM-ddThh:mm format
@@ -372,7 +444,7 @@
                     })
                     .then(function (response) {
 
-                        console.log(response)
+                        // console.log(response)
                         // fill all details_* with data
                         document.getElementById('details_name').innerHTML = response.data.name;
                         document.getElementById('details_schedule').innerHTML = response.data.schedule;

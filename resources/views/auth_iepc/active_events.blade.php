@@ -222,20 +222,7 @@
         <script type="text/javascript">
 
             let event_key = null;
-
-            // function to convert date to yyyy-MM-ddThh:mm
-            function convertDateToInput(date) {
-                let dateObj = new Date(date);
-                let month = dateObj.getUTCMonth() + 1; //months from 1-12
-                let day = dateObj.getUTCDate();
-                let year = dateObj.getUTCFullYear();
-                let hours = dateObj.getUTCHours().toString().padStart(2, '0');
-                let minutes = dateObj.getUTCMinutes().toString().padStart(2, '0');
-                let seconds = dateObj.getUTCSeconds().toString().padStart(2, '0');
-
-                let newdate = year + "-" + month + "-" + day + "T" + hours + ":" + minutes;
-                return newdate;
-            }
+            var x = null;
 
             // function to convert php datetime to string d-m-Y H:i:s on UTC
             function convertDate(date) {
@@ -248,6 +235,20 @@
                 let seconds = dateObj.getUTCSeconds().toString().padStart(2, '0');
 
                 let newdate = day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                return newdate;
+            }
+
+            // function to convert date to yyyy-MM-ddThh:mm
+            function convertDateToInput(date) {
+                let dateObj = new Date(date);
+                let month = (dateObj.getUTCMonth() + 1).toString().padStart(2, '0'); //months from 1-12
+                let day = dateObj.getUTCDate().toString().padStart(2, '0');
+                let year = dateObj.getUTCFullYear();
+                let hours = dateObj.getUTCHours().toString().padStart(2, '0');
+                let minutes = dateObj.getUTCMinutes().toString().padStart(2, '0');
+                let seconds = dateObj.getUTCSeconds().toString().padStart(2, '0');
+
+                let newdate = year + "-" + month + "-" + day + "T" + hours + ":" + minutes;
                 return newdate;
             }
 
@@ -275,22 +276,28 @@
                             localStorage.setItem('startDate', countDownDate);
                         }
 
-                        var x = setInterval(function () {
+                        clearInterval(x)
+                        x = setInterval(function () {
 
-                            // Get todays date and time
-                            var now = new Date().getTime();
+                            // Get todays date and time convert to timezone
+                            let now = new Date();
+                            let utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                            let utc_countDownDate = countDownDate.getTime() + (countDownDate.getTimezoneOffset() * 60000);
+
 
                             // Find the distance between now an the count down date
-                            var distance = now - countDownDate.getTime();
+                            let distance = utc - utc_countDownDate;
 
-                            // Time calculations for days, hours, minutes and seconds
-                            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) - 5;
-                            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                            let dateObj = new Date(distance);
+                            let month = dateObj.getMonth();
+                            let day = dateObj.getDate() - 1;
+                            let hours = dateObj.getHours().toString().padStart(2, '0');
+                            let minutes = dateObj.getMinutes().toString().padStart(2, '0');
+                            let seconds = dateObj.getSeconds().toString().padStart(2, '0');
+
 
                             // Output the result in an element with id="demo"
-                            document.getElementById("timer").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+                            document.getElementById("timer").innerHTML = day + "d " + hours + "h " + minutes + "m " + seconds + "s ";
                         }, 1000);
 
 
@@ -319,7 +326,7 @@
                     })
                     .then(function (response) {
 
-                        console.log(response)
+                        // console.log(response)
                         // fill all details_* with data
                         document.getElementById('details_name').innerHTML = response.data.name;
                         document.getElementById('details_schedule').innerHTML = response.data.schedule;

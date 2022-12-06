@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\ElectorController;
 use Illuminate\Http\Request;
@@ -33,6 +34,10 @@ Route::get('event_details', [EventController::class, 'getDetails'])->name('event
 Route::get('event_getResults', [EventController::class, 'getResults'])->name('event_getResults');
 Route::get('event_getResultsPdf', [EventController::class, 'getResultsPdf'])->name('event_getResultsPdf');
 Route::get('event_getMajority', [EventController::class, 'getMajority'])->name('event_getMajority');
+
+// user
+Route::post('user_update', [UserController::class, 'update'])->name('user_update');
+Route::post('user_destroy', [UserController::class, 'destroy'])->name('user_destroy');
 
 // Make elector API routes for store
 Route::post('elector_store', [ElectorController::class, 'store'])->name('elector_store');

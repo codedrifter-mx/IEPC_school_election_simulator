@@ -100,17 +100,19 @@ class EventController extends Controller
             return response()->json(['message' => 'Evento no encontrado'], 404);
         }
 
-        // Add a numeric status column, if the event is between start_at and end_at, is 1, if the event is before start_at, is 0, if the event is after end_at, is 2, if the event is null, is 3
-        $now = now();
+        // now variable with America/Mexico_City timezone
+        $now = now('America/Mexico_City');
 
-        if ($now->between($event->start_at, $event->end_at)) {
+        // do IF(events.start_at <= CONVERT_TZ(NOW(),"SYSTEM","America/Mexico_City") AND events.end_at >= CONVERT_TZ(NOW(),"SYSTEM","America/Mexico_City"), 1, IF(events.start_at > CONVERT_TZ(NOW(),"SYSTEM","America/Mexico_City"), 0, IF(events.end_at < CONVERT_TZ(NOW(),"SYSTEM","America/Mexico_City"), 2, 3))) as status but in php and converting to strtotime
+        if (strtotime($now) > strtotime($event->start_at) and strtotime($now) < strtotime($event->end_at)) {
             $event->status = 1;
-        } elseif ($now->lt($event->start_at)) {
+        } elseif (strtotime($now) < strtotime($event->start_at)) {
             $event->status = 0;
-        } elseif ($now->gt($event->end_at)) {
+        } elseif (strtotime($now) > strtotime($event->end_at)) {
             $event->status = 2;
+        } else {
+            $event->status = 3;
         }
-
 
         if ($event->approved == 0) {
             $event->status = 3;
@@ -243,7 +245,7 @@ class EventController extends Controller
             return response()->json(['message' => 'Evento no encontrado'], 500);
         }
 
-        $event->end_at = now();
+        $event->end_at = now('America/Mexico_City');
         $event->save();
 
         // return 200 json
