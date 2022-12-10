@@ -32,7 +32,7 @@ Route::view('/admin/reports', 'auth_iepc.reports')->name('admin_reports');
 
 // QR event code
 Route::get('/qr_register/{key}', function ($event_key) {
-    $image = QrCode::size(1024)->generate(request()->getHttpHost().'/votacion/register' . $event_key);
+    $image = QrCode::size(1024)->generate(request()->getHttpHost().'/votacion/registro/' . $event_key);
 
     return response($image)->header('Content-type','image/svg+xml');
 })->name('qr_register');
@@ -50,15 +50,9 @@ Route::get('/qr_vote/{key}', function ($event_key) {
 
 // Candidate stored image
 Route::get('/candidate/image/{candidate_key}', function ($candidate_key) {
-    if (!Storage::disk('public')->exists('candidates/' . $candidate_key . '.jpg')) {
-        return response()->file(public_path('img/default.png'));
-    }
+    $file = Storage::disk('s3')->get('candidates/' . $candidate_key . '.jpg');
 
-    $file = File::get(storage_path('app/public/candidates/' . $candidate_key . '.jpg'));
-    $response = Response::make($file, 200);
-    $response->header("Content-Type", 'image/jpeg');
-
-    return $response;
+    return response($file, 200)->header('Content-Type','image/jpeg');
 })->name('candidate.image');
 
 // Get event stored file

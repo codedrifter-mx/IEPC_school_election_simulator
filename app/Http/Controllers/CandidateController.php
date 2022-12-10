@@ -78,13 +78,13 @@ class CandidateController extends Controller
             $image = Image::make($request->file('photo'))->fit(300, 400)->encode('jpg', 75);
 
             // save the image in 'public/candidates', $candidate->candidate_key . '.jpg'
-            Storage::disk('public')->put('candidates/' . $candidate->candidate_key . '.jpg', $image);
+            Storage::disk('s3')->put('candidates/' . $candidate->candidate_key . '.jpg', $image);
         }
 
         // if request has video file, save it
         if ($request->hasFile('video')) {
             // save the video in 'public/candidates', $candidate->candidate_key . '.mp4'
-            Storage::disk('public')->put('candidates/' . $candidate->candidate_key . '.mp4', $request->file('video'));
+            Storage::disk('s3')->put('candidates/' . $candidate->candidate_key . '.mp4', $request->file('video'));
         }
 
         // create a 'nulo' candidate, if its not already created on this event_key
@@ -168,7 +168,7 @@ class CandidateController extends Controller
             $image = Image::make($request->file('photo'))->fit(400, 400)->encode('jpg', 75);
 
             // save the image
-            Storage::disk('public')->put('candidates/' . $candidate->candidate_key . '.jpg', $image);
+            Storage::disk('s3')->put('candidates/' . $candidate->candidate_key . '.jpg', $image);
         }
 
         return response()->json($candidate, 200);
@@ -187,7 +187,7 @@ class CandidateController extends Controller
 
         // delete 'candidates/' . $candidate_key . '.jpg' from storage inside try catch
         try {
-            Storage::disk('public')->delete('candidates/' . $candidate_key . '.jpg');
+            Storage::disk('s3')->delete('candidates/' . $candidate_key . '.jpg');
         } catch (\Exception $e) {
             \Log::info($e);
         }

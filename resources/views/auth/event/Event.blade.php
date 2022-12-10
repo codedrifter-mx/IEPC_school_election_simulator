@@ -117,16 +117,16 @@
                             </div>
 
 
-                            {{-- Blob --}}
-                            <div class="w-full">
-                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                       for="photo">Logotipo de la Institución</label>
-                                <input class="block w-full text-sm text-slate-500
-      file:mr-4 file:py-2 file:px-4
-      file:rounded-full file:border-0
-      file:text-sm file:font-semibold" id="logo" type="file" name="photo">
+{{--                            --}}{{-- Blob --}}
+{{--                            <div class="w-full">--}}
+{{--                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"--}}
+{{--                                       for="photo">Logotipo de la Institución</label>--}}
+{{--                                <input class="block w-full text-sm text-slate-500--}}
+{{--      file:mr-4 file:py-2 file:px-4--}}
+{{--      file:rounded-full file:border-0--}}
+{{--      file:text-sm file:font-semibold" id="logo" type="file" name="photo">--}}
 
-                            </div>
+{{--                            </div>--}}
 
 
                             {{-- start_at --}}
