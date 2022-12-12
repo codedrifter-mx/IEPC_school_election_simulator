@@ -49,7 +49,7 @@
                                     <div class="my-1 flex rounded-md shadow-sm">
                                         <input type="text" name="teamname" id="teamname"
                                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
-                                               placeholder="Equipo">
+                                               placeholder="Planilla">
                                     </div>
                                 </div>
 
@@ -142,11 +142,7 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>Identificador</td>
-                            <td id="modal_candidate_key"></td>
-                        </tr>
-                        <tr>
-                            <td>Equipo</td>
+                            <td>Planilla</td>
                             <td id="modal_teamname"></td>
                         </tr>
                         <tr>

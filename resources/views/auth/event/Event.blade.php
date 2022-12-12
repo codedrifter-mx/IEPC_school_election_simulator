@@ -35,11 +35,7 @@
                                     Ciclo escolar </label>
                                 <select id="cycle" name="cycle"
                                         class="focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    <option value="2020-2021">2020-2021</option>
-                                    <option value="2021-2022">2021-2022</option>
-                                    <option value="2022-2023">2022-2023</option>
-                                    <option value="2023-2024">2023-2024</option>
-                                    <option value="2024-2025">2024-2025</option>
+
                                 </select>
                             </div>
 
@@ -395,6 +391,15 @@
                 document.getElementById('form_event').addEventListener('submit', storeEvent);
                 document.getElementById('user_id').value = "{{ Auth::user()->user_id }}";
 
+                // fill cycle with "year-year+1" format, 10 years from current
+                let currentYear = new Date().getFullYear();
+                for (let i = 0; i < 10; i++) {
+                    let option = document.createElement("option");
+                    option.text = currentYear + "-" + (currentYear + 1);
+                    option.value = currentYear + "-" + (currentYear + 1);
+                    document.getElementById("cycle").add(option);
+                    currentYear++;
+                }
 
             });
 

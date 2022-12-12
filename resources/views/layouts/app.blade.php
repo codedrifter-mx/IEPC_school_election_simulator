@@ -23,7 +23,7 @@
     @include('layouts.navigation')
 
     <!-- Page Content -->
-    <main>
+    <main style="margin-top: 4rem;">
         {{ $slot }}
     </main>
 </div>

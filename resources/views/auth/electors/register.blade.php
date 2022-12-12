@@ -62,7 +62,7 @@
                         <div class="shadow rounded-md overflow-hidden">
                             <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                                 <div class="text-center">
-                                    <h1 class="block">Fase 1: Desarrollo de la votación</h1>
+                                    <h1 class="block">Fase 1: Registro de votantes</h1>
                                 </div>
                                 <img class="max-w-full m-0 p-6" id="qr_register" src="" alt="QR">
                                 <div class="p-6 break-all rounded bg-primary text-center"><a
@@ -77,7 +77,7 @@
                         <div class="shadow rounded-md overflow-hidden">
                             <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                                 <div class="text-center">
-                                    <h1 class="block">Fase 2: Desarrollo de la votación</h1>
+                                    <h1 class="block">Fase 2: Votación</h1>
                                 </div>
 
                                 <img class="max-w-full m-0 p-6" id="qr_vote" src="" alt="QR">

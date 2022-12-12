@@ -121,7 +121,7 @@ class EventController extends Controller
         // if tha candidates with this event_key are odd or less than 2, status is 4
         $candidates = Candidate::where('event_id', $event->event_id)->get();
 
-        if ((count($candidates) - 1) % 2 != 0 || (count($candidates) - 1) < 2) {
+        if ((count($candidates) - 1) < 2) {
             $event->status = 4;
         }
 
@@ -455,6 +455,9 @@ class EventController extends Controller
             'end_at' => $event->end_at,
             'director' => $event->director,
         ];
+
+        // exclude $data['candidates'] key 'nulo'
+        $data['candidates']->forget('nulo');
 
         $data['candidates'] = $data['candidates']->sortDesc();
 

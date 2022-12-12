@@ -103,11 +103,11 @@ class CandidateController extends Controller
         // if there is odd number of candidates, send a json warning
         $candidates = Candidate::where('event_id', $event->event_id)->get();
 
-        if ((count($candidates) - 1) % 2 != 0) {
+        if ((count($candidates) - 1) == 1) {
             return response()->json([
-                'message' => 'El número de candidatos es impar, por favor agrega otro candidato',
+                'message' => 'El número de candidatos es 1, por favor agrega otro candidato',
                 'candidate' => $candidate,
-            ], 201);
+            ], 203);
         }
 
         // if event end_at is empty, return a successful message but with a warning about validation
