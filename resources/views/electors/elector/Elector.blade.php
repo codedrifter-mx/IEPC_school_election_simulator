@@ -12,7 +12,7 @@
                             <div class="flex w-full justify-center">
                                 <div class=" justify-center">
                                     <svg id="svg" xmlns="http://www.w3.org/2000/svg"
-                                         xmlns:xlink="http://www.w3.org/1999/xlink" height="100" class="p-0"
+                                         height="100" class="p-0"
                                          viewBox="0, 0, 400,178.73859579531933"
                                          preserveAspectRatio="none">
                                         <g id="svgg">
@@ -165,7 +165,11 @@
     <input type="checkbox" id="viewCandidateModal" class="modal-toggle"/>
     <div class="modal">
         <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
+            <div class="text-center">
+                <p class="font-bold">¡Haz click para ver sus propuestas!</p>
+            </div>
             <div class="grid grid-cols-1">
+
 
                 <div class="flex flex-wrap justify-center" id="candidates">
 
@@ -173,6 +177,24 @@
 
                 <div class="modal-action col-span-3">
                     <label for="viewCandidateModal" class="btn">Cerrar</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="checkbox" id="viewCandidateVideo" class="modal-toggle"/>
+    <div class="modal">
+        <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
+            <div class="grid grid-cols-1">
+
+                <div class="flex flex-wrap justify-center">
+                    <video id="video" src="" controls></video>
+                </div>
+
+                <div class="modal-action col-span-3">
+                    <label for="viewCandidateVideo" class="btn" onclick="
+                        document.getElementById('video').pause();
+                        ">Cerrar</label>
                 </div>
             </div>
         </div>
@@ -302,6 +324,16 @@
                     });
             }
 
+            function setVideo(candidate_key) {
+                // on id "video" set src to src_video
+                document.getElementById('video').src = window.location.origin + "/candidate/video/" + candidate_key;
+
+                document.getElementById('viewCandidateVideo').checked = true;
+
+                document.getElementById('video').play();
+
+            }
+
             // Create indexCandidates to fill all candidates as cards
             function indexCandidates(event_key) {
 
@@ -318,9 +350,9 @@
 
                             let src = window.location.origin + "/candidate/image/" + candidates[i].candidate_key;
 
-                            t += `<div class="max-w-xs w-[13.5rem] m-2">
+                            t += `<div class="max-w-xs w-[13.5rem] m-2" style="" onclick="setVideo('` + candidates[i].candidate_key + `')">
                                     <div class="relative">
-                                        <div for="` + 'candidate_' + i + `"
+                                        <label for="` + 'candidate_' + i + `"
                                                class="card flex rounded-xl bg-white bg-opacity-90 backdrop-blur-2xl shadow-xl hover:bg-opacity-25 peer-checked:bg-purple-900 peer-checked:text-whitetransition">
                                             <figure class="object-fit"><img src="` + src + `" alt="` + 'candidate_' + i + `" class=" h-[14.5rem]"/></figure>
                                             <div class="p-4">
@@ -329,7 +361,7 @@
                                                     <p>` + candidates[i].name + `</p>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </label>
                                     </div>
                                 </div>`;
                         }
@@ -341,24 +373,9 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-
-                // axios get request
-                axios.get("{{ route('event_show') }}",
-                    {
-                        params: {
-                            event_key: event_key
-                        }
-                    })
-                    .then(function (response) {
-                        // console.log(response);
-
-                        document.getElementById('title').innerHTML = response.data.data.name;
-
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
             }
+
+
 
 
             // when document loaded

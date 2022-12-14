@@ -83,8 +83,14 @@ class CandidateController extends Controller
 
         // if request has video file, save it
         if ($request->hasFile('video')) {
-            // save the video in 'public/candidates', $candidate->candidate_key . '.mp4'
-            Storage::disk('s3')->put('candidates/' . $candidate->candidate_key . '.mp4', $request->file('video'));
+            $video = $request->file('video');
+
+            // rename video as $candidate->candidate_key . '.mp4'\
+
+
+
+            // save the video in s3 with rename $candidate->candidate_key . '.mp4'
+            Storage::disk('s3')->putFileAs('candidates', $video, $candidate->candidate_key . '.mp4');
         }
 
         // create a 'nulo' candidate, if its not already created on this event_key
@@ -164,11 +170,17 @@ class CandidateController extends Controller
 
         // if request has photo file, save it
         if ($request->hasFile('photo')) {
-            // transform as vertical 4:3 ratio and lowest file size
-            $image = Image::make($request->file('photo'))->fit(400, 400)->encode('jpg', 75);
+            // transform $request->file('photo') into .jpg file with vertical 4:3 ratio and lowest file size
+            $image = Image::make($request->file('photo'))->fit(300, 400)->encode('jpg', 75);
 
-            // save the image
+            // save the image in 'public/candidates', $candidate->candidate_key . '.jpg'
             Storage::disk('s3')->put('candidates/' . $candidate->candidate_key . '.jpg', $image);
+        }
+
+        // if request has video file, save it
+        if ($request->hasFile('video')) {
+            // save the video in 'public/candidates', $candidate->candidate_key . '.mp4'
+            Storage::disk('s3')->put('candidates/' . $candidate->candidate_key . '.mp4', $request->file('video'));
         }
 
         return response()->json($candidate, 200);

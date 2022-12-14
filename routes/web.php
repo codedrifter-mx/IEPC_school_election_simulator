@@ -55,6 +55,14 @@ Route::get('/candidate/image/{candidate_key}', function ($candidate_key) {
     return response($file, 200)->header('Content-Type','image/jpeg');
 })->name('candidate.image');
 
+// Candidate stored video
+Route::get('/candidate/video/{candidate_key}', function ($candidate_key) {
+    $url = Storage::disk('s3')->get('candidates/' . $candidate_key . '.mp4');
+
+    return response($url, 200)->header('Content-Type','video/mp4');
+})->name('candidate.video');
+
+
 // Get event stored file
 Route::get('/pdf/ficha/{candidate_key}', function ($event_key) {
     if (!Storage::disk('public')->exists('pdf/ficha/' . $event_key . '.pdf')) {

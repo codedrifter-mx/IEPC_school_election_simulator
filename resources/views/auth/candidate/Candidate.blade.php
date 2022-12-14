@@ -76,16 +76,16 @@
                                     </div>
                                 </div>
 
-{{--                                --}}{{-- Blob --}}
-{{--                                <div>--}}
-{{--                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"--}}
-{{--                                           for="photo">Video de propuestas</label>--}}
-{{--                                    <input class="block w-full text-sm text-slate-500--}}
-{{--      file:mr-4 file:py-2 file:px-4--}}
-{{--      file:rounded-full file:border-0--}}
-{{--      file:text-sm file:font-semibold" id="video" type="file" name="video">--}}
+{{--                                 Blob--}}
+                                <div>
+                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                           for="photo">Video de propuestas</label>
+                                    <input class="block w-full text-sm text-slate-500
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-full file:border-0
+      file:text-sm file:font-semibold" id="video" type="file" name="video">
 
-{{--                                </div>--}}
+                                </div>
 
 
                                 {{-- Button Form --}}
@@ -152,6 +152,9 @@
                         </tbody>
                     </table>
                     <div class="modal-action col-span-3">
+                        <a href="" type="button" class="btn btn-primary" id="view_video">
+                            Ver video
+                        </a>
                         <label for="viewCandidateModal" class="btn">Cerrar</label>
                     </div>
                 </div>
@@ -306,13 +309,14 @@
 
                 // get photo input
                 let photo = document.getElementById('photo').files[0];
-                // let video = document.getElementById('video').files[0];
+                let video = document.getElementById('video').files[0];
 
                 //append values to formData
                 formData.append('event_key', event_key);
                 formData.append('teamname', teamname);
                 formData.append('name', name);
                 formData.append('photo', photo);
+                formData.append('video', video);
 
 
                 // axios post on candidate_store laravel route, with all input values and photo input
@@ -464,10 +468,10 @@
                     .then(function (response) {
                         // console.log(response);
                         document.getElementById("modal_photo").src = window.location.origin + "/candidate/image/" + response.data.candidate_key;
+                        document.getElementById("view_video").href = window.location.origin + "/candidate/video/" + response.data.candidate_key;
 
 
                         // put the candidate data in the modal
-                        document.getElementById('modal_candidate_key').innerHTML = response.data.candidate_key;
                         document.getElementById('modal_teamname').innerHTML = response.data.teamname;
                         document.getElementById('modal_name').innerHTML = response.data.name;
 
