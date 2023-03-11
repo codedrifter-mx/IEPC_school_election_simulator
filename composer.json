@@ -6,7 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "ext-intl": "*",
         "ext-zip": "*",
+        "aws/aws-sdk-php": "^3.260",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^2.7",
         "laravel/framework": "^9.19",
@@ -15,6 +17,7 @@
         "laravel/tinker": "^2.7",
         "league/flysystem-aws-s3-v3": "^3.0",
         "livewire/livewire": "^2.10",
+        "phpoffice/phpspreadsheet": "^1.27",
         "rappasoft/laravel-livewire-tables": "^2.8",
         "setasign/fpdf": "^1.8",
         "setasign/fpdi": "^2.3",

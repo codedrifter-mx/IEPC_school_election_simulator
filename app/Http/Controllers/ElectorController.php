@@ -17,7 +17,6 @@ class ElectorController extends Controller
         $rules = [
             'name' => 'required|string',
             'paternal_surname' => 'required|string',
-            'maternal_surname' => 'required|string',
             'grade' => 'required|string',
             'group' => 'required|string',
             'code' => 'required|string'
@@ -27,10 +26,8 @@ class ElectorController extends Controller
         $msgs = [
             'name.required' => 'El nombre es requerido',
             'name.string' => 'El nombre debe ser una cadena de texto',
-            'paternal_surname.required' => 'El apellido paterno es requerido',
-            'paternal_surname.string' => 'El apellido paterno debe ser una cadena de texto',
-            'maternal_surname.required' => 'El apellido materno es requerido',
-            'maternal_surname.string' => 'El apellido materno debe ser una cadena de texto',
+            'paternal_surname.required' => 'El primer apellido es requerido',
+            'paternal_surname.string' => 'El primer apellido debe ser una cadena de texto',
             'grade.required' => 'El grado es requerido',
             'grade.string' => 'El grado debe ser una cadena de texto',
             'group.required' => 'El grupo es requerido',
@@ -41,6 +38,11 @@ class ElectorController extends Controller
 
         // make a validator with the rules and msgs
         $request->validate($rules, $msgs);
+
+        // if maternal_surname is empty, then add a space
+        if ($request->maternal_surname == null) {
+            $request->request->add(['maternal_surname' => " "]);
+        }
 
         $request->request->add(['elector_key' => Str::random(8)]);
         // combine name, paternal_surname and maternal_surname and delete paternal_surname and maternal_surname afterwards

@@ -1,106 +1,107 @@
 <x-public-layout>
     <div class="py-3">
         <div class="sm:px-4 lg:px-6">
-            <div class="md:mt-0 md:col-span-1">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <div class="flex flex-col text-center items-center gap-4 px-2">
 
-                    <div></div>
-                    <div class="col-span-3 md:col-span-1 shadow rounded-md overflow-hidden">
-                        <div class="px-4 py-5 bg-white sm:p-6">
-                            <div class="grid grid-cols-1 gap-3">
+                    <div class="shadow rounded-md overflow-hidden w-full md:w-[40rem]">
+                        <div class="px-6 py-5 bg-white sm:p-6">
 
-                                {{-- code --}}
-                                <div>
-                                    <label for="code"
-                                           class="block font-medium text-gray-700 text-center">
-                                        1.- Ingresa tu codigo de voto </label>
-                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                        <input type="text" name="code" id="code"
-                                               class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
-                                               placeholder="XXXX1234">
-                                    </div>
-                                </div>
+                            <label for="code"
+                                   class="block font-medium text-gray-700 text-center">
+                                Paso 1.- Ingresa tu codigo de voto </label>
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <input type="text" name="code" id="code"
+                                       class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
+                                       placeholder="XXXX1234">
                             </div>
                         </div>
                     </div>
-                    <div></div>
 
-{{--                    <div></div>--}}
-{{--                    <div class="col-span-3 md:col-span-1 shadow rounded-md overflow-hidden">--}}
-{{--                        <div class="px-4 py-5 bg-white sm:p-6">--}}
-{{--                            <div class="grid grid-cols-1 gap-3">--}}
+                    <div class="shadow rounded-md overflow-hidden w-full md:w-[40rem]">
+                        <div class="px-6 py-5 bg-white sm:p-6">
 
-{{--                                <button type="button"--}}
-{{--                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">--}}
-{{--                                    2.- Conoce a los candidatos--}}
-{{--                                </button>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div></div>--}}
+                            <label
+                                   class="block font-medium text-gray-700 text-center">
+                                Paso 2.- Conoce a los candidatos </label>
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <button type="button"
+                                        class="w-full flex justify-center text-white p-2 rounded-md shadow-lg btn-primary"
+                                        onclick="document.getElementById('viewCandidateModal').checked = true;"
+                                >
+                                    Conocer candidatos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                    <div class="col-span-3 shadow rounded-md overflow-hidden">
+
+                    <div class="shrink shadow rounded-md overflow-hidden">
                         <div class="p-4 bg-gray-200">
-                            {{-- Title Form --}}
                             <div class="text-center">
                                 <h1 class="block" id="title">Votacion</h1>
-                                <p class="block">Paso 2: Vota por la planilla de tu preferencia</p>
+                                <p class="block">Paso 3: Vota por la planilla de tu preferencia</p>
                             </div>
-                            {{-- Form structure --}}
+
                             <div class="flex flex-wrap justify-center" id="candidates">
-{{--                                <div class="max-w-xs w-[13.5rem] m-2">--}}
-{{--                                    <div class="relative">--}}
-{{--                                        <input type="radio" name="candidate" id="candidate_1" value="1"--}}
-{{--                                               class="hidden peer">--}}
-{{--                                        <label for="candidate_1"--}}
-{{--                                               class="card flex rounded-xl bg-white bg-opacity-90 backdrop-blur-2xl shadow-xl hover:bg-opacity-25 peer-checked:bg-purple-900 peer-checked:text-white cursor-pointer transition">--}}
-{{--                                            <figure class=""><img src="https://placeimg.com/400/225/arch" alt="Shoes"--}}
-{{--                                                                  class="object-cover h-[10.5rem]"/></figure>--}}
-{{--                                            <div class="p-4">--}}
-{{--                                                <div>--}}
-{{--                                                    <h3 class="card-title text-center">Alfredo Flores Garcia</h3>--}}
-{{--                                                    <p>Candidato del equipo: punchis punchis1</p>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </label>--}}
-{{--                                        <div--}}
-{{--                                            class="flex absolute top-0 right-4 bottom-0 w-7 h-7 my-auto rounded-full bg-purple-700 scale-0 peer-checked:scale-100 transition delay-100">--}}
-{{--                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"--}}
-{{--                                                 class="w-5 text-white my-auto mx-auto" viewBox="0 0 16 16">--}}
-{{--                                                <path--}}
-{{--                                                    d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>--}}
-{{--                                            </svg>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-
 
 
                             </div>
                         </div>
                     </div>
 
-                    <div></div>
-                    <div class="col-span-3 md:col-span-1 shadow rounded-md overflow-hidden">
-                        <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-                            <div class="grid grid-cols-1 gap-3">
+                    <div class="shadow rounded-md overflow-hidden w-full md:w-[40rem]">
+                        <div class="p-4 bg-white">
+                            <button type="button"
+                                    id="vote"
+                                    class="w-full flex justify-center text-white p-2 rounded-md shadow-lg btn-primary"
 
-
-                                {{-- insert --}}
-                                <button type="button"
-                                        id="vote"
-                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Votar
-                                </button>
-
-                            </div>
-
-
+                            >
+                                Votar
+                            </button>
                         </div>
                     </div>
-                    <div></div>
 
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="checkbox" id="viewCandidateModal" class="modal-toggle"/>
+    <div class="modal">
+        <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
+            <div class="text-center">
+                <p class="font-bold">¡Haz click para ver sus propuestas!</p>
+            </div>
+            <div class="grid grid-cols-1">
+
+
+                <div class="flex flex-wrap justify-center" id="candidatesVideo">
+
+                </div>
+
+                <div class="modal-action">
+                    <label for="viewCandidateModal" class="btn">Cerrar</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="checkbox" id="viewCandidateVideo" class="modal-toggle"/>
+    <div class="modal">
+        <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
+            <div class="grid grid-cols-1">
+
+                <div class="flex flex-wrap justify-center">
+                    <video id="video" src="" controls></video>
+                </div>
+
+                <div class="modal-action">
+
+                    <div>
+                        <label for="viewCandidateVideo" class="btn" onclick="document.getElementById('video').pause();">Cerrar</label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -116,7 +117,8 @@
 
                 axios.get("{{ route('candidate_index') }}", {
                     params: {
-                        event_key: event_key
+                        event_key: event_key,
+                        nulo: true
                     }
                 })
                     .then(function (response) {
@@ -125,9 +127,19 @@
                         console.log(candidates);
 
                         var t = "";
+                        var v = "";
                         for (var i = 0; i < response.data.length; i++) {
 
                             let src = window.location.origin + "/candidate/image/" + candidates[i].candidate_key;
+
+
+                            if (candidates[i].name === 'nulo') {
+                                src = window.location.origin + "/candidate/image/nulo";
+                                candidates[i].name = '';
+                            } else {
+                                candidates[i].teamname = 'Planilla: ' + candidates[i].teamname;
+
+                            }
 
                             t += `<div class="max-w-xs w-[13.5rem] m-2">
                                     <div class="relative">
@@ -135,11 +147,11 @@
                                                class="hidden peer">
                                         <label for="` + 'candidate_' + i + `"
                                                class="card flex rounded-xl bg-white bg-opacity-90 backdrop-blur-2xl shadow-xl hover:bg-opacity-25 peer-checked:bg-purple-900 peer-checked:text-white cursor-pointer transition">
-                                            <figure class="object-fit"><img src="` + src + `" alt="` + 'candidate_' + i + `" class=" h-[14.5rem]"/></figure>
-                                            <div class="p-4">
-                                                <div>
-                                                    <h3 class="card-title text-center">Equipo: ` + candidates[i].teamname + `</h3>
-                                                    <p>` + candidates[i].name + `</p>
+                                            <figure class="object-fit h-[17rem]"><img src="` + src + `" alt="` + 'candidate_' + i + `" class="h-[18rem]"/></figure>
+                                            <div class="p-3 text-center">
+                                                <div class="text-center">
+                                                    <h1 class="font-bold text-center">` + candidates[i].teamname + `</h1>
+                                                    <p class="">` + candidates[i].name + `</p>
                                                 </div>
                                             </div>
                                         </label>
@@ -153,8 +165,28 @@
                                         </div>
                                     </div>
                                 </div>`;
+
+                            if (candidates[i].name !== 'nulo') {
+                                v += `<div class="max-w-xs w-[13.5rem] m-2" style="" onclick="setVideo('` + candidates[i].candidate_key + `')">
+                                    <div class="relative">
+                                        <label for="` + 'candidate_' + i + `"
+                                               class="card flex rounded-xl bg-white bg-opacity-90 backdrop-blur-2xl shadow-xl hover:bg-opacity-25 peer-checked:bg-purple-900 peer-checked:text-whitetransition">
+                                            <figure class="object-fit"><img src="` + src + `" alt="` + 'candidate_' + i + `" class=" h-[14.5rem]"/></figure>
+                                            <div class="p-4">
+                                                <div>
+                                                    <h3 class="card-title text-center">Equipo: ` + candidates[i].teamname + `</h3>
+                                                    <p>` + candidates[i].name + `</p>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>`;
+                            }
+
                         }
 
+                        document.getElementById("candidatesVideo").innerHTML = '';
+                        document.getElementById("candidatesVideo").innerHTML += v;
                         document.getElementById("candidates").innerHTML = '';
                         document.getElementById("candidates").innerHTML += t;
 
@@ -179,6 +211,16 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+            }
+
+            function setVideo(candidate_key) {
+                // on id "video" set src to src_video
+                document.getElementById('video').src = window.location.origin + "/candidate/video/" + candidate_key;
+
+                document.getElementById('viewCandidateVideo').checked = true;
+
+                document.getElementById('video').play();
+
             }
 
             //Create function storeVote
@@ -217,8 +259,16 @@
                         document.getElementById('code').value = '';
 
 
-                        // toastr success message, but in spanish
-                        toastr.success('Voto con éxito');
+                        // swal with success message, when message done, refresh page
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Voto registrado con exito!',
+                            showConfirmButton: false,
+                            confirmButtonText: 'Siguiente voto',
+                            timer: 5000
+                        }).then(function () {
+                            location.reload();
+                        })
 
                     })
                     .catch(function (error) {
@@ -251,7 +301,9 @@
             document.getElementById('vote').addEventListener('click', storeVote);
 
             document.addEventListener('DOMContentLoaded', function () {
+
                 indexCandidates();
+
             });
         </script>
     </x-slot>

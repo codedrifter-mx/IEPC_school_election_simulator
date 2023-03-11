@@ -1,35 +1,34 @@
 <x-public-layout>
 
-    <div>
-        <div>
-            <div class="md:mt-0 md:col-span-1">
-                <div class="grid grid-cols-1 md:grid-cols-2 h-96">
+    <div class="md:mt-0 md:col-span-1 pt-8" >
+        <div class="grid grid-cols-1 md:grid-cols-2 p-2 justify-center justify-items-center text-center items-center place-items-center md:px-60 lg:px-80">
 
-                    <a href="{{ route('panel') }}" class="flex">
-                        <button type="button" class="flex-1 text-center transition bg-gray-900 hover:bg-gray-800 active:bg-gray-700 focus:bg-gray-800 sm:w-max">
-                            <span class="block text-white font-semibold">
+            <a href="{{ route('panel') }}" class="flex py-2 ">
+                <button type="button"
+                        class="bg-gray-900 hover:bg-gray-800 active:bg-gray-700 focus:bg-gray-800 sm:w-max rounded-xl">
+                    <div class="p-6">
+                        <img src="{{ asset('img/school.png') }}" alt="Iniciar sesion para IEPC" style="height: 18rem" >
+                    </div>
+                            <span class="block text-white font-semibold p-6 ">
                                 Instituciones Educativas
                             </span>
-                        </button>
-                    </a>
-{{--                    <a href="{{ route('elector') }}" class="flex">--}}
-{{--                        <button type="button" class="flex-1 text-center transition bg-gray-400 hover:bg-gray-200 active:bg-gray-300 focus:bg-gray-200 sm:w-max">--}}
-{{--                            <span class="block text-gray-700 font-semibold group-focus:text-yellow-700">--}}
-{{--                                Alumnos--}}
-{{--                            </span>--}}
-{{--                        </button>--}}
-{{--                    </a>--}}
-                    <a href="{{ route('admin_panel') }}" class="flex">
-                        <button type="button" class="flex-1 text-center transition bg-gray-900 hover:bg-gray-800 active:bg-gray-700 focus:bg-gray-800 sm:w-max">
-                            <span class="block text-white font-semibold">
+                </button>
+            </a>
+            <a href="{{ route('admin_panel') }}" class="flex py-2 ">
+                <button type="button"
+                        class="bg-gray-900 hover:bg-gray-800 active:bg-gray-700 focus:bg-gray-800 sm:w-max rounded-xl">
+                    <div class="p-6">
+                        <img src="{{ asset('img/iepc_mono.png') }}" alt="Iniciar sesion para IEPC" style="height: 18rem" >
+                    </div>
+                    <span class="block text-white font-semibold p-6">
                                 IEPC
                             </span>
-                        </button>
-                    </a>
-                </div>
+                </button>
+            </a>
 
-            </div>
         </div>
+
+
     </div>
 
     <x-slot name="scripts">

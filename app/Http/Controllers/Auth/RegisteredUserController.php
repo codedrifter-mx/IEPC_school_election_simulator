@@ -43,6 +43,8 @@ class RegisteredUserController extends Controller
         // Create validation rules
         $rules = [
             'name' => ['required', 'string', 'max:255'],
+            'municipality' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'level' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -53,6 +55,12 @@ class RegisteredUserController extends Controller
             'name.required' => 'El campo nombre es obligatorio.',
             'name.string' => 'El campo nombre debe ser una cadena de caracteres.',
             'name.max' => 'El campo nombre no debe ser mayor a 255 caracteres.',
+            'municipality.required' => 'El campo municipio es obligatorio.',
+            'municipality.string' => 'El campo municipio debe ser una cadena de caracteres.',
+            'municipality.max' => 'El campo municipio no debe ser mayor a 255 caracteres.',
+            'address.required' => 'El campo dirección es obligatorio.',
+            'address.string' => 'El campo dirección debe ser una cadena de caracteres.',
+            'address.max' => 'El campo dirección no debe ser mayor a 255 caracteres.',
             'email.required' => 'El campo email es obligatorio.',
             'email.string' => 'El campo email debe ser una cadena de caracteres.',
             'email.email' => 'El campo email debe ser un email válido.',
@@ -73,6 +81,8 @@ class RegisteredUserController extends Controller
 
         $user = User::create([
             'name' => $request->name,
+            'municipality' => $request->municipality,
+            'address' => $request->address,
             'email' => $request->email,
             'level' => $request->level,
             'password' => Hash::make($request->password),

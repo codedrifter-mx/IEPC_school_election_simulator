@@ -73,7 +73,7 @@ class UserController extends Controller
         // if the validator passes, update the user
         $user->update($request->all());
         // return the succes message
-        return response()->json(['message' => 'Usuario Aprovado'], 200);
+        return response()->json(['message' => 'Usuario Aprobado'], 200);
     }
 
     //destroy

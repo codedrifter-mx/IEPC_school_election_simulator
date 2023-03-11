@@ -15,7 +15,11 @@ class AdminUsersTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('user_id')
-            ->setRefreshKeepAlive();
+            ->setRefreshKeepAlive()
+            ->setColumnSelectStatus(false)
+            ->setPaginationDisabled()
+            ->setSearchDisabled()
+            ->setPaginationVisibilityDisabled();
     }
 
     public function columns(): array

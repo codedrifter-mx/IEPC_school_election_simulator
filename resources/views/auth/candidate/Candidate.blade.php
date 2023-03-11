@@ -33,16 +33,16 @@
 
 
                         {{-- Form structure --}}
-                        <div class="flex flex-wrap gap-2">
+                        <div class="flex flex-wrap">
 
                             {{-- Form --}}
-                            <form id="store" class="flex-initial basis-2/5">
+                            <form id="store" class="p-2 flex-initial basis-2/5">
                                 @csrf
                                 <input type="hidden" id="user_id" name="user_id" value="">
                                 <input type="hidden" id="candidate_key" name="candidate_key">
 
                                 {{-- teamname --}}
-                                <div>
+                                <div class="my-3">
                                     <label for="teamname"
                                            class="text-sm text-right">
                                         Nombre de Planilla </label>
@@ -53,19 +53,9 @@
                                     </div>
                                 </div>
 
-                                {{-- Blob --}}
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                           for="photo">Logotipo de la planilla / Fotografia del candidato</label>
-                                    <input class="block w-full text-sm text-slate-500
-      file:mr-4 file:py-2 file:px-4
-      file:rounded-full file:border-0
-      file:text-sm file:font-semibold" id="photo" type="file" name="photo">
-
-                                </div>
 
                                 {{-- name --}}
-                                <div>
+                                <div class="my-3">
                                     <label for="name"
                                            class="text-sm text-right">
                                         Nombre completo del candidato representante</label>
@@ -76,9 +66,20 @@
                                     </div>
                                 </div>
 
-{{--                                 Blob--}}
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                {{-- Blob --}}
+                                <div class="my-3">
+                                    <label class="text-sm text-right"
+                                           for="photo">Logotipo de la planilla</label>
+                                    <input class="block w-full text-sm text-slate-500
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-full file:border-0
+      file:text-sm file:font-semibold" id="photo" type="file" name="photo">
+
+                                </div>
+
+                                {{-- Blob --}}
+                                <div class="my-3">
+                                    <label class="text-sm text-right"
                                            for="photo">Video de propuestas</label>
                                     <input class="block w-full text-sm text-slate-500
       file:mr-4 file:py-2 file:px-4
@@ -88,17 +89,29 @@
                                 </div>
 
 
+                                {{-- Aviso de privacidad checkbox with flex--}}
+                                <div class="flex items-center justify-center m-2">
+                                    <input type="checkbox" name="privacy" id="privacy" class="m-3">
+                                    <label
+                                        class="block link" for="privacy">Declaro que la escuela cuenta con el
+                                        consentimiento escrito
+                                        de la persona candidata de esta planilla (en su caso del padre,
+                                        madre o tutor) para la utilización de su nombre e imagen en
+                                        esta plataforma durante el desarrollo de esta elección.</label>
+                                </div>
+
+
                                 {{-- Button Form --}}
                                 <div>
                                     <button id="form_button"
-                                            class="btn-block inline-flex w-full mt-3 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            class="btn-primary inline-flex w-full mt-3 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white">
                                         Guardar
                                     </button>
                                 </div>
                             </form>
 
                             {{-- Table --}}
-                            <div class="flex-1 overflow-x-auto">
+                            <div class="p-2 flex-1 overflow-x-auto">
                                 <div class="">
                                     <div class="">
                                         <table id="candidates" class="table table-compact w-full">
@@ -170,13 +183,19 @@
                 // get the event_index from the server
                 axios.get("{{ route('event_index') }}", {
                     params: {
-                        user_id: document.getElementById('user_id').value
+                        user_id: document.getElementById('user_id').value,
+                        ongoing: true
                     }
                 })
                     .then(function (response) {
-                        // if response.data is empty, show toastr error
                         if (response.data.length === 0) {
-                            toastr.error('No hay eventos disponibles, registra minimo uno', 'Error');
+                            // toastr.error('No hay eventos disponibles, registra minimo uno', 'Error'); but on top middle
+
+                            toastr.error('No hay eventos disponibles, registra minimo uno', 'Error', {
+                                positionClass: 'toast-top-center',
+                                closeButton: true,
+                                progressBar: true,
+                            });
 
                             // remove validation-form
                             document.getElementById('validation-form').remove();
@@ -235,48 +254,21 @@
                             t += "<td>" + candidates[i].teamname + "</td>";
                             t += "<td>" + candidates[i].name + "</td>";
                             t += `<td>
-                                    <button class="btn btn-square btn-outline"
+                                    <button class="btn btn-primary"
                                             onclick="showCandidate('` + candidates[i].candidate_key + `')">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                             height="16" fill="currentColor" class="bi bi-eye-fill"
-                                             viewBox="0 0 16 16">
-                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
-                                            <path
-                                                d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
-                                        </svg>
+                                        Ver
                                     </button>
                                 </td>`;
                             t += ` <th>
-                                                    <button class="btn btn-square btn-outline"
+                                                    <button class="btn btn-primary"
                                                             onclick="setCandidate('` + candidates[i].candidate_key + `')">
-                                                        <svg width="24" stroke-width="1.5" height="24"
-                                                             viewBox="0 0 24 24" fill="none"
-                                                             xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M20 12V5.74853C20 5.5894 19.9368 5.43679 19.8243 5.32426L16.6757 2.17574C16.5632 2.06321 16.4106 2 16.2515 2H4.6C4.26863 2 4 2.26863 4 2.6V21.4C4 21.7314 4.26863 22 4.6 22H11"
-                                                                stroke="currentColor" stroke-linecap="round"
-                                                                stroke-linejoin="round"/>
-                                                            <path d="M8 10H16M8 6H12M8 14H11" stroke="currentColor"
-                                                                  stroke-linecap="round" stroke-linejoin="round"/>
-                                                            <path
-                                                                d="M16 5.4V2.35355C16 2.15829 16.1583 2 16.3536 2C16.4473 2 16.5372 2.03725 16.6036 2.10355L19.8964 5.39645C19.9628 5.46275 20 5.55268 20 5.64645C20 5.84171 19.8417 6 19.6464 6H16.6C16.2686 6 16 5.73137 16 5.4Z"
-                                                                fill="currentColor" stroke="currentColor"
-                                                                stroke-linecap="round" stroke-linejoin="round"/>
-                                                            <path
-                                                                d="M17.9541 16.9394L18.9541 15.9394C19.392 15.5015 20.102 15.5015 20.5399 15.9394V15.9394C20.9778 16.3773 20.9778 17.0873 20.5399 17.5252L19.5399 18.5252M17.9541 16.9394L14.963 19.9305C14.8131 20.0804 14.7147 20.2741 14.6821 20.4835L14.4394 22.0399L15.9957 21.7973C16.2052 21.7646 16.3988 21.6662 16.5487 21.5163L19.5399 18.5252M17.9541 16.9394L19.5399 18.5252"
-                                                                stroke="currentColor" stroke-linecap="round"
-                                                                stroke-linejoin="round"/>
-                                                        </svg>
+                                                        Editar
                                                     </button>
                                                 </th>`;
                             t += `<th>
-                                                    <button class="btn btn-square btn-outline"
+                                                    <button class="btn btn-primary"
                                                             onclick="dropCandidate('` + candidates[i].candidate_key + `')">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
-                                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                  stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                        </svg>
+                                                        Borrar
                                                     </button>
                                                 </th>`;
 
@@ -296,18 +288,18 @@
             function storeCandidate(e) {
                 e.preventDefault();
 
-                // get select event_key
+                if (!document.getElementById('privacy').checked) {
+                    toastr.error("Debes aceptar el aviso de consentimiento");
+                    return;
+                }
+
                 let select_event_key = document.getElementById("event_key");
                 let event_key = select_event_key.options[select_event_key.selectedIndex].value;
 
-                // create a formdata object
                 let formData = new FormData();
 
-                // get input values
                 let teamname = document.getElementById('teamname').value;
                 let name = document.getElementById('name').value;
-
-                // get photo input
                 let photo = document.getElementById('photo').files[0];
                 let video = document.getElementById('video').files[0];
 
@@ -318,24 +310,45 @@
                 formData.append('photo', photo);
                 formData.append('video', video);
 
+                // show toaster info message about uploading is photo or video exists, in spanish
+                if (photo || video) {
+                    toastr.info('Subiendo foto o video, por favor espere...', 'Subiendo');
+                }
 
                 // axios post on candidate_store laravel route, with all input values and photo input
                 axios.post("{{ route('candidate_store') }}", formData)
                     .then(function (response) {
-                        console.log(response);
+                        // console.log(response);
                         // clear input values
                         document.getElementById('teamname').value = '';
                         document.getElementById('name').value = '';
                         // refresh table
                         populateTable();
 
-                        // toastr success message with response.data.message, if it has code 201, warning message otherwise
                         if (response.status === 200) {
-                            toastr.success(response.data.message);
+                            // success swal with response.data.message
+                            Swal.fire({
+                                icon: 'success',
+                                title: response.data.message
+                            })
                         } else if (response.status === 203) {
-                            toastr.error(response.data.message);
-                        }  else {
-                            toastr.warning(response.data.message);
+                            // error swal with response.data.message
+                            Swal.fire({
+                                icon: 'error',
+                                title: response.data.message
+                            })
+                        } else if (response.status === 413) {
+                            // error swal with response.data.message
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'El archivo es muy grande'
+                            })
+                        } else {
+                            // warning swal with response.data.message
+                            Swal.fire({
+                                icon: 'warning',
+                                title: response.data.message
+                            })
                         }
 
                     })
@@ -384,34 +397,42 @@
 
             function editCandidate(e) {
                 e.preventDefault();
+                if (!document.getElementById('privacy').checked) {
+                    toastr.error("Debes aceptar el aviso de consentimiento");
+                    return;
+                }
 
-                // get input values
                 let candidate_key = document.getElementById('candidate_key').value;
                 let teamname = document.getElementById('teamname').value;
                 let name = document.getElementById('name').value;
+                let photo = document.getElementById('photo').files[0];
+                let video = document.getElementById('video').files[0];
 
-                axios.post("{{ route('candidate_update') }}", {
-                    candidate_key: candidate_key,
-                    teamname: teamname,
-                    name: name,
-                })
+                let formData = new FormData();
+                formData.append('candidate_key', candidate_key);
+                formData.append('event_key', event_key);
+                formData.append('teamname', teamname);
+                formData.append('name', name);
+                formData.append('photo', photo);
+                formData.append('video', video);
+
+                // show toaster info message about uploading is photo or video exists, in spanish
+                if (photo || video) {
+                    toastr.info('Subiendo foto o video, por favor espere...', 'Subiendo');
+                }
+
+                axios.post("{{ route('candidate_update') }}", formData)
                     .then(function (response) {
-                        // console.log(response);
-                        // clear input values
                         document.getElementById('candidate_key').value = '';
                         document.getElementById('teamname').value = '';
                         document.getElementById('name').value = '';
-                        // refresh table
+
                         populateTable();
 
-                        // change the button text to "Agregar candidato"
                         document.getElementById('form_button').innerHTML = 'Agregar candidato';
-
-                        // change store form event listener to storeCandidate function
                         document.getElementById('store').removeEventListener('submit', editCandidate);
                         document.getElementById('store').addEventListener('submit', storeCandidate);
 
-                        // show toastr success message that you are editing the event, but in spanish
                         toastr.success('Candidato editado correctamente');
                     })
                     .catch(function (error) {
@@ -499,6 +520,26 @@
                 });
 
                 populateEventSelect();
+
+                if (!localStorage.getItem('firstTime')) {
+                    Swal.fire({
+                        title: '¡Bienvenido!',
+                        icon: 'info',
+                        width: 800,
+                        html: `
+                            <div style="text-align: left;">
+                                A continuación ingresa los datos de la elección. Deberás hacer un registro por cada planilla registrada. Considera que los datos que requerirás son los siguientes:
+                             <br><br>Nombre de las planillas
+                            <br>Nombre completo de las personas candidatas
+                            <br>Logotipos de las planillas
+                            <br>Video de propuestas de las personas candidatas
+                            </div>
+                        `,
+                        confirmButtonText: '¡Entendido!'
+                    });
+                    localStorage.setItem('firstTime', true);
+                }
+
             });
 
         </script>

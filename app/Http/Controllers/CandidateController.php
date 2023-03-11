@@ -16,20 +16,14 @@ class CandidateController extends Controller
     {
         $event_key= $request->event_key;
 
-        // Log the event_key
-//        \Log::info($event_key);
-
-        // Find event id with event_key
         $event = Event::where('event_key', $event_key)->first();
 
+        if ($request->nulo == 'true') {
+            $candidates = Candidate::where('event_id', $event->event_id)->get();
+        } else {
+            $candidates = Candidate::where('event_id', $event->event_id)->where('name', '!=', 'Nulo')->get();
+        }
 
-        // Get all candidates where event_key, and remove 'nulo' candidate
-        $candidates = Candidate::where('event_id', $event->event_id)->where('name', '!=', 'Nulo')->get();
-
-
-//        \Log::info($candidates);
-
-        // Return the event
         return response()->json($candidates, 200);
     }
 
@@ -69,27 +63,15 @@ class CandidateController extends Controller
             return response()->json(['message' => 'El número máximo de candidatos es 10'], 203);
         }
 
-        // if the validator passes, create the candidate
         $candidate = Candidate::create($request->all());
 
-        // if request has photo file, save it
         if ($request->hasFile('photo')) {
-            // transform $request->file('photo') into .jpg file with vertical 4:3 ratio and lowest file size
             $image = Image::make($request->file('photo'))->fit(300, 400)->encode('jpg', 75);
-
-            // save the image in 'public/candidates', $candidate->candidate_key . '.jpg'
             Storage::disk('s3')->put('candidates/' . $candidate->candidate_key . '.jpg', $image);
         }
 
-        // if request has video file, save it
         if ($request->hasFile('video')) {
             $video = $request->file('video');
-
-            // rename video as $candidate->candidate_key . '.mp4'\
-
-
-
-            // save the video in s3 with rename $candidate->candidate_key . '.mp4'
             Storage::disk('s3')->putFileAs('candidates', $video, $candidate->candidate_key . '.mp4');
         }
 
@@ -98,7 +80,7 @@ class CandidateController extends Controller
             $nulo = new Candidate();
             $nulo->candidate_key = Str::random(8);
             $nulo->event_id = $event->event_id;
-            $nulo->teamname = 'nulo';
+            $nulo->teamname = 'Anular';
             $nulo->name = 'nulo';
             $nulo->paternal_surname = 'nulo';
             $nulo->maternal_surname = 'nulo';
@@ -133,7 +115,6 @@ class CandidateController extends Controller
     public function show(Request $request)
     {
         $candidate_key = $request->candidate_key;
-
         $candidate = Candidate::firstWhere('candidate_key', $candidate_key);
 
         if (!$candidate) {
@@ -151,7 +132,6 @@ class CandidateController extends Controller
             'teamname' => 'required|string',
             'name' => 'required|string'
         ];
-
         $msgs = [
             'teamname.required' => 'El nombre del equipo es requerido',
             'teamname.string' => 'El nombre del equipo debe ser un string',
@@ -159,7 +139,6 @@ class CandidateController extends Controller
             'name.string' => 'El nombre debe ser un string'        ];
 
         $request->validate($rules, $msgs);
-
         $candidate = Candidate::firstWhere('candidate_key', $candidate_key);
 
         if (!$candidate) {
@@ -168,20 +147,38 @@ class CandidateController extends Controller
 
         $candidate->update($request->all());
 
-        // if request has photo file, save it
         if ($request->hasFile('photo')) {
-            // transform $request->file('photo') into .jpg file with vertical 4:3 ratio and lowest file size
+            \Log::info('photo');
+
+            try {
+                Storage::disk('s3')->delete('candidates/' . $candidate_key . '.jpg');
+                \Log::info('deleted');
+            } catch (\Exception $e) {
+                \Log::info($e);
+            }
+
             $image = Image::make($request->file('photo'))->fit(300, 400)->encode('jpg', 75);
+            Storage::disk('s3')->put('candidates/' . $candidate_key . '.jpg', $image);
 
-            // save the image in 'public/candidates', $candidate->candidate_key . '.jpg'
-            Storage::disk('s3')->put('candidates/' . $candidate->candidate_key . '.jpg', $image);
+            \Log::info('photo uploaded');
         }
 
-        // if request has video file, save it
         if ($request->hasFile('video')) {
-            // save the video in 'public/candidates', $candidate->candidate_key . '.mp4'
-            Storage::disk('s3')->put('candidates/' . $candidate->candidate_key . '.mp4', $request->file('video'));
+            \Log::info('video');
+
+            try {
+                Storage::disk('s3')->delete('candidates/' . $candidate_key . '.mp4');
+            } catch (\Exception $e) {
+                \Log::info($e);
+            }
+
+            $video = $request->file('video');
+            Storage::disk('s3')->putFileAs('candidates', $video, $candidate_key . '.mp4');
+            \Log::info('video uploaded');
+
         }
+        \Log::info('updated');
+
 
         return response()->json($candidate, 200);
     }
@@ -197,9 +194,14 @@ class CandidateController extends Controller
 
         $candidate->delete();
 
-        // delete 'candidates/' . $candidate_key . '.jpg' from storage inside try catch
         try {
             Storage::disk('s3')->delete('candidates/' . $candidate_key . '.jpg');
+        } catch (\Exception $e) {
+            \Log::info($e);
+        }
+
+        try {
+            Storage::disk('s3')->delete('candidates/' . $candidate_key . '.mp4');
         } catch (\Exception $e) {
             \Log::info($e);
         }

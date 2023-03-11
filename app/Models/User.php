@@ -22,6 +22,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $name
  * @property string|null $charge
  * @property string|null $municipality
+ * @property string|null $locality
  * @property string|null $address
  * @property string $email
  * @property Carbon|null $email_verified_at
@@ -55,6 +56,7 @@ class User extends Authenticatable
         'name',
         'charge',
         'municipality',
+        'locality',
         'address',
         'email',
         'email_verified_at',

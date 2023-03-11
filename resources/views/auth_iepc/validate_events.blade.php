@@ -55,7 +55,8 @@
 
                 <div>
                     <div class="flex flex-col">
-                        <label for="start_at" class="block text-sm font-medium text-gray-700">Fecha de inicio propuesto</label>
+                        <label for="start_at" class="block text-sm font-medium text-gray-700">Fecha de inicio
+                            propuesto</label>
                         <div class="mt-1">
                             <input type="text" name="end_at" id="start_at"
                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md bg-gray-200"
@@ -65,7 +66,7 @@
 
                     <label for="start_at_new"
                            class="mt-3 block text-sm font-medium text-gray-700">
-                        Fecha de fin de la votación </label>
+                        Fecha de inicio de la votación </label>
                     <input type="datetime-local" name="end_at" id="start_at_new"
                            class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
@@ -103,7 +104,7 @@
 
     <x-slot name="scripts">
         <script type="text/javascript">
-            // function to convert php datetime to string d-m-Y H:i:s on UTC
+
             function convertDate(date) {
                 let dateObj = new Date(date);
                 let month = dateObj.getUTCMonth() + 1; //months from 1-12
@@ -117,7 +118,6 @@
                 return newdate;
             }
 
-            // function to convert date to yyyy-MM-ddThh:mm
             function convertDateToInput(date) {
                 let dateObj = new Date(date);
                 let month = (dateObj.getUTCMonth() + 1).toString().padStart(2, '0'); //months from 1-12
@@ -145,7 +145,7 @@
                     .then(function (response) {
                         response = response.data;
 
-                        console.log(response);
+                        // console.log(response);
 
                         document.getElementById('end_at').value = convertDate(response.data.end_at);
                         document.getElementById('end_at_new').value = convertDateToInput(response.data.end_at);
@@ -158,11 +158,11 @@
             }
 
             function updateEvent() {
+
                 let event_key = document.getElementById('event_key').value;
                 let start_at = document.getElementById('start_at_new').value;
                 let end_at = document.getElementById('end_at_new').value;
 
-                //event update route
                 axios.post("{{ route('event_update') }}",
                     {
                         event_key: event_key,
@@ -171,20 +171,22 @@
                         approved: true
                     })
                     .then(function (response) {
-                        toastr.success(response.data.message);
-
-                        //close modal
                         document.getElementById('viewValidationModal').checked = false;
+
+                        Swal.fire({
+                            title: response.data.message,
+                            icon: 'success',
+                            confirmButtonText: 'Aceptar'
+                        })
 
                     })
                     .catch(function (error) {
                         toastr.error(error.response.data.message);
                     });
+
             }
 
             function accept(user_id) {
-
-                // get now() converted to php datetime
                 let now = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
                 axios.post("{{ route('user_update') }}",
@@ -193,14 +195,21 @@
                         email_verified_at: now,
                     })
                     .then(function (response) {
-                        toastr.success(response.data.message);
+                        // swal with response.data.message
+                        Swal.fire({
+                            title: response.data.message,
+                            icon: 'success',
+                            confirmButtonText: 'Aceptar'
+                        })
                     })
                     .catch(function (error) {
                         toastr.error(error.response.data.message);
                     });
+
             }
 
-            function deny(user_id) {
+
+            function denyUser(user_id) {
                 axios.post("{{ route('user_destroy') }}",
                     {
                         user_id: user_id
@@ -213,9 +222,7 @@
                     });
             }
 
-
             document.getElementById('validate_event').addEventListener('click', updateEvent);
-
 
         </script>
     </x-slot>

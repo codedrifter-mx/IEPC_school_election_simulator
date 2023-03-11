@@ -2,7 +2,7 @@
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                <x-application-logo-large class="w-20 h-20 fill-current text-gray-500" />
             </a>
         </x-slot>
 
@@ -21,16 +21,23 @@
 
             <!-- Municipio -->
             <div class="mt-4">
-                <x-label for="municipio" :value="__('Municipio')" />
+                <x-label for="municipality" :value="__('Municipio')" />
 
-                <x-input id="municipio" class="block mt-1 w-full" type="text" name="municipio" :value="old('municipio')" required />
+                <x-input id="municipality" class="block mt-1 w-full" type="text" name="municipality" :value="old('municipio')" required />
+            </div>
+
+            <!-- Localidad -->
+            <div class="mt-4">
+                <x-label for="locality" :value="__('Localidad')" />
+
+                <x-input id="locality" class="block mt-1 w-full" type="text" name="locality" :value="old('localidad')" required />
             </div>
 
             <!-- Domicilio -->
             <div class="mt-4">
-                <x-label for="domicilio" :value="__('Domicilio')" />
+                <x-label for="address" :value="__('Domicilio')" />
 
-                <x-input id="domicilio" class="block mt-1 w-full" type="text" name="domicilio" :value="old('domicilio')" required />
+                <x-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('domicilio')" required />
             </div>
 
             <!-- Email Address -->

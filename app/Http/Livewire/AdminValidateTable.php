@@ -15,7 +15,11 @@ class AdminValidateTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('event_key')
-            ->setRefreshKeepAlive();
+            ->setRefreshKeepAlive()
+            ->setColumnSelectStatus(false)
+            ->setPaginationDisabled()
+            ->setSearchDisabled()
+            ->setPaginationVisibilityDisabled();
     }
 
     public function columns(): array

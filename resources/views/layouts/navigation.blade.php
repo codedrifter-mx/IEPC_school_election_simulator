@@ -13,43 +13,42 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
 
+                    @if(Auth::check())
+                        @if ( Auth::user()->level  === 'Administrador')
 
-                    @if ( Auth::user()->level  === 'Administrador')
+                            <x-nav-link :href="route('admin_active_events')"
+                                        :active="request()->routeIs('admin_active_events')">
+                                Elecciones Activas
+                            </x-nav-link>
 
-                        <x-nav-link :href="route('admin_active_events')"
-                                    :active="request()->routeIs('admin_active_events')">
-                            Elecciones Activas
-                        </x-nav-link>
+                            <x-nav-link :href="route('admin_validate_events')"
+                                        :active="request()->routeIs('admin_validate_events')">
+                                Eventos por validar
+                                <div class="px-2"><div class="badge badge-xs hidden" id="event_badge"></div></div>
 
-                        <x-nav-link :href="route('admin_validate_events')"
-                                    :active="request()->routeIs('admin_validate_events')">
-                            Eventos por validar
-                        </x-nav-link>
+                            </x-nav-link>
 
-                        <x-nav-link :href="route('admin_satisfaction')"
-                                    :active="request()->routeIs('admin_satisfaction')">
-                            Encuestas
-                        </x-nav-link>
+                            <x-nav-link :href="route('admin_satisfaction')"
+                                        :active="request()->routeIs('admin_satisfaction')">
+                                Encuestas
+                            </x-nav-link>
 
-{{--                        <x-nav-link :href="route('admin_reports')"--}}
-{{--                                    :active="request()->routeIs('admin_reports')">--}}
-{{--                            Reportes--}}
-{{--                        </x-nav-link>--}}
+                        @else
+                            <x-nav-link :href="route('events')" :active="request()->routeIs('events')">
+                                1.- Realiza tu registro
+                            </x-nav-link>
 
-                    @else
-                        <x-nav-link :href="route('events')" :active="request()->routeIs('events')">
-                            1.- Realiza tu registro
-                        </x-nav-link>
+                            <x-nav-link :href="route('candidates')" :active="request()->routeIs('candidates')">
+                                2.- Ingresa los datos de la elección
+                            </x-nav-link>
 
-                        <x-nav-link :href="route('candidates')" :active="request()->routeIs('candidates')">
-                            2.- Ingresa los datos de la elección
-                        </x-nav-link>
-
-                        <x-nav-link :href="route('register_electors')"
-                                    :active="request()->routeIs('register_electors')">
-                            3.- Fases de Votación
-                        </x-nav-link>
+                            <x-nav-link :href="route('register_electors')"
+                                        :active="request()->routeIs('register_electors')">
+                                3.- Fases de Votación
+                            </x-nav-link>
+                        @endif
                     @endif
+
 
                 </div>
 
@@ -61,7 +60,11 @@
                     <x-slot name="trigger">
                         <button
                             class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                            <div>{{ Auth::user()->name }}</div>
+                            <div>
+                                @if(Auth::check())
+                                {{ Auth::user()->name }}
+                                @endif
+                            </div>
 
                             <div class="ml-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -110,11 +113,15 @@
         <div class="pt-2 pb-3 space-y-1">
 
             <x-responsive-nav-link :href="route('events')" :active="request()->routeIs('events')">
-                Eventos
+                1.- Realiza tu registro
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('candidates')" :active="request()->routeIs('candidates')">
-                Candidatos
+                2.- Ingresa los datos de la elección
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('register_electors')" :active="request()->routeIs('register_electors')">
+                3.- Fases de Votación
             </x-responsive-nav-link>
 
         </div>
@@ -122,8 +129,10 @@
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
+                @if(Auth::check())
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                    @endif
             </div>
 
             <div class="mt-3 space-y-1">
@@ -141,3 +150,30 @@
         </div>
     </div>
 </nav>
+
+    <script type="text/javascript">
+
+
+        function countEvents() {
+
+            axios.get('{{ route('event_indexCount') }}')
+                .then(function (response) {
+                    console.log(response.data);
+                    document.getElementById('event_badge').innerHTML = response.data;
+                    document.getElementById('event_badge').classList.remove('hidden');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            <!-- if user is not auth, redirect -->
+            @if (Auth::user() === null)
+                window.location.href = "{{ route('login') }}";
+            @endif
+            countEvents()
+        });
+    </script>

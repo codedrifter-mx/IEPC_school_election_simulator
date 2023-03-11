@@ -60,8 +60,20 @@ class VoteController extends Controller
         }
 
 
+
         // Get elector_id with elector.code, get candidate_id with the request, and get event_id with event_key, then create a new vote
         $event = Event::where('event_key', $request->event_key)->first();
+
+
+        $now = now('America/Mexico_City');
+
+        $now = $now->toDateTimeString();
+        $event->start_at = $event->start_at->toDateTimeString();
+        $event->end_at = $event->end_at->toDateTimeString();
+
+        if ($now >= $event->end_at) {
+            return response()->json(['error' => 'La votación termino'], 400);
+        }
 
         $vote = Vote::create([
             'elector_id' => $elector->elector_id,

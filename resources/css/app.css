@@ -1,6 +1,10 @@
 @import "toastr";
 /*import flickity*/
 @import "flickity";
+@import "bootstrap-icons";
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 
 @tailwind base;
@@ -10,4 +14,30 @@
 
 /* external css: flickity.css */
 
+.square {
+    width: 40vw;
+    height: 40vh;
+    padding: 20%;
+    background-color: #000;
+}
 
+
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -20px;
+    margin-left: -25px;
+    width: 50px;
+    height: 40px;
+    text-align: center;
+    font-size: 10px;
+}

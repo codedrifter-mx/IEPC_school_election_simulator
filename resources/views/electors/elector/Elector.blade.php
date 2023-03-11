@@ -6,13 +6,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 m-3">
                     <div></div>
                     <div class="shadow rounded-md overflow-hidden">
-                        <form id="store" class="px-4 py-2 bg-white space-y-6 sm:p-6">
+                        <form id="store" class="px-4 py-2 bg-white space-y-4 sm:p-6">
 
 
                             <div class="flex w-full justify-center">
                                 <div class=" justify-center">
                                     <svg id="svg" xmlns="http://www.w3.org/2000/svg"
-                                         height="100" class="p-0"
+                                         height="90" class="p-0"
                                          viewBox="0, 0, 400,178.73859579531933"
                                          preserveAspectRatio="none">
                                         <g id="svgg">
@@ -26,10 +26,10 @@
 
 
                             {{-- Title Form --}}
-                            <div class="mt-2 md:mt-0 text-center">
-                                <h1 class="block"> Registro de Electores </h1>
+                            <div class="text-center">
+                                <h1 class="block font-bold"> Registro de votantes </h1>
                             </div>
-                            {{-- Form structure --}}
+
                             <div class="grid grid-cols-1 gap-3">
 
                                 {{-- name --}}
@@ -60,7 +60,7 @@
                                 <div>
                                     <label for="paternal_surname"
                                            class="block font-medium text-gray-700">
-                                        Apellido paterno </label>
+                                        Primer apellido </label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
                                         <input type="text" name="paternal_surname" id="paternal_surname"
                                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
@@ -72,7 +72,7 @@
                                 <div>
                                     <label for="maternal_surname"
                                            class="block font-medium text-gray-700">
-                                        Apellido materno</label>
+                                        Segundo apellido</label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
                                         <input type="text" name="maternal_surname" id="maternal_surname"
                                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
@@ -120,37 +120,44 @@
                                             <option value="Otro">Otro</option>
                                         </select>
                                     </div>
+                                </div>
 
+                                {{-- code --}}
+                                <div>
+                                    <label for="code"
+                                           class="block font-medium text-gray-700">
+                                        Crea tu codigo de voto
+                                        {{-- create a ? gray badge icon with a class="tooltip" data-tip="ejemplo de codigos...--}}
+                                        <span class="badge tooltip" data-tip="Pueden ser letras iniciales de tu nombre en cualquier orden y un número secreto para tí.">?</span>
 
-                                    {{-- code --}}
-                                    <div>
-                                        <label for="code"
-                                               class="block font-medium text-gray-700">
-                                            Crea tu codigo de voto </label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="code" id="code"
-                                                   class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
-                                                   placeholder="XXXX1234">
-                                        </div>
+                                    </label>
+
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <input type="text" name="code" id="code"
+                                               class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300"
+                                               placeholder="XXXX1234"
+                                                  maxlength="12"
+                                        >
                                     </div>
+                                </div>
 
-                                    {{-- Aviso de privacidad checkbox with flex--}}
-                                    <div class="flex items-center text-center p-1 mt-3">
-                                        <input type="checkbox" name="privacy" id="privacy" class="m-2">
-                                        <label
-                                            class="link block font-medium text-gray-700" onclick=
-                                            "document.getElementById('viewprivacy').checked = true;">Acepto el aviso de
-                                            privacidad </label>
-                                    </div>
+                                {{-- Aviso de privacidad checkbox with flex--}}
+                                <div class="flex items-center text-center justify-center">
+                                    <input type="checkbox" name="privacy" id="privacy" class="m-2">
+                                    <label
+                                        class="link block font-medium text-gray-700" onclick=
+                                        "document.getElementById('viewprivacy').checked = true;">Acepto el aviso de
+                                        privacidad </label>
                                 </div>
 
                                 {{-- insert --}}
                                 <button type="submit"
-                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white btn-primary">
                                     Registrarse
                                 </button>
-
                             </div>
+
+
 
 
                         </form>
@@ -175,7 +182,7 @@
 
                 </div>
 
-                <div class="modal-action col-span-3">
+                <div class="modal-action">
                     <label for="viewCandidateModal" class="btn">Cerrar</label>
                 </div>
             </div>
@@ -191,10 +198,11 @@
                     <video id="video" src="" controls></video>
                 </div>
 
-                <div class="modal-action col-span-3">
-                    <label for="viewCandidateVideo" class="btn" onclick="
-                        document.getElementById('video').pause();
-                        ">Cerrar</label>
+                <div class="modal-action">
+
+                    <div>
+                        <label for="viewCandidateVideo" class="btn" onclick="document.getElementById('video').pause();">Cerrar</label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -206,19 +214,17 @@
             <div class="grid grid-cols-1">
 
                 <div>
-                    <p>
-                        AVISO DE PRIVACIDAD SIMPLIFICADO
-
-                        El Instituto Electoral y de Participación Ciudadana del Estado de Durango informa que es el
+                    <p class="text-center font-bold">AVISO DE PRIVACIDAD SIMPLIFICADO</p>
+                    <p class="font-bold text-justify">
+                        <br><br>El Institu to Electoral y de Participación Ciudadana del Estado de Durango informa que es el
                         responsable del tratamiento de los datos personales que se recaben, los cuales serán protegidos
                         conforme a las leyes aplicables en la materia y serán utilizados únicamente para los fines de la
                         elección estudiantil.
 
-                        Si deseas ejercer los derechos de acceso, rectificación, cancelación u oposición de datos
+                        <br><br>Si deseas ejercer los derechos de acceso, rectificación, cancelación u oposición de datos
                         personales,
                         puedes hacerlo directamente en la Unidad de Técnica de Transparencia del Instituto Electoral y
-                        de
-                        Participación Ciudadana del Estado de Durango, ubicado en calle Litio sin número, colonia Ciudad
+                        de sParticipación Ciudadana del Estado de Durango, ubicado en calle Litio sin número, colonia Ciudad
                         Industrial, Durango, Dgo. C.P. 34208; en estrados, al correo electrónico:
                         ut.transparencia@iepcdurango.mx o a través de la plataforma nacional de transparencia
                         http://www.plataformadetransparencia.org.mx., igualmente se hace del conocimiento la dirección
@@ -275,6 +281,7 @@
 
                         // clear input values
                         document.getElementById('name').value = '';
+                        document.getElementById('names').value = '';
                         document.getElementById('paternal_surname').value = '';
                         document.getElementById('maternal_surname').value = '';
                         document.getElementById('code').value = '';
@@ -374,8 +381,6 @@
                         console.log(error);
                     });
             }
-
-
 
 
             // when document loaded

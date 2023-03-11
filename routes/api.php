@@ -33,9 +33,14 @@ Route::post('event_stop', [EventController::class, 'stop'])->name('event_stop');
 Route::get('event_details', [EventController::class, 'getDetails'])->name('event_details');
 Route::get('event_getResults', [EventController::class, 'getResults'])->name('event_getResults');
 Route::get('event_getResultsPdf', [EventController::class, 'getResultsPdf'])->name('event_getResultsPdf');
+Route::get('event_getResultsXlsx', [EventController::class, 'getResultsXlsx'])->name('event_getResultsXlsx');
+Route::get('event_getElectorsXlsx', [EventController::class, 'getElectorsXlsx'])->name('event_getElectorsXlsx');
+Route::get('event_getAct', [EventController::class, 'getAct'])->name('event_getAct');
 Route::get('event_getMajority', [EventController::class, 'getMajority'])->name('event_getMajority');
+Route::get('event_indexCount', [EventController::class, 'indexCount'])->name('event_indexCount');
 
 // user
+Route::get('user_index', [UserController::class, 'index'])->name('user_index');
 Route::post('user_update', [UserController::class, 'update'])->name('user_update');
 Route::post('user_destroy', [UserController::class, 'destroy'])->name('user_destroy');
 
@@ -47,5 +52,8 @@ Route::post('vote_store', [VoteController::class, 'store'])->name('vote_store');
 
 
 Route::post('get_events', [AdminController::class, 'index_events'])->name('index_events');
+Route::post('send_email', [AdminController::class, 'sendEmail'])->name('send_email');
+
+// send email
 Route::post('send_email', [AdminController::class, 'sendEmail'])->name('send_email');
 

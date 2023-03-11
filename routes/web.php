@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ElectorController;
 use App\Http\Controllers\VoteController;
+use Faker\Provider\Image;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -43,14 +44,15 @@ Route::get('/qr_vote/{key}', function ($event_key) {
     return response($image)->header('Content-type','image/svg+xml');
 })->name('qr_vote');
 
-
-
-
-
-
-// Candidate stored image
 Route::get('/candidate/image/{candidate_key}', function ($candidate_key) {
-    $file = Storage::disk('s3')->get('candidates/' . $candidate_key . '.jpg');
+    if ($candidate_key == 'nulo') {
+        $file = Storage::disk('s3')->get('nulo.png');
+    } elseif (!Storage::disk('s3')->exists('candidates/' . $candidate_key . '.jpg')) {
+        $file = Storage::disk('s3')->get('default.png');
+    } else{
+        $file = Storage::disk('s3')->get('candidates/' . $candidate_key . '.jpg');
+    }
+
 
     return response($file, 200)->header('Content-Type','image/jpeg');
 })->name('candidate.image');
@@ -63,7 +65,6 @@ Route::get('/candidate/video/{candidate_key}', function ($candidate_key) {
 })->name('candidate.video');
 
 
-// Get event stored file
 Route::get('/pdf/ficha/{candidate_key}', function ($event_key) {
     if (!Storage::disk('public')->exists('pdf/ficha/' . $event_key . '.pdf')) {
         return response()->json(['message' => 'No existe el archivo'], 404);

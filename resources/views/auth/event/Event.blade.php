@@ -3,22 +3,18 @@
         <div class="sm:px-6 mx-2 lg:px-8">
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-
-                    {{-- Title Form --}}
                     <div class="mt-5 md:mt-0 ">
-                        <h1 class="block">Realiza tu registro</h1>
+                        <h1 class="block font-bold">Realiza tu registro</h1>
                     </div>
 
                     <div class="grid grid-cols-6 gap-4" id="form_event">
 
                         <input type="hidden" id="event_key" name="event_key">
 
-                        {{-- Form --}}
                         <form class="col-span-6 md:col-span-2 grid grid-cols-1 gap-4">
                             @csrf
                             <input type="hidden" id="user_id" name="user_id" value="{{ Auth::user()->user_id }}">
 
-                            {{-- name --}}
                             <div>
                                 <label for="name"
                                        class="block text-sm font-medium text-gray-700">
@@ -85,10 +81,21 @@
                             <div>
                                 <label for="director"
                                        class="block text-sm font-medium text-gray-700">
-                                    Título y nombre de la autoridad máxima de la institución educativa </label>
+                                    Título y nombre de la autoridad máxima de la institución</label>
                                 <input type="text" name="director" id="director"
                                        class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
                                        placeholder="Ejemplo: Mtra. Daniela Ruiz Martínez. Directora">
+                            </div>
+
+                            {{-- Blob --}}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700"
+                                       for="photo">Logotipo actual de la institución</label>
+                                <input class="block w-full text-sm text-slate-500
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-full file:border-0
+      file:text-sm file:font-semibold" id="photo" type="file" name="photo">
+
                             </div>
 
                             {{-- responsible --}}
@@ -111,19 +118,6 @@
                                        placeholder="Ejemplo: 55 1234 5678"
                                        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                             </div>
-
-
-{{--                            --}}{{-- Blob --}}
-{{--                            <div class="w-full">--}}
-{{--                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"--}}
-{{--                                       for="photo">Logotipo de la Institución</label>--}}
-{{--                                <input class="block w-full text-sm text-slate-500--}}
-{{--      file:mr-4 file:py-2 file:px-4--}}
-{{--      file:rounded-full file:border-0--}}
-{{--      file:text-sm file:font-semibold" id="logo" type="file" name="photo">--}}
-
-{{--                            </div>--}}
-
 
                             {{-- start_at --}}
                             <div>
@@ -149,7 +143,7 @@
                             {{-- Button Form --}}
                             <div>
                                 <button id="submit_button"
-                                        class="btn-block inline-flex w-full py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        class="btn-primary inline-flex w-full py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white">
                                     Guardar
                                 </button>
                             </div>
@@ -157,7 +151,7 @@
 
                         {{-- Table --}}
                         <div class="col-span-6 md:col-span-4">
-                            <div class="overflow-x-auto">
+                            <div class="overflow-x-auto shadow-xl ">
                                 <livewire:events-table/>
                             </div>
                         </div>
@@ -185,28 +179,33 @@
                 let groups = document.getElementById("groups").value;
                 let schedule = document.getElementById("schedule").value;
                 let director = document.getElementById("director").value;
+                let photo = document.getElementById('photo').files[0];
                 let responsible = document.getElementById("responsible").value;
                 let responsible_phone = document.getElementById("responsible_phone").value;
                 let start_at = document.getElementById("start_at").value;
                 let end_at = document.getElementById("end_at").value;
 
+                // create formdata
+                let formData = new FormData();
+
+                formData.append('user_id', user_id);
+                formData.append('name', name);
+                formData.append('cycle', cycle);
+                formData.append('population', population);
+                formData.append('groups', groups);
+                formData.append('schedule', schedule);
+                formData.append('director', director);
+                formData.append('photo', photo);
+                formData.append('responsible', responsible);
+                formData.append('responsible_phone', responsible_phone);
+                formData.append('start_at', start_at);
+                formData.append('end_at', end_at);
+
+
 
                 // axios post request
-                axios.post("{{ route('event_store') }}", {
-                    user_id: user_id,
-                    name: name,
-                    cycle: cycle,
-                    population: population,
-                    groups: groups,
-                    schedule: schedule,
-                    director: director,
-                    responsible: responsible,
-                    responsible_phone: responsible_phone,
-                    start_at: start_at,
-                    end_at: end_at,
-                })
+                axios.post("{{ route('event_store') }}", formData)
                     .then(function (response) {
-                        toastr.success('Evento creado con éxito');
 
                         // clear each input
                         document.getElementById("name").value = '';
@@ -217,6 +216,16 @@
                         document.getElementById("director").value = '';
                         document.getElementById("responsible").value = '';
                         document.getElementById("responsible_phone").value = '';
+
+                        // swal with message "Para continuar con el proceso de registro, realiza el paso 2 ingresando los datos de la elección."
+                        Swal.fire({
+                            title: '¡Evento creado con éxito!',
+                            text: "Para continuar con el proceso de registro, realiza el paso 2 ingresando los datos de la elección.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Continuar',
+                        });
 
                     })
                     .catch(function (error) {
@@ -392,13 +401,40 @@
                 document.getElementById('user_id').value = "{{ Auth::user()->user_id }}";
 
                 // fill cycle with "year-year+1" format, 10 years from current
-                let currentYear = new Date().getFullYear();
+                let currentYear = new Date().getFullYear() - 1;
                 for (let i = 0; i < 10; i++) {
                     let option = document.createElement("option");
                     option.text = currentYear + "-" + (currentYear + 1);
                     option.value = currentYear + "-" + (currentYear + 1);
                     document.getElementById("cycle").add(option);
                     currentYear++;
+                }
+
+                if (!localStorage.getItem('firstTime')) {
+                    Swal.fire({
+                        title: '¡Bienvenido!',
+                        icon: 'info',
+                        width: 800,
+                        html: `
+                            <div style="text-align: left;">
+                                A continuación, se te pedirá realizar el registro de la elección que se organizará en tu escuela. Antes de continuar, te sugerimos que tengas a la mano los siguientes datos:
+                             <br><br>Nombre del evento (Ej. Elección de la sociedad de alumnos)
+                             <br>Ciclo Escolar
+                             <br>Total de alumnos (que votarán)
+                             <br>Número de grupos (con los que cuenta tu escuela)
+                             <br>Turno
+                             <br>Título, nombre y cargo de la máxima autoridad de la escuela
+                             <br>Nombre de una persona enlace
+                             <br>Número telefónico de la persona designada como enlace
+                             <br>Fecha y hora del inicio de la votación
+                             <br>Fecha y hora del fin de la votación
+                             <br>Logotipo de la escuela en formato JPG o PNG
+                             <br>Domicilio de la escuela
+                            </div>
+                        `,
+                        confirmButtonText: '¡Entendido!'
+                    });
+                    localStorage.setItem('firstTime', true);
                 }
 
             });

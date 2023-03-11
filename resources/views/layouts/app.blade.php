@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
@@ -23,7 +25,8 @@
     @include('layouts.navigation')
 
     <!-- Page Content -->
-    <main style="margin-top: 4rem;">
+    <main class="min-h-screen"
+        style="background: url('/img/background_work_1.jpg');background-repeat: no-repeat;background-size: cover;background-position: center; margin-top: 4rem;">
         {{ $slot }}
     </main>
 </div>

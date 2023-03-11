@@ -35,6 +35,7 @@ class AdminController extends Controller
     }
 
 
+
     // send email function with email and subject in the request, validated
     public function sendEmail(Request $request)
     {
@@ -42,6 +43,7 @@ class AdminController extends Controller
         $rules = [
             'email' => 'required|email',
             'subject' => 'required',
+            'message' => 'required',
         ];
 
         // msgs but in spanish
@@ -49,14 +51,18 @@ class AdminController extends Controller
             'email.required' => 'El campo email es requerido',
             'email.email' => 'El campo email debe ser un email valido',
             'subject.required' => 'El campo asunto es requerido',
+            'message.required' => 'El campo mensaje es requerido',
         ];
 
         // validate
         $request->validate($rules, $messages);
 
 
-        // send email
-//        Mail::to($request->email)->send(new SendEmail($request->subject));
+        // send plain email, resolving must be of type ?Symfony\Component\Mime\Part\AbstractPart, string given, error
+        Mail::raw($request->message, function ($message) use ($request) {
+            $message->to($request->email);
+            $message->subject($request->subject);
+        });
 
         // return response
         return response()->json(['message' => 'Email enviado correctamente'], 200);

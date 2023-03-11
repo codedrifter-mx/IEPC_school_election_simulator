@@ -15,8 +15,15 @@ class EventsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('event_key')
-            ->setRefreshKeepAlive();
+            ->setRefreshKeepAlive()
+            ->setColumnSelectStatus(false)
+            ->setPaginationDisabled()
+            ->setSearchDisabled()
+            ->setPaginationVisibilityDisabled();
+
     }
+
+
 
     public function columns(): array
     {
@@ -41,9 +48,9 @@ class EventsTable extends DataTableComponent
             // if end_at empty, show badge "IEPC por confirmar"
                 ->label(fn($row) => $row->end_at == null ? '<span class="badge badge-warning">IEPC por confirmar</span>' : $row->end_at)
                 ->html(),
-            Column::make('Editar', 'event_key')
-                ->label(fn($row) => '<button onclick="setEvent(`' . $row->event_key . '`)" class="btn btn-primary btn-sm">Editar</button>')
-                ->html(),
+//            Column::make('Editar', 'event_key')
+//                ->label(fn($row) => '<button onclick="setEvent(`' . $row->event_key . '`)" class="btn btn-primary btn-sm">Editar</button>')
+//                ->html(),
             // add a 'Borrar' button column
             Column::make('Borrar', 'event_key')
                 ->label(fn($row) => '<button onclick="dropEvent(`' . $row->event_key . '`)" class="btn btn-danger btn-sm">Borrar</button>')

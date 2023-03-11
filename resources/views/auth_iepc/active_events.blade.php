@@ -62,7 +62,7 @@
                     <tr>
                         <td>Tiempo Transcurrido</td>
                         <td>
-                            <div class="p-6 break-all rounded bg-primary text-center">
+                            <div class="p-3 break-all rounded bg-primary text-center">
                                 <div class="text-white font-bold" id="timer">0d 0h 0m 0s</div>
                             </div>
                         </td>
@@ -73,12 +73,12 @@
             </div>
 
 
-                <div class="modal-action">
-                    <button class="btn btn-primary" id="btnDates">Modificar Fechas</button>
-
-                    <label for="viewModalNominal" class="btn">Cerrar</label>
-                </div>
+            <div class="modal-action">
+                <button class="btn btn-primary" id="btnDates">Modificar Fechas</button>
+                <button class="btn btn-primary" id="btnXlsx">Descargar Excel</button>
+                <label for="viewModalNominal" class="btn">Cerrar</label>
             </div>
+        </div>
     </div>
 
     <input type="checkbox" id="viewModalDate" class="modal-toggle"/>
@@ -89,7 +89,8 @@
 
                 <div>
                     <div class="flex flex-col">
-                        <label for="start_at" class="block text-sm font-medium text-gray-700">Fecha de inicio propuesto</label>
+                        <label for="start_at" class="block text-sm font-medium text-gray-700">Fecha de inicio
+                            propuesto</label>
                         <div class="mt-1">
                             <input type="text" name="end_at" id="start_at"
                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md bg-gray-200"
@@ -138,23 +139,23 @@
     <div class="modal">
         <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
             <div class="overflow-x-auto">
-                <div class="p-2 col-span-2 md:col-span-1" id="third">
+                <div class="p-2 " id="third">
                     <div class="shadow rounded-md overflow-hidden">
                         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                             <button id="details_button"
-                                    class="btn-block w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    class="btn-primary w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white ">
                                 Conoce los resultados de la elección
                             </button>
                             <button id="results_button"
-                                    class="btn-block w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    class="btn-primary w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white ">
                                 Descargar cartel de resultados
                             </button>
                             <button id="journey_button"
-                                    class="btn-block w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    class="btn-primary w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white ">
                                 Descargar Acta de la Jornada Electoral
                             </button>
                             <button id="majority_button"
-                                    class="btn-block w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    class="btn-primary w-full text-sm py-2 px-2 border border-transparent shadow-sm font-medium rounded-md text-white ">
                                 Descargar Constancia de Mayoría y Validez
                             </button>
                         </div>
@@ -224,7 +225,6 @@
             let event_key = null;
             var x = null;
 
-            // function to convert php datetime to string d-m-Y H:i:s on UTC
             function convertDate(date) {
                 let dateObj = new Date(date);
                 let month = dateObj.getUTCMonth() + 1; //months from 1-12
@@ -238,7 +238,6 @@
                 return newdate;
             }
 
-            // function to convert date to yyyy-MM-ddThh:mm
             function convertDateToInput(date) {
                 let dateObj = new Date(date);
                 let month = (dateObj.getUTCMonth() + 1).toString().padStart(2, '0'); //months from 1-12
@@ -312,11 +311,8 @@
                 event_key = event_key_;
 
                 document.getElementById('viewModalResults').checked = true;
-
             }
 
-
-            // function to show details
             function showDetails() {
                 axios.get("{{ route('event_details') }}",
                     {
@@ -355,45 +351,122 @@
                     });
             }
 
-            // function to show details
-            function showResults() {
+            function getFileResults() {
 
-                axios.get("{{ route('event_getResultsPdf') }}",
-                    {
-                        params: {
-                            event_key: event_key
-                        }
-                    })
-                    .then(function (response) {
-                        window.open(response.data.url, '_blank');
-                    })
-                    .catch(function (error) {
-                        console.log(error)
-                        // show toastr error
-                        toastr.error(error.response.data);
-                    });
+                Swal.fire({
+                    title: '¡Un documento digital tiene validez!',
+                    text: "Antes de imprimir, piensa si es necesario hacerlo. En el IEPC somos amigables con el medio ambiente, por lo que te invitamos a no imprimir estos documentos, ya que puedes descargarlos y compartirlos vía electrónica",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Descargar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.get("{{ route('event_getResultsPdf') }}",
+                            {
+                                params: {
+                                    event_key: event_key
+                                }
+                            })
+                            .then(function (response) {
+                                window.open(response.data.url, '_blank');
+                            })
+                            .catch(function (error) {
+                                console.log(error)
+                                // show toastr error
+                                toastr.error(error.response.data.message);
+                            });
+                    }
+                })
+
             }
 
             // function to show details
-            function showMajority() {
+            function getFileAct() {
+                Swal.fire({
+                    title: '¡Un documento digital tiene validez!',
+                    text: "Antes de imprimir, piensa si es necesario hacerlo. En el IEPC somos amigables con el medio ambiente, por lo que te invitamos a no imprimir estos documentos, ya que puedes descargarlos y compartirlos vía electrónica",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Descargar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.get("{{ route('event_getAct') }}",
+                            {
+                                params: {
+                                    event_key: event_key
+                                }
+                            })
+                            .then(function (response) {
+                                window.open(response.data.url, '_blank');
+                            })
+                            .catch(function (error) {
+                                console.log(error)
+                                // show toastr error
+                                toastr.error(error.response.data.message);
+                            });
+                    }
+                })
+            }
+
+            // function to show details
+            function getFileMayority() {
                 //show info toastr that it can take a while
-                toastr.info("Este proceso puede tardar unos segundos en descargar...");
 
-                axios.get("{{ route('event_getMajority') }}",
-                    {
-                        params: {
-                            event_key: event_key
-                        }
-                    })
-                    .then(function (response) {
-                        window.open(response.data.url, '_blank');
-                    })
-                    .catch(function (error) {
-                        console.log(error)
-                        // show toastr error
-                        toastr.error(error.response.data);
-                    });
+
+
+                Swal.fire({
+                    title: '¡Un documento digital tiene validez!',
+                    text: "Antes de imprimir, piensa si es necesario hacerlo. En el IEPC somos amigables con el medio ambiente, por lo que te invitamos a no imprimir estos documentos, ya que puedes descargarlos y compartirlos vía electrónica",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Descargar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        toastr.info("Este proceso puede tardar unos segundos en descargar...");
+
+                        axios.get("{{ route('event_getMajority') }}",
+                            {
+                                params: {
+                                    event_key: event_key
+                                }
+                            })
+                            .then(function (response) {
+                                window.open(response.data.url, '_blank');
+                            })
+                            .catch(function (error) {
+                                console.log(error)
+                                // show toastr error
+                                toastr.error(error.response.data.message);
+                            });
+                    }
+                })
             }
+
+            function downloadResults() {
+                // create a http request for event_getResultsXlsx without axios
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', "{{ route('event_getResultsXlsx') }}?event_key=" + event_key, true);
+                xhr.responseType = 'blob';
+                xhr.onload = function (e) {
+                        var blob = this.response;
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = "resultados.xlsx";
+                        link.click();
+                };
+                xhr.send();
+
+            }
+
 
             function validateEvent() {
 
@@ -450,12 +523,14 @@
 
             document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('btnDates').addEventListener('click', validateEvent);
+                document.getElementById('btnXlsx').addEventListener('click', downloadResults);
                 document.getElementById('validate_event').addEventListener('click', updateEvent);
 
 
                 document.getElementById('details_button').addEventListener('click', showDetails);
-                document.getElementById('results_button').addEventListener('click', showResults);
-                document.getElementById('majority_button').addEventListener('click', showMajority);
+                document.getElementById('results_button').addEventListener('click', getFileResults);
+                document.getElementById('journey_button').addEventListener('click', getFileAct);
+                document.getElementById('majority_button').addEventListener('click', getFileMayority);
 
             });
 

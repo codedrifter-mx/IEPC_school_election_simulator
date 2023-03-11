@@ -12,20 +12,38 @@
                     <div class="grid grid-cols-3 gap-4" id="form_event">
 
 
-                        {{-- Email --}}
+                        {{-- Users combobox--}}
                         <div class="col-span-1 sm:col-span-1">
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email destino: </label>
+                            <label for="users" class="block text-sm font-medium text-gray-700">Elije alguna institución registrada: </label>
+                            <select name="users" id="users" autocomplete="users"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <option value="0">Selecciona alguna institución</option>
+                            </select>
+                        </div>
+
+                        {{-- Email --}}
+                        <div class="col-span-1 sm:col-span-1" id="emailForm">
+                            <label for="email" class="block text-sm font-medium text-gray-700">O escribe el email destino: </label>
                             <input type="text" name="email" id="email" autocomplete="email"
                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                         </div>
 
+
+
                         {{-- Subject --}}
                         <div class="col-span-3 sm:col-span-3">
                             <label for="subject" class="block text-sm font-medium text-gray-700">Asunto: </label>
-                            <textarea id="subject" name="subject" rows="3"
-                                      class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
-
+                            <input type="text" name="subject" id="subject" autocomplete="subject"
+                                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                         </div>
+
+                        {{-- Message --}}
+                        <div class="col-span-3 sm:col-span-3">
+                            <label for="message" class="block text-sm font-medium text-gray-700">Mensaje: </label>
+                            <textarea name="message" id="message" autocomplete="message" rows="5"
+                                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
+                        </div>
+
 
                         {{-- Button Form --}}
                         <div>
@@ -36,6 +54,7 @@
                         </div>
 
                     </div>
+
                 </div>
             </div>
         </div>
@@ -49,7 +68,16 @@
             function sendEmail(e) {
                 e.preventDefault();
                 var email = document.getElementById("email").value;
+                var users_select = document.getElementById("users");
+                if (users_select.value == 0) {if (email == '') {
+                        toastr.error('El campo email es obligatorio');
+                        return;
+                    }
+                } else {
+                    email = users_select.value;
+                }
                 var subject = document.getElementById("subject").value;
+                var message = document.getElementById("message").value;
 
                 var submit_button = document.getElementById('submit_button');
                 submit_button.disabled = true;
@@ -58,6 +86,7 @@
                 var data = {
                     email: email,
                     subject: subject,
+                    message: message,
                 };
 
                 axios.post("{{ route('send_email') }}", data)
@@ -67,6 +96,7 @@
                         submit_button.innerHTML = 'Guardar';
                         document.getElementById("email").value = '';
                         document.getElementById("subject").value = '';
+                        document.getElementById("message").value = '';
 
                         // show success message
                         Swal.fire({
@@ -90,12 +120,50 @@
                     });
             }
 
+            // get all users function
+            function getUsers() {
+                axios.get("{{ route('user_index') }}")
+                    .then(function (response) {
+                        var users = response.data;
+
+                        var users_select = document.getElementById("users");
+                        for (var i = 0; i < users.length; i++) {
+                            // if it has administrador level, it is not shown
+                            if (users[i].level != "Administrador") {
+                                var option = document.createElement("option");
+                                option.value = users[i].email;
+                                option.text = users[i].name + ' - ' + users[i].email;
+                                users_select.appendChild(option);
+                            }
+
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+            // create function to hide and show email input
+            function changeEmail() {
+                var users_select = document.getElementById("users");
+                var email_input = document.getElementById("emailForm");
+                if (users_select.value == 0) {
+                    email_input.style.display = "block";
+                } else {
+                    email_input.style.display = "none";
+                }
+            }
+
 
 
             document.addEventListener('DOMContentLoaded', function () {
                 // add event listener to submit button
+                getUsers();
                 document.getElementById('submit_button').addEventListener('click', sendEmail);
             });
+
+            // add event listener to users combobox
+            document.getElementById('users').addEventListener('change', changeEmail);
 
         </script>
     </x-slot>
