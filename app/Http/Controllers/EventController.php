@@ -759,6 +759,7 @@ class EventController extends Controller
             'end_at' => $event->end_at,
             'population' => $event->population,
             'director' => $event->director,
+            'locality' => $event->locality,
             'total_votes' => $votes,
             'candidates' => $candidates->pluck('votes', 'name'),
             'candidates_key' => $candidates->pluck('candidate_key', 'name'),
@@ -796,6 +797,11 @@ class EventController extends Controller
             $left = 59;
             $top = 71;
             $text = $data['municipio'];
+            $fpdi->Text($left, $top, $text);
+
+            $left = 128;
+            $top = 71;
+            $text = $data['locality'];
             $fpdi->Text($left, $top, $text);
 
             $left = 40;
@@ -862,6 +868,8 @@ class EventController extends Controller
             $top = 85.5;
             $text = $data['domicilio'];
             $fpdi->Text($left, $top, $text);
+
+
 
             $left = 124;
             $top = 80.5;

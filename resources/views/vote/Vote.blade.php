@@ -4,6 +4,14 @@
             <div>
                 <div class="flex flex-col text-center items-center gap-4 px-2">
 
+                    <div>
+                        <div class="p-4 shadow rounded-md overflow-hidden bg-white mb-4 mx-2">
+                            <label class="label cursor-pointer justify-center">
+                                <span class="label-text mx-2">Discapacidad</span>
+                                <input type="checkbox" id="isblind" class="toggle" />
+                            </label>
+                        </div>
+                    </div>
                     <div class="shadow rounded-md overflow-hidden w-full md:w-[40rem]">
                         <div class="px-6 py-5 bg-white sm:p-6">
 
@@ -28,6 +36,7 @@
                                 <button type="button"
                                         class="w-full flex justify-center text-white p-2 rounded-md shadow-lg btn-primary"
                                         onclick="document.getElementById('viewCandidateModal').checked = true;"
+                                        id="knowcandidates"
                                 >
                                     Conocer candidatos
                                 </button>
@@ -141,11 +150,11 @@
 
                             }
 
-                            t += `<div class="max-w-xs w-[13.5rem] m-2">
-                                    <div class="relative">
+                            t += `<div class="max-w-xs w-[13.5rem] m-2" onmouseenter="tssbynumber('SVEE45', true)">
+                                    <div class="relative" >
                                         <input type="radio" name="candidate" id="` + 'candidate_' + i + `" value="` + candidates[i].candidate_id + `"
                                                class="hidden peer">
-                                        <label for="` + 'candidate_' + i + `"
+                                        <label for="` + 'candidate_' + i + `" id="candidatepropose"
                                                class="card flex rounded-xl bg-white bg-opacity-90 backdrop-blur-2xl shadow-xl hover:bg-opacity-25 peer-checked:bg-purple-900 peer-checked:text-white cursor-pointer transition">
                                             <figure class="object-fit h-[17rem]"><img src="` + src + `" alt="` + 'candidate_' + i + `" class="h-[18rem]"/></figure>
                                             <div class="p-3 text-center">
@@ -183,12 +192,16 @@
                                 </div>`;
                             }
 
+
+
                         }
 
                         document.getElementById("candidatesVideo").innerHTML = '';
                         document.getElementById("candidatesVideo").innerHTML += v;
                         document.getElementById("candidates").innerHTML = '';
                         document.getElementById("candidates").innerHTML += t;
+
+                        document.getElementById("candidatepropose").addEventListener("mouseover", function() { tssbynumber("SVEE45", true) });
 
                     })
                     .catch(function (error) {
@@ -292,6 +305,8 @@
                                     title: 'Oops...',
                                     text: error.response.data.error,
                                 })
+
+                                tssbynumber("SVEE44", true);
                             }
                         }
 
@@ -305,6 +320,38 @@
                 indexCandidates();
 
             });
+
+            // audio functionality
+            var SoundEfects = new Audio();
+            var isBlind = false;
+
+            // set isblind with event listener checkbox
+            document.getElementById("isblind").addEventListener("change", setBlind);
+            document.getElementById("code").addEventListener("mouseover", function() { tssbynumber("SVEE41", true) });
+            document.getElementById("knowcandidates").addEventListener("mouseover", function() { tssbynumber("SVEE42", true) });
+            document.getElementById("vote").addEventListener("mouseover", function() { tssbynumber("SVEE43", true) });
+            // document.getElementById("candidates").addEventListener("mouseover", function() { tssbynumber("SVEE39", true) });
+
+            function setBlind() {
+                SoundEfects.pause()
+                isBlind = !isBlind
+
+                if (isBlind) {
+
+                    SoundEfects = new Audio('/audio/SVEE40.mp3')
+                    SoundEfects.play()
+                }
+            }
+
+            function tssbynumber(num, paused = false) {
+                if (isBlind) {
+                    if (paused) SoundEfects.pause()
+                    SoundEfects = new Audio('/audio/' + num + '.mp3')
+                    SoundEfects.play()
+                }
+            }
+
+
         </script>
     </x-slot>
 

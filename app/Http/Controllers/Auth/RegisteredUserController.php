@@ -58,6 +58,9 @@ class RegisteredUserController extends Controller
             'municipality.required' => 'El campo municipio es obligatorio.',
             'municipality.string' => 'El campo municipio debe ser una cadena de caracteres.',
             'municipality.max' => 'El campo municipio no debe ser mayor a 255 caracteres.',
+            'locality.required' => 'El campo localidad es obligatorio.',
+            'locality.string' => 'El campo localidad debe ser una cadena de caracteres.',
+            'locality.max' => 'El campo localidad no debe ser mayor a 255 caracteres.',
             'address.required' => 'El campo dirección es obligatorio.',
             'address.string' => 'El campo dirección debe ser una cadena de caracteres.',
             'address.max' => 'El campo dirección no debe ser mayor a 255 caracteres.',
@@ -82,6 +85,7 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'municipality' => $request->municipality,
+            'locality' => $request->locality,
             'address' => $request->address,
             'email' => $request->email,
             'level' => $request->level,

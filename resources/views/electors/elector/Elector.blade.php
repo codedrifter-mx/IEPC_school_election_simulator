@@ -4,7 +4,14 @@
             <div class="mt-3 md:mt-0 md:col-span-1">
 
                 <div class="grid grid-cols-1 md:grid-cols-3 m-3">
-                    <div></div>
+                    <div>
+                        <div class="p-4 shadow rounded-md overflow-hidden bg-white mb-4 mx-2">
+                            <label class="label cursor-pointer justify-center">
+                                <span class="label-text mx-2">Discapacidad</span>
+                                <input type="checkbox" id="isblind" class="toggle" />
+                            </label>
+                        </div>
+                    </div>
                     <div class="shadow rounded-md overflow-hidden">
                         <form id="store" class="px-4 py-2 bg-white space-y-4 sm:p-6">
 
@@ -27,7 +34,7 @@
 
                             {{-- Title Form --}}
                             <div class="text-center">
-                                <h1 class="block font-bold"> Registro de votantes </h1>
+                                <h1 class="block font-bold" id="SVEE02"> Registro de votantes </h1>
                             </div>
 
                             <div class="grid grid-cols-1 gap-3">
@@ -88,13 +95,13 @@
                                     <div class="mt-1 flex rounded-md shadow-sm">
                                         <select name="grade" id="grade"
                                                 class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300">
-                                            <option value="1">Primero</option>
-                                            <option value="2">Segundo</option>
-                                            <option value="3">Tercero</option>
-                                            <option value="4">Cuarto</option>
-                                            <option value="5">Quinto</option>
-                                            <option value="6">Sexto</option>
-                                            <option value="Otro">Otro</option>
+                                            <option value="1" id="1">Primero</option>
+                                            <option value="2" id="2">Segundo</option>
+                                            <option value="3" id="3">Tercero</option>
+                                            <option value="4" id="4">Cuarto</option>
+                                            <option value="5" id="5">Quinto</option>
+                                            <option value="6" id="6">Sexto</option>
+                                            <option value="Otro" id="Otro">Otro</option>
                                         </select>
                                     </div>
                                 </div>
@@ -152,7 +159,8 @@
 
                                 {{-- insert --}}
                                 <button type="submit"
-                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white btn-primary">
+                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white btn-primary"
+                                id="registerbtn">
                                     Registrarse
                                 </button>
                             </div>
@@ -170,10 +178,10 @@
     </div>
 
     <input type="checkbox" id="viewCandidateModal" class="modal-toggle"/>
-    <div class="modal">
+    <div class="modal" id="candidatesModalaudio">
         <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
             <div class="text-center">
-                <p class="font-bold">¡Haz click para ver sus propuestas!</p>
+                <p class="font-bold" >¡Haz click para ver sus propuestas!</p>
             </div>
             <div class="grid grid-cols-1">
 
@@ -183,7 +191,7 @@
                 </div>
 
                 <div class="modal-action">
-                    <label for="viewCandidateModal" class="btn">Cerrar</label>
+                    <label for="viewCandidateModal" id="viewCandidateModalBtn" class="btn">Cerrar</label>
                 </div>
             </div>
         </div>
@@ -201,7 +209,7 @@
                 <div class="modal-action">
 
                     <div>
-                        <label for="viewCandidateVideo" class="btn" onclick="document.getElementById('video').pause();">Cerrar</label>
+                        <label for="viewCandidateVideo" class="btn" id="viewCandidateVideoBtn"  onclick="document.getElementById('video').pause();">Cerrar</label>
                     </div>
                 </div>
             </div>
@@ -209,7 +217,7 @@
     </div>
 
     <input type="checkbox" id="viewprivacy" class="modal-toggle"/>
-    <div class="modal">
+    <div class="modal" id="modalaudio">
         <div class="modal-box modal-bottom sm:modal-middle md:w-11/12 md:max-w-5xl">
             <div class="grid grid-cols-1">
 
@@ -232,7 +240,7 @@
                     </p>
                 </div>
                 <div class="modal-action col-span-3">
-                    <label for="viewprivacy" class="btn">Cerrar</label>
+                    <label for="viewprivacy" id="viewprivacyBtn"  class="btn">Cerrar</label>
                 </div>
             </div>
         </div>
@@ -290,14 +298,20 @@
                             + 'Te invitamos a consultar la sección “Conoce a tus candidatos y candidatas y revisa sus propuestas”'
                             + 'antes de emitir tu voto.'
 
+                        tssbynumber("SVEE34", true);
 
                         Swal.fire({
                             title: 'Haz concluido tu registro, te recomendamos que tomes nota de la clave que generaste y la conserves',
                             text: msg,
                             icon: 'success',
                             confirmButtonText: 'Conoce a tus candidatos y candidatas',
-                            // black space not leaveble
                             allowOutsideClick: false,
+                            didOpen: function() {
+                                const confirmButton = document.querySelector('.swal2-confirm');
+                                confirmButton.addEventListener('mouseover', function() {
+                                    tssbynumber("SVEE35", true);
+                                });
+                            }
                         }).then((result) => {
                             if (result.isConfirmed) {
 
@@ -312,6 +326,10 @@
                             for (var key in error.response.data.errors) {
                                 if (error.response.data.errors.hasOwnProperty(key)) {
                                     toastr.error(error.response.data.errors[key]);
+
+                                    if (key === 'code') {
+                                        tssbynumber("SVEE33", true);
+                                    }
                                 }
                             }
                         });
@@ -360,7 +378,8 @@
                             t += `<div class="max-w-xs w-[13.5rem] m-2" style="" onclick="setVideo('` + candidates[i].candidate_key + `')">
                                     <div class="relative">
                                         <label for="` + 'candidate_' + i + `"
-                                               class="card flex rounded-xl bg-white bg-opacity-90 backdrop-blur-2xl shadow-xl hover:bg-opacity-25 peer-checked:bg-purple-900 peer-checked:text-whitetransition">
+                                               class="card flex rounded-xl bg-white bg-opacity-90 backdrop-blur-2xl shadow-xl hover:bg-opacity-25 peer-checked:bg-purple-900 peer-checked:text-whitetransition"
+                                            id="candidatesPropose">
                                             <figure class="object-fit"><img src="` + src + `" alt="` + 'candidate_' + i + `" class=" h-[14.5rem]"/></figure>
                                             <div class="p-4">
                                                 <div>
@@ -376,11 +395,15 @@
                         document.getElementById("candidates").innerHTML = '';
                         document.getElementById("candidates").innerHTML += t;
 
+                        document.getElementById("candidatesPropose").addEventListener("mouseover", function() { tssbynumber("SVEE36", true) });
+
+
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             }
+
 
 
             // when document loaded
@@ -389,6 +412,80 @@
                 indexCandidates('{{ $event_key }}');
 
             });
+
+            // audio functionality
+            var SoundEfects = new Audio();
+            var isBlind = false;
+
+            // set isblind with event listener checkbox
+            document.getElementById("isblind").addEventListener("change", setBlind);
+            document.getElementById("SVEE02").addEventListener("mouseover", function() { tssbynumber("SVEE02", true) });
+            document.getElementById("name").addEventListener("mouseover", function() { tssbynumber("SVEE04", true) });
+            document.getElementById("names").addEventListener("mouseover", function() { tssbynumber("SVEE05", true) });
+            document.getElementById("paternal_surname").addEventListener("mouseover", function() { tssbynumber("SVEE06", true) });
+            document.getElementById("maternal_surname").addEventListener("mouseover", function() { tssbynumber("SVEE07", true) });
+            document.getElementById("grade").addEventListener("mouseover", function() { tssbynumber("SVEE08", true) });
+
+
+            const select = document.querySelector('select');
+            const options = select.querySelectorAll('option');
+
+            for (let i = 0; i < options.length; i++) {
+                options[i].addEventListener('mouseenter', function() {
+                    this.selected = true;
+                    select.dispatchEvent(new Event('change'));
+                });
+            }
+
+            // set grade with event listener change, and play the audio of the option when hover
+            document.getElementById("grade").addEventListener("change", function(event) {
+                if (event.target.value == 1) {
+                    tssbynumber("SVEE09", true)
+                } else if (event.target.value == 2) {
+                    tssbynumber("SVEE10", true)
+                } else if (event.target.value == 3) {
+                    tssbynumber("SVEE11", true)
+                } else if (event.target.value == 4) {
+                    tssbynumber("SVEE12", true)
+                } else if (event.target.value == 5) {
+                    tssbynumber("SVEE13", true)
+                } else if (event.target.value == 6) {
+                    tssbynumber("SVEE14", true)
+                }
+            });
+
+
+            document.getElementById("Otro").addEventListener("mouseenter", function() { tssbynumber("SVEE15", true) });
+            document.getElementById("group").addEventListener("mouseover", function() { tssbynumber("SVEE16", true) });
+            document.getElementById("code").addEventListener("mouseover", function() { tssbynumber("SVEE28", true) });
+            document.getElementById("privacy").addEventListener("mouseover", function() { tssbynumber("SVEE29", true) });
+            document.getElementById("privacy").addEventListener("click", function() { tssbynumber("SVEE30", true) });
+            document.getElementById("modalaudio").addEventListener("mouseout", function() { tssbynumber("SVEE31", true) });
+            document.getElementById("registerbtn").addEventListener("mouseover", function() { tssbynumber("SVEE32", true) });
+
+            document.getElementById("viewCandidateModalBtn").addEventListener("mouseover", function() { tssbynumber("SVEE37", true) });
+            document.getElementById("viewCandidateVideoBtn").addEventListener("mouseover", function() { tssbynumber("SVEE37", true) });
+            document.getElementById("viewprivacyBtn").addEventListener("mouseover", function() { tssbynumber("SVEE37", true) });
+
+            function setBlind() {
+                SoundEfects.pause()
+                isBlind = !isBlind
+
+                if (isBlind) {
+                    SoundEfects.pause()
+                    SoundEfects = new Audio('/audio/SVEE03.mp3')
+                    SoundEfects.play()
+                }
+            }
+
+            function tssbynumber(num, paused = false) {
+                if (isBlind) {
+                    if (paused) SoundEfects.pause()
+                    SoundEfects = new Audio('/audio/' + num + '.mp3')
+                    SoundEfects.play()
+                }
+            }
+
 
         </script>
     </x-slot>
