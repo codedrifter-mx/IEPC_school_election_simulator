@@ -1,64 +1,131 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Desarrollo del simulador de elecciones escolares en modo virtual
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este proyecto es una aplicación web que permite la documentacion virtual y simulacion de elecciones escolares de manera digital, esto permite que las escuelas puedan organizar elecciones mientras que el IEPC pueda monitorear estas actividades.
 
-## About Laravel
+Puedes interactuar aqui: http://schoolelectionsimulator-env.eba-vximfvvp.us-east-1.elasticbeanstalk.com/
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tech Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* Laravel 9 (PHP 8.1)
+* Tailwind CSS
+* AWS (BeanStalk, S3, EC2, RDS)
+* MySQL 8.0
+* Apache web server
+* Docker
+* Windows 11 WSL 2
+* JetBrains PHPstorm as IDE
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Local Build
+After cloning the project, follow these steps to set it up locally (WSL enviroment):
 
-## Learning Laravel
+Install PHP and extensions:
+```bash
+sudo apt install php php-intl php-zip php-simplexml php-dom php-gd php-xml php-curl
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Download Composer.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('sha384', 'composer-setup.php') === 'EXPECTED_SHA384_CHECKSUM') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+```
 
-## Laravel Sponsors
+Install dependencies:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```bash
+php composer.phar install
+```
 
-### Premium Partners
+Ensure that you have the .env file (if don't, copy .env.example)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Check the config/database.php file to determine whether you are using local MySQL or AWS RDS:
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```php
+'mysql' => [
+'driver' => 'mysql',
+'url' => env('DATABASE_URL'),
+'host' => env('DB_HOST', '127.0.0.1'),
+'port' => env('DB_PORT', '3306'),
+'database' => env('DB_DATABASE', 'forge'),
+'username' => env('DB_USERNAME', 'forge'),
+'password' => env('DB_PASSWORD', ''),
+'unix_socket' => env('DB_SOCKET', ''),
+'charset' => 'utf8mb4',
+'collation' => 'utf8mb4_unicode_ci',
+'prefix' => '',
+'prefix_indexes' => true,
+'strict' => true,
+'engine' => null,
+'options' => extension_loaded('pdo_mysql') ? array_filter([
+PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+]) : [],
+],
 
-## Code of Conduct
+// Comment either one or other
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+// 'mysql' => [
+//     'driver' => 'mysql',
+//     'host' => env('RDS_HOSTNAME', '127.0.0.1'),
+//     'port' => env('RDS_PORT', '3306'),
+//     'database' => env('RDS_DB_NAME', 'forge'),
+//     'username' => env('RDS_USERNAME', 'forge'),
+//     'password' => env('RDS_PASSWORD', ''),
+//     'unix_socket' => env('DB_SOCKET', ''),
+//     'charset' => 'utf8mb4',
+//     'collation' => 'utf8mb4_unicode_ci',
+//     'prefix' => '',
+//     'strict' => true,
+//     'engine' => null,
+// ],
+```
 
-## Security Vulnerabilities
+4. Use Sail to run the project (Docker needed):
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+./vendor/bin/sail up
 
-## License
+./vendor/bin/sail php artisan migrate:fresh --seed
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+./vendor/bin/sail npm install
+
+./vendor/bin/sail npm run build
+```
+
+5. Migrate the tables 
+
+```bash
+./vendor/bin/sail php artisan migrate:fresh --seed
+```
+
+6. Go to http://localhost/ on navigator
+
+# AWS Production
+
+To set a production environment, I used AWS BeanStalk, so first, you got to create and BeanStalk's instance and upload the .zip of the whole project.
+
+Change the .env keys, users and databases names to work properly
+
+```bash
+zip -r project.zip .
+```
+
+In case that you are using other environment, set up an Apache web server and point to the /public/index.php
+
+## Considerations/Troubleshoots
+
+#### Font missing
+
+You must check that the contents of /fpdf/font/* are included in: /vendor/setasign/fpdf/font
+
+#### MySQL container not working
+
+```bash
+docker-compose down --volumes
+./vendor/bin/sail sail up --build
+```
+
+#### Local enviroment too slow
+
+Either completely mount it on native Windows (XAMPP\LAMP) or Linux environment, if not, try this:
+https://stackoverflow.com/questions/63036490/docker-is-extremely-slow-when-running-laravel-on-nginx-container-wsl2
