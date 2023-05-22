@@ -98,7 +98,7 @@ PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
 ./vendor/bin/sail php artisan migrate:fresh --seed
 ```
 
-6. Go to http://localhost/ on navigator
+6. Go to http://localhost/ on navigator, You can use preregister users like a@a.com (school) or e@e.com (IEPC), password for them are 12345678
 
 # AWS Production
 
