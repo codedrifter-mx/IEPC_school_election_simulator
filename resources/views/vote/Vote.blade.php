@@ -133,8 +133,6 @@
                     .then(function (response) {
                         let candidates = response.data;
 
-                        console.log(candidates);
-
                         var t = "";
                         var v = "";
                         for (var i = 0; i < response.data.length; i++) {
@@ -267,12 +265,8 @@
                     event_key: event_key,
                 })
                     .then(function (response) {
-                        console.log(response);
-                        // clear input values
                         document.getElementById('code').value = '';
 
-
-                        // swal with success message, when message done, refresh page
                         Swal.fire({
                             icon: 'success',
                             title: '¡Voto registrado con exito!',
@@ -285,8 +279,6 @@
 
                     })
                     .catch(function (error) {
-                        // console.log(error);
-
                         for (var key in error.response.data.errors) {
                             if (error.response.data.errors.hasOwnProperty(key)) {
                                 toastr.error(error.response.data.errors[key]);

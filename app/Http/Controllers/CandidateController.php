@@ -67,12 +67,12 @@ class CandidateController extends Controller
 
         if ($request->hasFile('photo')) {
             $image = Image::make($request->file('photo'))->fit(300, 400)->encode('jpg', 75);
-            Storage::disk('s3')->put('candidates/' . $candidate->candidate_key . '.jpg', $image);
+            Storage::disk('local')->put('candidates/' . $candidate->candidate_key . '.jpg', $image);
         }
 
         if ($request->hasFile('video')) {
             $video = $request->file('video');
-            Storage::disk('s3')->putFileAs('candidates', $video, $candidate->candidate_key . '.mp4');
+            Storage::disk('local')->putFileAs('candidates', $video, $candidate->candidate_key . '.mp4');
         }
 
         // create a 'nulo' candidate, if its not already created on this event_key
@@ -148,36 +148,26 @@ class CandidateController extends Controller
         $candidate->update($request->all());
 
         if ($request->hasFile('photo')) {
-            \Log::info('photo');
-
             try {
-                Storage::disk('s3')->delete('candidates/' . $candidate_key . '.jpg');
-                \Log::info('deleted');
+                Storage::disk('local')->delete('candidates/' . $candidate_key . '.jpg');
             } catch (\Exception $e) {
                 \Log::info($e);
             }
 
             $image = Image::make($request->file('photo'))->fit(300, 400)->encode('jpg', 75);
-            Storage::disk('s3')->put('candidates/' . $candidate_key . '.jpg', $image);
-
-            \Log::info('photo uploaded');
+            Storage::disk('local')->put('candidates/' . $candidate_key . '.jpg', $image);
         }
 
         if ($request->hasFile('video')) {
-            \Log::info('video');
-
             try {
-                Storage::disk('s3')->delete('candidates/' . $candidate_key . '.mp4');
+                Storage::disk('local')->delete('candidates/' . $candidate_key . '.mp4');
             } catch (\Exception $e) {
                 \Log::info($e);
             }
 
             $video = $request->file('video');
-            Storage::disk('s3')->putFileAs('candidates', $video, $candidate_key . '.mp4');
-            \Log::info('video uploaded');
-
+            Storage::disk('local')->putFileAs('candidates', $video, $candidate_key . '.mp4');
         }
-        \Log::info('updated');
 
 
         return response()->json($candidate, 200);
@@ -195,13 +185,13 @@ class CandidateController extends Controller
         $candidate->delete();
 
         try {
-            Storage::disk('s3')->delete('candidates/' . $candidate_key . '.jpg');
+            Storage::disk('local')->delete('candidates/' . $candidate_key . '.jpg');
         } catch (\Exception $e) {
             \Log::info($e);
         }
 
         try {
-            Storage::disk('s3')->delete('candidates/' . $candidate_key . '.mp4');
+            Storage::disk('local')->delete('candidates/' . $candidate_key . '.mp4');
         } catch (\Exception $e) {
             \Log::info($e);
         }

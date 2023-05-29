@@ -230,7 +230,6 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-
                         for (var key in error.response.data.errors) {
                             if (error.response.data.errors.hasOwnProperty(key)) {
                                 toastr.error(error.response.data.errors[key]);

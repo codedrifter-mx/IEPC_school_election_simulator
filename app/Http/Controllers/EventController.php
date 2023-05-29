@@ -60,8 +60,6 @@ class EventController extends Controller
         }
 
 
-
-
         return response()->json($events, 200);
     }
 
@@ -124,7 +122,7 @@ class EventController extends Controller
             $image = Image::make($request->file('photo'))->fit(300, 400)->encode('jpg', 75);
 
             // save the image in 'public/candidates', $candidate->candidate_key . '.jpg'
-            Storage::disk('s3')->put('events/' . $request->event_key . '.jpg', $image);
+            Storage::disk('local')->put('events/' . $request->event_key . '.jpg', $image);
         } else {
             return response()->json(['errors' => ['photo' => ['El logotipo es requerido']]], 422);
         }
@@ -461,10 +459,10 @@ class EventController extends Controller
             $fpdi->AddFont('Century Gothic', '', 'Century_Gothic.php');
             $fpdi->SetFont("Century Gothic", "", 14);
 
-            if (Storage::disk('s3')->exists('events/' . $request->event_key . '.jpg')) {
+            if (Storage::disk('local')->exists('events/' . $request->event_key . '.jpg')) {
                 $left = 11;
                 $top = 20.3;
-                $url = Storage::disk('s3')->url('events/' . $request->event_key . '.jpg');
+                $url = storage_path('app/events/' . $request->event_key . '.jpg');
                 $fpdi->Image($url, $left, $top, 23.3, 23.3);
             }
 
@@ -476,25 +474,26 @@ class EventController extends Controller
 
             $fpdi->Text($left, $top, $text);
 
-
             $top = 146.3;
             foreach ($data['candidates'] as $key => $value) {
-                if ($key == 'nulo') continue;
+                if ($key == 'nulo') {
+                    continue;
+                }
 
                 $top += 15;
 
-                $url = Storage::disk('s3')->url('default.png');
-
+                $url = Storage::disk('local')->url('default.png');
 
                 try {
-                    if (Storage::disk('s3')->exists('candidates/' . $data['candidates_key'][$key] . '.jpg')) {
-                        $url = Storage::disk('s3')->url('candidates/' . $data['candidates_key'][$key] . '.jpg');
+                    $candidateKey = utf8_encode($data['candidates_key'][$key]);
+                    if (Storage::disk('local')->exists('candidates/' . $candidateKey . '.jpg')) {
+                        $url = storage_path('app/candidates/' . $candidateKey . '.jpg');
                         $top -= 6.5;
                         $left = 6.2;
                         $fpdi->Image($url, $left, $top, 9.5, 9.5);
                         $top += 6.5;
                     } else {
-                        $url = Storage::disk('s3')->url('default.png');
+                        $url = storage_path('app/default.png');
                         $top -= 6.5;
                         $left = 6.5;
                         $fpdi->Image($url, $left, $top, 9.5, 9.5);
@@ -504,18 +503,17 @@ class EventController extends Controller
                     $top += 7;
                 }
 
-
                 $left = 24;
-                $text = $key;
+                $text = utf8_encode($key);
                 $fpdi->Text($left, $top, $text);
 
                 $left = 117;
-                $text = $value;
+                $text = utf8_encode($value);
                 $fpdi->Text($left, $top, $text);
 
-                // now $value number transform to text number in spanish
+                // Convert $value number to text number in Spanish
                 $left = 165;
-                $text = $this->numberToText($value);
+                $text = utf8_encode($this->numberToText($value));
                 $fpdi->Text($left, $top, $text);
             }
 
@@ -525,39 +523,40 @@ class EventController extends Controller
             $fpdi->Text($left, $top, $text);
 
             $left = 165;
-            $text = $this->numberToText($text);
+            $text = utf8_encode($this->numberToText($text));
             $fpdi->Text($left, $top, $text);
 
             $left = 117;
             $top += 15.5;
-            $text = $data['candidates']->sum() - $data['candidates']['nulo'];
+            $text = utf8_encode($data['candidates']->sum() - $data['candidates']['nulo']);
             $fpdi->Text($left, $top, $text);
 
             $left = 117;
             $top += 15;
-            // sum value of $data['candidates'] with key nulo
-            $text = $data['candidates']['nulo'];
+            $text = utf8_encode($data['candidates']['nulo']);
             $fpdi->Text($left, $top, $text);
 
             $left = 117;
             $top += 15;
-            $text = $data['no_votes'];
+            $text = utf8_encode($data['no_votes']);
             $fpdi->Text($left, $top, $text);
 
-            $text = $data['director'];
+            $text = utf8_encode($data['director']);
             $left = 47;
             $left = $left - $fpdi->GetStringWidth($text) / 2;
             $top += 42.5;
 
             $fpdi->Text($left, $top, $text);
-
         }
 
         $file = $fpdi->Output('S', $event->event_key . '.pdf');
-        Storage::disk('s3')->put('/pdf/ficha/' . $event->event_key . '.pdf', $file);
-        $url = Storage::disk('s3')->url('/pdf/ficha/' . $event->event_key . '.pdf');
+        Storage::disk('local')->put('pdf/ficha/' . $event->event_key . '.pdf', $file);
+        $filePath = storage_path('app/pdf/ficha/' . $event->event_key . '.pdf');
 
-        return response()->json(['url' => $url]);
+        return response()->file($filePath, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $event->event_key . '.pdf"',
+        ]);
     }
 
     public function getResultsXlsx(Request $request)
@@ -584,6 +583,10 @@ class EventController extends Controller
 
         $votes = Vote::where('event_id', $event->event_id)->count();
 
+        // Check if there are no candidates or votes
+        if ($candidates->isEmpty() || $votes === 0) {
+            return response()->json(['message' => 'No se encontraron candidatos o votos'], 404);
+        }
 
         $data = [
             'school_name' => $event->user_name,
@@ -662,6 +665,7 @@ class EventController extends Controller
 
         return response()->download($file, 'datos.xlsx', $headers);
     }
+
     public function getElectorsXlsx(Request $request)
     {
         $event_key = $request->event_key;
@@ -681,7 +685,6 @@ class EventController extends Controller
             ->where('electors.event_key', $event_key)
             ->orderBy('electors.name', 'asc')
             ->get();
-
 
 
         // create a Xlsx file with data
@@ -767,10 +770,6 @@ class EventController extends Controller
             'no_votes' => $event->population - $votes
         ];
 
-        //log data
-//        \Log::info($data);
-
-        // count $data['candidates'] without nulo key
         $count = count($data['candidates']) - 1;
 
         $fpdi = new Fpdi;
@@ -786,10 +785,10 @@ class EventController extends Controller
             $fpdi->SetFont("Century Gothic", "", 14);
 
             // if 'events/' . $request->event_key . '.jpg' exists, add image
-            if (Storage::disk('s3')->exists('events/' . $request->event_key . '.jpg')) {
+            if (Storage::disk('local')->exists('events/' . $request->event_key . '.jpg')) {
                 $left = 10.5;
                 $top = 20.5;
-                $url = Storage::disk('s3')->url('events/' . $request->event_key . '.jpg');
+                $url = storage_path('app/events/' . $request->event_key . '.jpg');
                 $fpdi->Image($url, $left, $top, 23.5, 23.5);
             }
 
@@ -870,7 +869,6 @@ class EventController extends Controller
             $fpdi->Text($left, $top, $text);
 
 
-
             $left = 124;
             $top = 80.5;
             $text = $data['anio'];
@@ -904,8 +902,8 @@ class EventController extends Controller
                 $fpdi->Text($left, $top, $text);
 
                 try {
-                    if (Storage::disk('s3')->url('candidates/' . $data['candidates_key'][$key] . '.jpg')) {
-                        $url = Storage::disk('s3')->url('candidates/' . $data['candidates_key'][$key] . '.jpg');
+                    if (Storage::disk('local')->url('candidates/' . $data['candidates_key'][$key] . '.jpg')) {
+                        $url = storage_path('app/candidates/' . $data['candidates_key'][$key] . '.jpg');
                         $top -= 7;
                         $left = 64;
                         $fpdi->Image($url, $left, $top, 6.5, 6.6);
@@ -959,15 +957,18 @@ class EventController extends Controller
             $left = 106;
             $top += 38;
             $text = $data['director'];
-            $fpdi->Text($left - $fpdi->GetStringWidth($text) / 2 , $top, $text);
+            $fpdi->Text($left - $fpdi->GetStringWidth($text) / 2, $top, $text);
 
         }
 
         $file = $fpdi->Output('S', $event->event_key . '.pdf');
-        Storage::disk('s3')->put('/pdf/ficha/' . $event->event_key . '.pdf', $file);
-        $url = Storage::disk('s3')->url('/pdf/ficha/' . $event->event_key . '.pdf');
+        Storage::disk('local')->put('pdf/ficha/' . $event->event_key . '.pdf', $file);
+        $filePath = storage_path('app/pdf/ficha/' . $event->event_key . '.pdf');
 
-        return response()->json(['url' => $url]);
+        return response()->file($filePath, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $event->event_key . '.pdf"',
+        ]);
     }
 
     public function getMajority(Request $request)
@@ -1034,13 +1035,12 @@ class EventController extends Controller
                 $fpdi->SetFont("Century Gothic", "", 26);
 
                 // if 'events/' . $request->event_key . '.jpg' exists, add image
-                if (Storage::disk('s3')->exists('events/' . $request->event_key . '.jpg')) {
+                if (Storage::disk('local')->exists('events/' . $request->event_key . '.jpg')) {
                     $left = 11;
                     $top = 7;
-                    $url = Storage::disk('s3')->url('events/' . $request->event_key . '.jpg');
+                    $url = storage_path('app/events/' . $request->event_key . '.jpg');
                     $fpdi->Image($url, $left, $top, 30, 30);
                 }
-
 
                 $left = 135;
                 $text = $key;
@@ -1062,19 +1062,24 @@ class EventController extends Controller
                 $left = 132;
                 $top = 181;
                 $text = $data['director'];
-                $fpdi->Text($left - $fpdi->GetStringWidth($text) / 2 , $top, $text);
+                $fpdi->Text($left - $fpdi->GetStringWidth($text) / 2, $top, $text);
             }
 
             $file = $fpdi->Output('S', $event->event_key . '.pdf');
-            Storage::disk('s3')->put('/pdf/majority/' . $event->event_key . '/' . $key . '.pdf', $file);
-            $url = Storage::disk('s3')->url('/pdf/majority/' . $event->event_key . '/' . $key . '.pdf');
+            Storage::disk('local')->put('/pdf/majority/' . $event->event_key . '/' . $key . '.pdf', $file);
+            $url = Storage::disk('local')->url('/pdf/majority/' . $event->event_key . '/' . $key . '.pdf');
 
             $top_candidates_array[$key] = $url;
         }
 
         // if ($top_candidates->count() == 1) then just download the pdf, otherwise download a zip file with all pdf url with response()->download
         if ($top_candidates->count() == 1) {
-            return response()->json(['url' => $top_candidates_array[$top_candidates->keys()->first()]]);
+            $filePath = storage_path('app/pdf/majority/' . $event->event_key . '/' . $top_candidates->keys()->first() . '.pdf');
+
+            return response()->file($filePath, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $top_candidates->keys()->first() . '.pdf"',
+            ]);
         } else {
 
             // zip each file from $top_candidates_array and return the zip file
@@ -1089,10 +1094,15 @@ class EventController extends Controller
             // make $zip compatible to upload to s3
             $zip = file_get_contents($zip_name);
 
-            Storage::disk('s3')->put('/pdf/majority/' . $event->event_key . '/' . $event->event_key . '.zip', $zip);
-            $url = Storage::disk('s3')->url('/pdf/majority/' . $event->event_key . '/' . $event->event_key . '.zip');
+            $zip_path = storage_path('app/' . $event->event_key . '.zip');
 
-            return response()->json(['url' => $url]);
+            $headers = [
+                'Content-Type' => 'application/zip',
+                'Content-Disposition' => 'attachment; filename="' . $event->event_key . '.zip"',
+                'Content-Length' => filesize($zip_path),
+            ];
+
+            return response()->file($zip, $headers);
         }
     }
 

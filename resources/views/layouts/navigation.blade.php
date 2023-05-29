@@ -158,7 +158,6 @@
 
             axios.get('{{ route('event_indexCount') }}')
                 .then(function (response) {
-                    console.log(response.data);
                     document.getElementById('event_badge').innerHTML = response.data;
                     document.getElementById('event_badge').classList.remove('hidden');
                 })

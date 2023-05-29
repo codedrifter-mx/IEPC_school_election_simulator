@@ -21,7 +21,7 @@
 
             @if ( Auth::user()->level  === 'Administrador')
                 <div>
-                    <a href="{{ route('logout') }}">
+                    <a href="{{ route('admin_active_events') }}">
                         <button
                             class="btn-block inline-flex w-full mt-2 mb-2 text-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             {{ __('Eventos Activos') }}
@@ -30,7 +30,7 @@
                 </div>
 
                 <div>
-                    <a href="{{ route('logout') }}">
+                    <a href="{{ route('admin_validate_events') }}">
                         <button
                             class="btn-block inline-flex w-full mt-2 mb-2 text-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             {{ __('Eventos por validar') }}

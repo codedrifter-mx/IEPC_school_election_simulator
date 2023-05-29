@@ -20,7 +20,7 @@ module.exports = {
                     '40/60': '40% 60%',
                 },
             backgroundImage: {
-                'background': "url('/img/background.jpg')",
+                'background': "url('{{ asset('img/background.jpg') }}')",
             }
         },
     },

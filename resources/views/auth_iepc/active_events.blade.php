@@ -322,14 +322,11 @@
                     })
                     .then(function (response) {
 
-                        // console.log(response)
-                        // fill all details_* with data
                         document.getElementById('details_name').innerHTML = response.data.name;
                         document.getElementById('details_schedule').innerHTML = response.data.schedule;
                         document.getElementById('details_cycle').innerHTML = response.data.cycle;
                         document.getElementById('details_population').innerHTML = response.data.population;
                         document.getElementById('details_total_votes').innerHTML = response.data.total_votes;
-                        // document.getElementById('details_candidates').innerHTML = response.data.candidates;
                         document.getElementById('details_no_votes').innerHTML = response.data.no_votes;
 
 
@@ -364,19 +361,19 @@
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        axios.get("{{ route('event_getResultsPdf') }}",
-                            {
-                                params: {
-                                    event_key: event_key
-                                }
-                            })
+                        axios.get("{{ route('event_getResultsPdf') }}", {
+                            params: {
+                                event_key: event_key
+                            },
+                            responseType: 'blob'
+                        })
                             .then(function (response) {
-                                window.open(response.data.url, '_blank');
+                                const url = URL.createObjectURL(response.data);
+                                window.open(url, '_blank');
                             })
                             .catch(function (error) {
-                                console.log(error)
-                                // show toastr error
-                                toastr.error(error.response.data.message);
+                                console.log(error);
+                                toastr.error(error.response.data);
                             });
                     }
                 })
@@ -385,40 +382,6 @@
 
             // function to show details
             function getFileAct() {
-                Swal.fire({
-                    title: '¡Un documento digital tiene validez!',
-                    text: "Antes de imprimir, piensa si es necesario hacerlo. En el IEPC somos amigables con el medio ambiente, por lo que te invitamos a no imprimir estos documentos, ya que puedes descargarlos y compartirlos vía electrónica",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Descargar',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        axios.get("{{ route('event_getAct') }}",
-                            {
-                                params: {
-                                    event_key: event_key
-                                }
-                            })
-                            .then(function (response) {
-                                window.open(response.data.url, '_blank');
-                            })
-                            .catch(function (error) {
-                                console.log(error)
-                                // show toastr error
-                                toastr.error(error.response.data.message);
-                            });
-                    }
-                })
-            }
-
-            // function to show details
-            function getFileMayority() {
-                //show info toastr that it can take a while
-
-
 
                 Swal.fire({
                     title: '¡Un documento digital tiene validez!',
@@ -433,35 +396,81 @@
                     if (result.isConfirmed) {
                         toastr.info("Este proceso puede tardar unos segundos en descargar...");
 
-                        axios.get("{{ route('event_getMajority') }}",
-                            {
-                                params: {
-                                    event_key: event_key
-                                }
-                            })
+                        axios.get("{{ route('event_getAct') }}", {
+                            params: {
+                                event_key: event_key
+                            },
+                            responseType: 'blob' // Set the response type to 'blob'
+                        })
                             .then(function (response) {
-                                window.open(response.data.url, '_blank');
+                                const url = URL.createObjectURL(response.data);
+                                window.open(url, '_blank');
                             })
                             .catch(function (error) {
-                                console.log(error)
+                                console.log(error);
                                 // show toastr error
-                                toastr.error(error.response.data.message);
+                                toastr.error(error.response.data);
+                            });
+                    }
+                });
+            }
+
+            function getFileMayority() {
+                Swal.fire({
+                    title: '¡Un documento digital tiene validez!',
+                    text: "Antes de imprimir, piensa si es necesario hacerlo. En el IEPC somos amigables con el medio ambiente, por lo que te invitamos a no imprimir estos documentos, ya que puedes descargarlos y compartirlos vía electrónica",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Descargar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        toastr.info("Este proceso puede tardar unos segundos en descargar...", {
+                            timeOut: 5000,
+                            positionClass: "toast-top-center"
+                        });
+
+                        axios.get("{{ route('event_getMajority') }}", {
+                            params: {
+                                event_key: event_key
+                            },
+                            responseType: 'blob'
+                        })
+                            .then(function (response) {
+                                const url = URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                                const link = document.createElement('a');
+                                link.href = url;
+                                link.target = '_blank';
+                                link.click();
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                                // show toastr error
+                                toastr.error(error.response.data);
                             });
                     }
                 })
             }
 
             function downloadResults() {
-                // create a http request for event_getResultsXlsx without axios
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', "{{ route('event_getResultsXlsx') }}?event_key=" + event_key, true);
                 xhr.responseType = 'blob';
                 xhr.onload = function (e) {
-                        var blob = this.response;
+                    if (xhr.status === 200) {
+                        var blob = xhr.response;
                         var link = document.createElement('a');
                         link.href = window.URL.createObjectURL(blob);
                         link.download = "resultados.xlsx";
                         link.click();
+                    } else if (xhr.status === 404) {
+                        var errorResponse = JSON.parse(xhr.responseText);
+                        alert(errorResponse.message);
+                    } else {
+                        alert('Hubo un error descargando este archivo.');
+                    }
                 };
                 xhr.send();
 
@@ -469,9 +478,6 @@
 
 
             function validateEvent() {
-
-                console.log(event_key);
-
                 axios.get("{{ route('event_show') }}",
                     {
                         params: {

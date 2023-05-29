@@ -33,7 +33,7 @@
             </div>
         </div>
         <main
-            style="background: url('/img/background.jpg');background-repeat: no-repeat;background-size: cover;background-position: center;min-height: 54vh;">
+            style="background: url('{{ asset('img/background.jpg') }}');background-repeat: no-repeat;background-size: cover;background-position: center;min-height: 54vh;">
             {{ $slot }}
         </main>
     </div>

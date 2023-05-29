@@ -46,11 +46,11 @@ Route::get('/qr_vote/{key}', function ($event_key) {
 
 Route::get('/candidate/image/{candidate_key}', function ($candidate_key) {
     if ($candidate_key == 'nulo') {
-        $file = Storage::disk('s3')->get('nulo.png');
-    } elseif (!Storage::disk('s3')->exists('candidates/' . $candidate_key . '.jpg')) {
-        $file = Storage::disk('s3')->get('default.png');
+        $file = Storage::disk('local')->get('nulo.png');
+    } elseif (!Storage::disk('local')->exists('candidates/' . $candidate_key . '.jpg')) {
+        $file = Storage::disk('local')->get('default.png');
     } else{
-        $file = Storage::disk('s3')->get('candidates/' . $candidate_key . '.jpg');
+        $file = Storage::disk('local')->get('candidates/' . $candidate_key . '.jpg');
     }
 
 
@@ -59,7 +59,7 @@ Route::get('/candidate/image/{candidate_key}', function ($candidate_key) {
 
 // Candidate stored video
 Route::get('/candidate/video/{candidate_key}', function ($candidate_key) {
-    $url = Storage::disk('s3')->get('candidates/' . $candidate_key . '.mp4');
+    $url = Storage::disk('local')->get('candidates/' . $candidate_key . '.mp4');
 
     return response($url, 200)->header('Content-Type','video/mp4');
 })->name('candidate.video');
@@ -79,7 +79,7 @@ Route::get('/pdf/ficha/{candidate_key}', function ($event_key) {
 
 // Get event stored file in s3
 Route::get('/s3/pdf/ficha/{candidate_key}', function ($event_key) {
-    $file = Storage::disk('s3')->get('pdf/ficha/' . $event_key . '.pdf');
+    $file = Storage::disk('local')->get('pdf/ficha/' . $event_key . '.pdf');
 
     return response($file, 200)->header('Content-Type', 'application/pdf');
 })->name('s3.event.ficha');

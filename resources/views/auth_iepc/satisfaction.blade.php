@@ -91,7 +91,6 @@
 
                 axios.post("{{ route('send_email') }}", data)
                     .then(function (response) {
-                        console.log(response);
                         submit_button.disabled = false;
                         submit_button.innerHTML = 'Guardar';
                         document.getElementById("email").value = '';

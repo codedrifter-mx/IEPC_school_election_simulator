@@ -12,12 +12,12 @@
 
                             <div class="grid grid-cols-1 gap-3">
                                 <div>
-                                        <select name="event_key" id="event_key"
-                                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300">
-                                            @foreach($events as $event)
-                                                <option value="{{ $event->event_key }}">{{ $event->name }}</option>
-                                            @endforeach
-                                        </select>
+                                    <select name="event_key" id="event_key"
+                                            class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:border-gray-300">
+                                        @foreach($events as $event)
+                                            <option value="{{ $event->event_key }}">{{ $event->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -100,7 +100,7 @@
 
                                 <div class="text-center rounded bg-primary p-3">
                                     <a class="text-white text-xs font-bold p-3 break-all rounded bg-primary text-center"
-                                        id="link_vote" href=""></a>
+                                       id="link_vote" href=""></a>
                                 </div>
 
                                 <div class="p-3 break-all rounded bg-primary text-center text-xs" id="timer_upper">
@@ -207,8 +207,6 @@
     </div>
 
 
-
-
     <x-slot name="scripts">
         <script type="text/javascript">
 
@@ -280,7 +278,10 @@
                         document.getElementById('event_status').innerHTML = '<span class="badge badge-danger">Inactivo</span>';
                         //toaster
                         // toastr.info('La votación no ha iniciado, comparte el enlace a los alumnos', 'Fase 1', {timeOut: 5000}); but top middle
-                        toastr.info('La votación no ha iniciado, comparte el enlace a los alumnos', 'Fase 1', {timeOut: 5000, positionClass: "toast-top-center"});
+                        toastr.info('La votación no ha iniciado, comparte el enlace a los alumnos', 'Fase 1', {
+                            timeOut: 5000,
+                            positionClass: "toast-top-center"
+                        });
                         //disable id second, third as opaque style
                         document.getElementById('second').style.opacity = "0.5";
                         document.getElementById('second').style.pointerEvents = "none";
@@ -298,7 +299,10 @@
 
                         document.getElementById('event_status').innerHTML = '<span class="badge badge-success">Activo</span>';
                         // toaster info message
-                        toastr.info('La votación se encuentra activa, puedes continuar con la votación', 'Fase 2', {timeOut: 5000, positionClass: "toast-top-center" });
+                        toastr.info('La votación se encuentra activa, puedes continuar con la votación', 'Fase 2', {
+                            timeOut: 5000,
+                            positionClass: "toast-top-center"
+                        });
 
                         //disable id third as opaque style
                         document.getElementById('third').style.opacity = "0.5";
@@ -347,7 +351,10 @@
                         document.getElementById('event_status').innerHTML = '<span class="badge badge-secondary">Finalizado</span>';
 
                         // toaster info message on top mid
-                        toastr.info('La votación ha finalizado, puedes ver los resultados', 'Fase 3', {timeOut: 5000, positionClass: "toast-top-center"});
+                        toastr.info('La votación ha finalizado, puedes ver los resultados', 'Fase 3', {
+                            timeOut: 5000,
+                            positionClass: "toast-top-center"
+                        });
 
                         //disable id first, second as opaque style
                         document.getElementById('first').style.opacity = "0.5";
@@ -366,7 +373,6 @@
                         document.getElementById('link_vote').innerHTML = "";
                         document.getElementById('link_vote').href = "";
                         document.getElementById("qr_vote").src = "";
-
 
 
                         document.getElementById('first').style.backgroundColor = null;
@@ -486,21 +492,16 @@
                         }
                     })
                     .then(function (response) {
-
-                        console.log(response)
-                        // fill all details_* with data
                         document.getElementById('details_name').innerHTML = response.data.name;
                         document.getElementById('details_schedule').innerHTML = response.data.schedule;
                         document.getElementById('details_cycle').innerHTML = response.data.cycle;
                         document.getElementById('details_population').innerHTML = response.data.population;
                         document.getElementById('details_total_votes').innerHTML = response.data.total_votes;
-                        // document.getElementById('details_candidates').innerHTML = response.data.candidates;
-                        // percentage about no_votes and population
+
                         document.getElementById('details_registered').innerHTML = response.data.total_electors;
 
                         let percentage = (response.data.total_electors_votes / response.data.total_electors) * 100
-                        document.getElementById('details_yes_votes').innerHTML =  percentage.toFixed(2) + "%";
-                        // no_votes
+                        document.getElementById('details_yes_votes').innerHTML = percentage.toFixed(2) + "%";
                         document.getElementById('details_no_votes').innerHTML = (100 - percentage).toFixed(2) + "%";
 
 
@@ -527,7 +528,6 @@
                 let event_key = document.getElementById('event_key').value;
 
 
-
                 Swal.fire({
                     title: '¡Un documento digital tiene validez!',
                     text: "Antes de imprimir, piensa si es necesario hacerlo. En el IEPC somos amigables con el medio ambiente, por lo que te invitamos a no imprimir estos documentos, ya que puedes descargarlos y compartirlos vía electrónica",
@@ -541,18 +541,18 @@
                     if (result.isConfirmed) {
                         toastr.info("Este proceso puede tardar unos segundos en descargar...");
 
-                        axios.get("{{ route('event_getResultsPdf') }}",
-                            {
-                                params: {
-                                    event_key: event_key
-                                }
-                            })
+                        axios.get("{{ route('event_getResultsPdf') }}", {
+                            params: {
+                                event_key: event_key
+                            },
+                            responseType: 'blob'
+                        })
                             .then(function (response) {
-                                window.open(response.data.url, '_blank');
+                                const url = URL.createObjectURL(response.data);
+                                window.open(url, '_blank');
                             })
                             .catch(function (error) {
-                                console.log(error)
-                                // show toastr error
+                                console.log(error);
                                 toastr.error(error.response.data);
                             });
                     }
@@ -593,30 +593,33 @@
                     if (result.isConfirmed) {
                         toastr.info("Este proceso puede tardar unos segundos en descargar...");
 
-                        axios.get("{{ route('event_getAct') }}",
-                            {
-                                params: {
-                                    event_key: event_key
-                                }
-                            })
+                        axios.get("{{ route('event_getAct') }}", {
+                            params: {
+                                event_key: event_key
+                            },
+                            responseType: 'blob' // Set the response type to 'blob'
+                        })
                             .then(function (response) {
-                                window.open(response.data.url, '_blank');
+                                // Create a URL object from the blob response
+                                const url = URL.createObjectURL(response.data);
+                                // Open the URL in a new window or tab
+                                window.open(url, '_blank');
                             })
                             .catch(function (error) {
-                                console.log(error)
+                                console.log(error);
                                 // show toastr error
                                 toastr.error(error.response.data);
                             });
                     }
-                })
+                });
             }
+
 
             // function to show details
             function getFileMayority() {
                 //show info toastr that it can take a while
 
                 let event_key = document.getElementById('event_key').value;
-
 
 
                 Swal.fire({
@@ -630,20 +633,26 @@
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        toastr.info("Este proceso puede tardar unos segundos en descargar...", {timeOut: 5000, positionClass: "toast-top-center"});
+                        toastr.info("Este proceso puede tardar unos segundos en descargar...", {
+                            timeOut: 5000,
+                            positionClass: "toast-top-center"
+                        });
 
-                        axios.get("{{ route('event_getMajority') }}",
-                            {
-                                params: {
-                                    event_key: event_key
-                                }
-                            })
+                        axios.get("{{ route('event_getMajority') }}", {
+                            params: {
+                                event_key: event_key
+                            },
+                            responseType: 'blob'
+                        })
                             .then(function (response) {
-
-                                window.open(response.data.url, '_blank');
+                                const url = URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                                const link = document.createElement('a');
+                                link.href = url;
+                                link.target = '_blank';
+                                link.click();
                             })
                             .catch(function (error) {
-                                console.log(error)
+                                console.log(error);
                                 // show toastr error
                                 toastr.error(error.response.data);
                             });

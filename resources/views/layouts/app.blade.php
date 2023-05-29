@@ -26,7 +26,7 @@
 
     <!-- Page Content -->
     <main class="min-h-screen"
-        style="background: url('/img/background_work_1.jpg');background-repeat: no-repeat;background-size: cover;background-position: center; margin-top: 4rem;">
+        style="background: url('{{ asset('img/background_work_1.jpg') }}');background-repeat: no-repeat;background-size: cover;background-position: center; margin-top: 4rem;">
         {{ $slot }}
     </main>
 </div>

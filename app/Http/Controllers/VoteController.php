@@ -12,9 +12,6 @@ class VoteController extends Controller
 {
     public function view($key)
     {
-        // Laravel Log $key variable
-        \Log::info($key);
-
         return view('vote.Vote')->with('key', $key);
     }
 
