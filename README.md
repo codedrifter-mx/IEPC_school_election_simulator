@@ -2,7 +2,9 @@
 
 Este proyecto es una aplicación web que permite la documentacion virtual y simulacion de elecciones escolares de manera digital, esto permite que las escuelas puedan organizar elecciones mientras que el IEPC pueda monitorear estas actividades.
 
-Puedes interactuar aqui: http://schoolelectionsimulator-env.eba-vximfvvp.us-east-1.elasticbeanstalk.com/
+Puedes interactuar aqui: https://iepcdurango.mx/school_election_simulator-main/project/public/index.php
+
+Alternativa AWS: http://schoolelectionsimulator-env.eba-vximfvvp.us-east-1.elasticbeanstalk.com/
 
 ## Tech Stack
 
